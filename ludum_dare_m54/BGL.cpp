@@ -76,7 +76,9 @@ void TextureHandler::Bind(std::string tag, int32_t textureSlot)
 	BGLTexture texture = textures[tag];
 
 	if(texture.isBound && textureSlot == texture.textureUnit)
+	{
 		return;
+	}
 
 	if(texture.id == 0)
 	{
@@ -369,7 +371,7 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 
 	// TODO(brett): move this code out int the animation frame functions
 	float uvFrameX = (sprite.frames[0].x / (float)sprite.textureWidth);
-	float uvFrameY = (sprite.frames[0].w / (float)sprite.textureHeight);
+	float uvFrameY = (sprite.frames[0].y / (float)sprite.textureHeight);
 
 	float uvFrameW = uvFrameX + (sprite.frames[0].w / (float)sprite.textureWidth);
 	float uvFrameH = uvFrameY + (sprite.frames[0].h / (float)sprite.textureHeight);

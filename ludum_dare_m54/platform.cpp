@@ -83,10 +83,14 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// Set screen clear color to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 
 	InitializeFrame(0, Window.width, Window.height, 0);
 
@@ -96,7 +100,6 @@ int main(int argc, char *argv[])
 	TextureHandler::Load("normal", "./images/normal.png");
 
 	Sprite TestSprite = Sprite::Create("diffuse", "normal", 100, 100, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
-
 
 	uint64_t LastTick = SDL_GetTicks();
 	uint64_t CurrentTick = SDL_GetTicks();
