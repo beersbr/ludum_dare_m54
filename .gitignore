@@ -11,8 +11,8 @@ ludum_dare_m54/Debug/*
 *.lastbuildstate
 *.suo
 *.exe
-*.vcxproj
-*.vcxproj.filters
+ludum_dare_m54\ludum_dare_m54.vcxproj
+ludum_dare_m54\ludum_dare_m54.vcxproj.filters
 
 # Windows image file caches
 Thumbs.db
@@ -57,3 +57,4 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.vcxproj
