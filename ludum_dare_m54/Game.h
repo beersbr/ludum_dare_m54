@@ -2,6 +2,8 @@
 
 #include "language.h"
 #include "Map.h"
+#include "Player.h"
+#include "BGL.h"
 
 class Game
 {
@@ -13,8 +15,9 @@ public:
 private:
     void update();
     void draw();
-    bool running;
+    bool running;    
     Map* curMap;
+    Player* tmpPlayer; //extremely temporary, for testing only;
     
 };
 
