@@ -3,6 +3,8 @@
 
 
 BGLInputState BGLController::SystemInputs = {};
+BGLButtonState *BGLController::pressedButtons[PRESSED_BUTTON_MAX];
+uint32_t BGLController::pressedButtonSz = 0;
 
 void BGLController::AddController(int32_t id)
 {
@@ -76,6 +78,7 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 			if(!state)
 			{
 				inputs->buttons[event.button].pressed = true;
+				pressedButtons[pressedButtonSz] = &inputs->buttons[event.button];
 			}
 
 			break;
@@ -121,6 +124,7 @@ void BGLController::UpdateKeyboardButton(SDL_KeyboardEvent event)
 	if(!state)
 	{
 		inputs->keys[event.keysym.sym + offset].pressed = true;
+		pressedButtons[pressedButtonSz] = &inputs->keys[event.keysym.sym-offset];
 	}
 }
 
@@ -149,13 +153,16 @@ void BGLController::UpdateMouseMotion(SDL_MouseMotionEvent event)
 
 }
 
+void BGLController::FrameClean()
+{
+	for(int i = 0; i < pressedButtonSz; ++i)
+	{
+		pressedButtons[i]->pressed = false;
+	}
+}
+
 
 BGLInputState BGLController::GetInputState()
 {
-	// TODO(brett): need to make a way to get multiple controllers... because
-	// that makes this game multiplayer instantly
-
-
-	// TODO(brett): if no controller is present then we need to return nothing
 	return SystemInputs;
 }

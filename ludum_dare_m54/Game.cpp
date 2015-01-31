@@ -20,7 +20,7 @@ void Game::startGame(String mapName)
     
     tmpPlayer = new Player();
 
-    tmpPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tmpPlayer->spriteData.getFrameArray());
+    //tmpPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tmpPlayer->spriteData.getFrameArray());
 
 }
 
@@ -30,11 +30,6 @@ void Game::update(int frameCount, float dt)
 	float dy = 0.0f;
 	float speed = 200.0f;
 	BGLInputState GameInput = BGLController::GetInputState();
-	//if(GameInput.controllerSz > 0)
-	//{
-	//	dx = GameInput.controllers[0].LX * speed * dt;
-	//	dy = GameInput.controllers[0].LY * speed * dt;
-	//}
 
 	if(GameInput.keyboard.keys[SDLK_w].down)
 	{
@@ -53,6 +48,11 @@ void Game::update(int frameCount, float dt)
 		dx = speed * dt * 1.0;
 	}
 
+	if(GameInput.controllerSz > 0)
+	{
+		dx = GameInput.controllers[0].LX * speed * dt;
+		dy = GameInput.controllers[0].LY * speed * dt;
+	}
 
 	tmpPlayer->sprite.modelTransform = glm::translate(tmpPlayer->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
 

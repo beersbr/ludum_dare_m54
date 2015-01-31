@@ -9,7 +9,7 @@
 
 #define CONTROLLER_AXIS_MAX 32767.0f
 #define CONTROLLER_HOOKUP_MAX 16
-
+#define PRESSED_BUTTON_MAX SDL_CONTROLLER_BUTTON_MAX + sizeof(KeyboardInputs)/sizeof(BGLButtonState)
 
 struct BGLButtonState
 {
@@ -87,13 +87,17 @@ typedef struct
  */
 typedef struct
 {
-
 	uint8_t controllerSz;
 	ControllerInputs controllers[CONTROLLER_HOOKUP_MAX];
 	KeyboardInputs keyboard;
 	MouseInputs mouse;
-
 } BGLInputState;
+
+
+/**
+	This is the controller for managing the system inputs. The platform will use this to 
+	update the saved controller state
+*/
 
 class BGLController
 {
@@ -109,10 +113,15 @@ public:
 	static void UpdateMouseButton(SDL_MouseButtonEvent event);
 	static void UpdateMouseMotion(SDL_MouseMotionEvent event);
 
+
+	static void FrameClean();
+
 	// Returns a copy of the current system input
 	static BGLInputState GetInputState();
 
 private:
 	static BGLInputState SystemInputs;
+	static BGLButtonState *pressedButtons[PRESSED_BUTTON_MAX];
+	static uint32_t pressedButtonSz;
 
 };
