@@ -27,7 +27,7 @@ void Game::startGame(String mapName)
 void Game::update(int frameCount)
 {
     //fuck it, change the frame ASAP!
-    if(!(frameCount % 40))
+    if(!(frameCount % 4))
     {
 
         tmpPlayer->sprite.SetAnimationFrame(tmpPlayer->sprite.currentFrame+1);
