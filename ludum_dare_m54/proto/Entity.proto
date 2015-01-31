@@ -1,0 +1,44 @@
+package DasSpace;
+
+//This is specific to active game data
+message Entity {
+    required int32 id; // ID will be tied to the ID of the sub-entity
+    required int32 pathID // What path are we gonna take?
+    required string spriteSheet = 1;
+    optional int32 neutralAnimationFrameStart = 2;
+    optional int32 neutralAnimationFrameEnd = 3;
+    optional int32 forwardAnimationFrameStart = 4;
+    optional int32 forwardAnimationFrameEnd = 5;
+    optional int32 backwardAnimationFrameStart = 6;
+    optional int32 backwardAnimationFrameEnd = 7;
+    optional int32 upAnimationFrameStart = 8;
+    optional int32 upAnimationFrameEnd = 9;
+    optional int32 downAnimationFrameStart = 10;
+    optional int32 downAnimationFrameEnd = 11;
+}
+
+//This is specific to static enemy data
+message Enemy {
+    reqired string name = 1; // Every enemy needs a name
+    required int32 id = 2;  // id to relate to the Entity
+    required int32 weaponID = 3; // what gun this enemy shoots
+    required int32 speed = 5; // how fast it goes
+}
+
+message Player {
+    required string name = 1;   // just for fun
+    required int32  id = 2; // necessary for the player entity
+}
+
+message Weapon {
+    required string name = 1; //name of the weapon
+    required int32 id = 2; //ID of the weapon, this is NOT related to an entity, the Weapon doesn't need such things
+    required int32 damage = 3; //How much damage the weapon does per bullet
+    required int32 spriteSheet = 4; //Image for displaying weapon information in HUD. Weapons on the ship will be drawn on the appropriate Weapons hip sprite
+}
+
+message Bullet { 
+    required int32 weaponID = 1; //Which weapon fires this bullet
+    required int32 bulletID = 2; //Corresponds to the entity ID;
+    required int32 speed = 3;
+}
