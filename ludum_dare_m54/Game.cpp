@@ -20,18 +20,19 @@ void Game::startGame(String mapName)
     
     tmpPlayer = new Player();
 
-    tmpPlayer->sprite.Create("masterSprite", "", 100, 100, 0, 4, tmpPlayer->spriteData.getFrameArray());
+    tmpPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tmpPlayer->spriteData.getFrameArray());
 
-    running = true;
-    while(running)
-    {
-        update();
-    }
-    
 }
 
-void Game::update(void)
+void Game::update(int frameCount)
 {
+    //fuck it, change the frame ASAP!
+    if(!(frameCount % 40))
+    {
 
+        tmpPlayer->sprite.SetAnimationFrame(tmpPlayer->sprite.currentFrame+1);
+    }
 
+    tmpPlayer->sprite.Render();
+    
 }

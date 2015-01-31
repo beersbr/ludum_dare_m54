@@ -3,6 +3,7 @@
 #include "platformdef.h"
 #include "BGL.h"
 #include "BGLController.h"
+#include "Game.h"
 
 internal void
 PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width, int32_t height, bool vsync = false)
@@ -97,6 +98,9 @@ int main(int argc, char *argv[])
 
 	InitializeFrame(0, Window.width, Window.height, 0);
 
+    Game* curGame = new Game();
+    curGame->startGame("WhoCares?");
+
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
 	TextureHandler::Load("diffuse", "./images/diffuse.png");
@@ -124,7 +128,6 @@ int main(int argc, char *argv[])
 		// NOTE(brett): ElapsedTick is in ms
 		uint64_t ElapsedTick = CurrentTick - LastTick;
 		CycleTime += ElapsedTick;
-
 
 		while(SDL_PollEvent(&event))
 		{
@@ -203,8 +206,8 @@ int main(int argc, char *argv[])
 		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(dx, dy, 0.0f));
 
 		// Update and Render
-		TestSprite.Render();
-
+		//TestSprite.Render();
+        curGame->update(frames);
 
 		// NOTE(brett): This is blocking with vsync on.
 		SDL_GL_SwapWindow(Window.sdlWindow);

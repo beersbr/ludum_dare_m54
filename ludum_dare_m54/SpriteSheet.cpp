@@ -8,9 +8,9 @@ SpriteSheet::SpriteSheet(void)
 
     for(int i = 0; i < 4; i++)
     {
-        int tmpPosX = i*sizeX;
+        //int tmpPosX = i*sizeX; //static width this sheet is tiled vertically
         int tmpPosY = i*sizeY;
-        frameVect.push_back(BGLRectMake((GLfloat)sizeX, (GLfloat)sizeY, (GLfloat)tmpPosX, (GLfloat)tmpPosY));
+        frameVect.push_back(BGLRectMake((GLfloat)0.0f, (GLfloat)tmpPosY, (GLfloat)sizeX, (GLfloat)sizeY));
     }
 
 }

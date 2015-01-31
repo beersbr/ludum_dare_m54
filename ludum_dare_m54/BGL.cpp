@@ -295,7 +295,7 @@ void Sprite::Render()
 
 	// NOTE(brett): this is a bit redundant... perhaps the texture will have the tag (noted in BGL.h)
 	TextureHandler::Bind(diffuseTextureTag, 0);
-	TextureHandler::Bind(normalTextureTag, 1);
+	//TextureHandler::Bind(normalTextureTag, 1); // This throws asn exception when passing an empty string as a normal
 
 	GLuint projectionLocation = glGetUniformLocation(shader.id, "projection");
 	GLuint modelLocation = glGetUniformLocation(shader.id, "model");
@@ -331,7 +331,49 @@ void Sprite::Render()
 	// NOTE(brett): Do I reset the transform after every draw?
 }
 
+void Sprite::SetAnimationFrame(uint32_t frameIndex)
+{
+    uint32_t newFrame = frameIndex % totalFrames;
+    currentFrame = newFrame;
 
+    // TODO(brett): move this code out int the animation frame functions
+	float uvFrameX = (frames[currentFrame].x / (float)textureWidth);
+	float uvFrameY = (frames[currentFrame].y / (float)textureHeight);
+
+	float uvFrameW = uvFrameX + (frames[currentFrame].w / (float)textureWidth);
+	float uvFrameH = uvFrameY + (frames[currentFrame].h / (float)textureHeight);
+
+	quad[0].pos.x = 0.0f;
+	quad[0].pos.y = 0.0f;
+	quad[0].uv.x = uvFrameX;
+	quad[0].uv.y = uvFrameY;
+
+	quad[1].pos.x = 0.0f;
+	quad[1].pos.y = viewRect.h;
+	quad[1].uv.x = uvFrameX;
+	quad[1].uv.y = uvFrameH;
+
+	quad[2].pos.x = viewRect.w;
+	quad[2].pos.y = 0.0f;
+	quad[2].uv.x = uvFrameW;
+	quad[2].uv.y = uvFrameY;
+
+	quad[3].pos.x = viewRect.w;
+	quad[3].pos.y = 0.0f;
+	quad[3].uv.x = uvFrameW;
+	quad[3].uv.y = uvFrameY;
+
+	quad[4].pos.x = 0.0f;
+	quad[4].pos.y = viewRect.h;
+	quad[4].uv.x = uvFrameX;
+	quad[4].uv.y = uvFrameH;
+
+	quad[5].pos.x = viewRect.w;
+	quad[5].pos.y = viewRect.h;
+	quad[5].uv.x = uvFrameW;
+	quad[5].uv.y = uvFrameH;
+
+}
 
 Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
 {
@@ -362,7 +404,7 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 	sprite.totalFrames = frameCount;
 	sprite.currentFrame = 0;
 	
-	for(int i = 0; i < frameCount; ++i)
+	for(unsigned int i = 0; i < frameCount; ++i)
 	{
 		//sprite.frames[i] = BGLRectMake(frames[i].x, frames[i].y, frames[i].w, frames[i].h);
 		sprite.frames[i] = frames[i];
@@ -370,11 +412,11 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 
 
 	// TODO(brett): move this code out int the animation frame functions
-	float uvFrameX = (sprite.frames[0].x / (float)sprite.textureWidth);
-	float uvFrameY = (sprite.frames[0].y / (float)sprite.textureHeight);
+	float uvFrameX = (sprite.frames[sprite.currentFrame].x / (float)sprite.textureWidth);
+	float uvFrameY = (sprite.frames[sprite.currentFrame].y / (float)sprite.textureHeight);
 
-	float uvFrameW = uvFrameX + (sprite.frames[0].w / (float)sprite.textureWidth);
-	float uvFrameH = uvFrameY + (sprite.frames[0].h / (float)sprite.textureHeight);
+	float uvFrameW = uvFrameX + (sprite.frames[sprite.currentFrame].w / (float)sprite.textureWidth);
+	float uvFrameH = uvFrameY + (sprite.frames[sprite.currentFrame].h / (float)sprite.textureHeight);
 
 	sprite.quad[0].pos.x = 0.0f;
 	sprite.quad[0].pos.y = 0.0f;

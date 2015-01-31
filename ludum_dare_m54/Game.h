@@ -11,9 +11,9 @@ public:
     Game(void);
     ~Game(void);
     void startGame(String mapName);
+    void update(int frameCount);
     bool isRunning();
 private:
-    void update();
     void draw();
     bool running;    
     Map* curMap;
