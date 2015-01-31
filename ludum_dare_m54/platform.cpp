@@ -192,8 +192,8 @@ int main(int argc, char *argv[])
 		{
 			//std::cout << "Pressing the B button..." << std::endl;
 			std::cout << "Left Stick: " << Controller.inputsStates.LX  << ", " << Controller.inputsStates.LY << std::endl;
+			TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(Controller.inputsStates.LX, Controller.inputsStates.LY, 0.0f));
 		}
-		
 
 		// Update and Render
 		TestSprite.Render();
