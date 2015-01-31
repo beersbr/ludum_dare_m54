@@ -135,10 +135,12 @@ int main(int argc, char *argv[])
 			{
 				case SDL_KEYDOWN:
 				{
+					BGLController::UpdateKeyboardButton(event.key);
 					break;
 				}
 				case SDL_KEYUP:
 				{
+					BGLController::UpdateKeyboardButton(event.key);
 					break;
 				}
 				case SDL_MOUSEMOTION:

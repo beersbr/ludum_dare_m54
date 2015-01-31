@@ -105,9 +105,11 @@ public:
 	static void UpdateControllerAxis(SDL_ControllerAxisEvent event);
 
 	static void UpdateKeyboardButton(SDL_KeyboardEvent event);
+	static BGLButtonState GetKey(SDL_Keycode key);
 	static void UpdateMouseButton(SDL_MouseButtonEvent event);
 	static void UpdateMouseMotion(SDL_MouseMotionEvent event);
 
+	// Returns a copy of the current system input
 	static BGLInputState GetInputState();
 
 private:

@@ -60,7 +60,7 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 	}
 
 	ControllerInputs *inputs = &(SystemInputs.controllers[event.which]);
-	uint8_t state = (event.state == SDL_PRESSED) ? 1 : 0;
+	bool state = (event.state == SDL_PRESSED) ? 1 : 0;
 
 	// NOTE(brett): I think I can probably do this with a cleverly constructed array
 	switch(event.button)
@@ -73,7 +73,7 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 		default:
 		{
 			inputs->buttons[event.button].down = state;
-			if(state == SDL_RELEASED)
+			if(!state)
 			{
 				inputs->buttons[event.button].pressed = true;
 			}
@@ -103,6 +103,52 @@ void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 		}
 	}
 }
+
+void BGLController::UpdateKeyboardButton(SDL_KeyboardEvent event)
+{
+	KeyboardInputs *inputs = &SystemInputs.keyboard;
+
+	int32_t offset = 0;
+	bool state = (event.state == SDL_PRESSED);
+	if(event.keysym.sym >= SDLK_CAPSLOCK)
+	{
+		offset += SDLK_CAPSLOCK;
+	}
+
+	inputs->keys[event.keysym.sym - offset].down = state;
+
+	// Not pressed anymore
+	if(!state)
+	{
+		inputs->keys[event.keysym.sym + offset].pressed = true;
+	}
+}
+
+
+BGLButtonState BGLController::GetKey(SDL_Keycode key)
+{
+	KeyboardInputs *inputs = &SystemInputs.keyboard;
+
+	int32_t offset = 0;
+	if(key >= SDLK_CAPSLOCK)
+	{
+		offset += SDLK_CAPSLOCK;
+	}
+
+	return(inputs->keys[key - offset]);
+}
+
+
+void BGLController::UpdateMouseButton(SDL_MouseButtonEvent event)
+{
+
+}
+
+void BGLController::UpdateMouseMotion(SDL_MouseMotionEvent event)
+{
+
+}
+
 
 BGLInputState BGLController::GetInputState()
 {
