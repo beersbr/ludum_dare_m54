@@ -24,12 +24,23 @@ void Game::startGame(String mapName)
 
 }
 
-void Game::update(int frameCount)
+void Game::update(int frameCount, float dt)
 {
+	float dx = 0.0f;
+	float dy = 0.0f;
+	float speed = 200.0f;
+	BGLInputState GameInput = BGLController::GetInputState();
+	if(GameInput.controllerSz > 0)
+	{
+		dx = GameInput.controllers[0].LX * speed * dt;
+		dy = GameInput.controllers[0].LY * speed * dt;
+	}
+
+	tmpPlayer->sprite.modelTransform = glm::translate(tmpPlayer->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
+
     //fuck it, change the frame ASAP!
     if(!(frameCount % 4))
     {
-
         tmpPlayer->sprite.SetAnimationFrame(tmpPlayer->sprite.currentFrame+1);
     }
 

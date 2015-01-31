@@ -1,23 +1,39 @@
 
 #include "BGLController.h"
 
-//std::vector<BGLControllerState> BGLController::gameControllers;
-std::unordered_map<int, BGLControllerState> BGLController::gameControllers;
+
+BGLInputState BGLController::SystemInputs = {};
 
 void BGLController::AddController(int32_t id)
 {
+	if(SystemInputs.controllerSz >= CONTROLLER_HOOKUP_MAX)
+	{
+		std::cout << "WARNING: Not tracking that " << CONTROLLER_HOOKUP_MAX + 1 << "th controller" << std::endl;
+		return;
+	}
 
-	BGLControllerState controller = {};
+	std::cout << "Attempint to add game controller with ID: " << id << std::endl;
 
 	if(SDL_IsGameController(id))
 	{
-		controller.controller = SDL_GameControllerOpen(id);
-		if(controller.controller)
+		SDL_GameController *newGameController = SDL_GameControllerOpen(id);
+		if(newGameController)
 		{
-			SDL_Joystick *joy = SDL_GameControllerGetJoystick(controller.controller);
-			controller.joystickInstance = SDL_JoystickInstanceID(joy);
+			SDL_Joystick *joy = SDL_GameControllerGetJoystick(newGameController);
+
+			//NOTE(brett): Not sure we will need this as the controller seems to have it all
+			uint32_t joysticInstanceID = SDL_JoystickInstanceID(joy);
 			
-			gameControllers[controller.id];
+			std::cout << "Controller ID matches count? " << (bool)(SystemInputs.controllerSz == id) << std::endl;
+			
+			// NOTE(brett): this needs to be here so we can clean up later... though right now we
+			// are single threaded. I'm pretty sure it will clean up itself
+			SystemInputs.controllers[SystemInputs.controllerSz].cid = id;
+			SystemInputs.controllers[SystemInputs.controllerSz].sdlGameController = newGameController;
+
+			SystemInputs.controllerSz += 1;
+
+			std::cout << "Controller added: " << id << std::endl;
 		}
 	}
 }
@@ -25,7 +41,10 @@ void BGLController::AddController(int32_t id)
 
 void BGLController::RemoveController(int32_t id)
 {
-
+	for(int i = 0; i < SystemInputs.controllerSz; i++)
+	{
+		SDL_GameControllerClose(SystemInputs.controllers[id].sdlGameController);
+	}
 }
 
 
@@ -33,7 +52,14 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 {
 	// NOTE(brett): What happens if this event has an incorrect 'which'??
 	// perhaps I should check and make sure it exists.
-	BGLControllerState *controller = &gameControllers[event.which];
+
+	// NOTE(brett): Controller Ids start at 0
+	if(event.which >= SystemInputs.controllerSz)
+	{
+		std::cout << "ERROR: Fuck, the ids are NON sequencial which means I need a lookup table" << std::endl;
+	}
+
+	ControllerInputs *inputs = &(SystemInputs.controllers[event.which]);
 	uint8_t state = (event.state == SDL_PRESSED) ? 1 : 0;
 
 	// NOTE(brett): I think I can probably do this with a cleverly constructed array
@@ -46,17 +72,20 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 		}
 		default:
 		{
-			controller->inputsStates.buttons[event.button] = state;
+			inputs->buttons[event.button].down = state;
+			if(state == SDL_RELEASED)
+			{
+				inputs->buttons[event.button].pressed = true;
+			}
+
 			break;
 		}
 	}
-
 }
-
 
 void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 {
-	BGLControllerState *controller = &gameControllers[event.which];
+	ControllerInputs *inputs = &(SystemInputs.controllers[event.which]);
 	
 	float normalizedValue = event.value / CONTROLLER_AXIS_MAX;
 	normalizedValue = (fabsf(normalizedValue) < 0.15f) ? 0.0f : normalizedValue;
@@ -70,23 +99,17 @@ void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 		}
 		default:
 		{
-			
-			controller->inputsStates.axis[event.axis] = normalizedValue;
+			inputs->axis[event.axis] = normalizedValue;
 		}
 	}
-
 }
 
-void BGLController::ResetControllerStates()
-{
-	// TODO(brett): get all the controllers and clear the pressed states
-	//BGLControllerState controller = gameControllers[event.which];
-}
-
-BGLControllerState BGLController::GetControllerState()
+BGLInputState BGLController::GetInputState()
 {
 	// TODO(brett): need to make a way to get multiple controllers... because
 	// that makes this game multiplayer instantly
 
-	return (*(gameControllers.begin())).second;
+
+	// TODO(brett): if no controller is present then we need to return nothing
+	return SystemInputs;
 }

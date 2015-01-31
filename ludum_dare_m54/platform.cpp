@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
-	InitializeFrame(0, Window.width, Window.height, 0);
+	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
     Game* curGame = new Game();
     curGame->startGame("WhoCares?");
@@ -189,35 +189,23 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		//std::cout << "Since Last Update: " << CurrentGameUpdate - LastGameUpdate << std::endl;
-
 		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		float speed = 200;
-
-		BGLControllerState Controller = BGLController::GetControllerState();
-
 		float dt = ElapsedTick/1000.0f;
-		float dx = Controller.inputsStates.LX * speed * dt;
-		float dy = Controller.inputsStates.LY * speed * dt;
-
-		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(dx, dy, 0.0f));
 
 		// Update and Render
-		//TestSprite.Render();
-        curGame->update(frames);
+        curGame->update(frames, dt);
 
 		// NOTE(brett): This is blocking with vsync on.
 		SDL_GL_SwapWindow(Window.sdlWindow);
-
 
 		frames += 1;
 		secondSum += ElapsedTick;
 		if(secondSum >= 1000)
 		{
-			//std::cout << "FPS: " << frames/(float)secondSum * 1000<< std::endl;
+			std::cout << "FPS: " << frames/(float)secondSum * 1000<< std::endl;
 
 			secondSum -= 1000;
 			frames = 0;
