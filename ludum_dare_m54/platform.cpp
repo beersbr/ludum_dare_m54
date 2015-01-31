@@ -55,6 +55,7 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 	}
 
 
+	std::cout << "VSYNC: " << platformWindow->vsync << std::endl;
 	SDL_GL_SetSwapInterval(platformWindow->vsync);
 }
 
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	PlatformWindow Window = {};
-	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800); 
+	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800, 0); 
 
 	if(!Window.isValid)
 	{
@@ -185,15 +186,11 @@ int main(int argc, char *argv[])
 
 		if(Controller.inputsStates.A)
 		{
-			std::cout << SDL_GetTicks() << "  Pressing the A button..." << std::endl;
+			//std::cout << SDL_GetTicks() << "  Pressing the A button..." << std::endl;
 		}
 
-		if(Controller.inputsStates.B)
-		{
-			//std::cout << "Pressing the B button..." << std::endl;
-			std::cout << "Left Stick: " << Controller.inputsStates.LX  << ", " << Controller.inputsStates.LY << std::endl;
-			TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(Controller.inputsStates.LX, Controller.inputsStates.LY, 0.0f));
-		}
+		//std::cout << "Left Stick: " << Controller.inputsStates.LX  << ", " << Controller.inputsStates.LY << std::endl;
+		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(Controller.inputsStates.LX, Controller.inputsStates.LY, 0.0f));
 
 		// Update and Render
 		TestSprite.Render();

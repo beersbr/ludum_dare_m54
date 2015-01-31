@@ -5,6 +5,8 @@
 #include <SDL.h>
 #include <unordered_map>
 
+#include <cmath>
+
 #define CONTROLLER_AXIS_MAX 32767.0f
 
 typedef struct

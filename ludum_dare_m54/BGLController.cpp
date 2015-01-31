@@ -59,6 +59,7 @@ void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 	BGLControllerState *controller = &gameControllers[event.which];
 	
 	float normalizedValue = event.value / CONTROLLER_AXIS_MAX;
+	normalizedValue = (fabsf(normalizedValue) < 0.15f) ? 0.0f : normalizedValue;
 
 	switch(event.axis)
 	{
@@ -69,6 +70,7 @@ void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 		}
 		default:
 		{
+			
 			controller->inputsStates.axis[event.axis] = normalizedValue;
 		}
 	}
