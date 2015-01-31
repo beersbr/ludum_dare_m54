@@ -183,13 +183,6 @@ int main(int argc, char *argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		BGLControllerState Controller = BGLController::GetControllerState();
-
-		if(Controller.inputsStates.A)
-		{
-			//std::cout << SDL_GetTicks() << "  Pressing the A button..." << std::endl;
-		}
-
-		//std::cout << "Left Stick: " << Controller.inputsStates.LX  << ", " << Controller.inputsStates.LY << std::endl;
 		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(Controller.inputsStates.LX, Controller.inputsStates.LY, 0.0f));
 
 		// Update and Render

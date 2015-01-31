@@ -11,7 +11,7 @@ class Resourcer
 public:
     Resourcer(void);
     ~Resourcer(void);
-    bool LoadObjectDataForMap(String mapName, std::vector<Entity*>* inEntityList, std::vector<Entity*>* inTileList);
+    bool LoadObjectDataForMap(String mapName, std::vector<Entity*>* inEntityList);
     
 };
 

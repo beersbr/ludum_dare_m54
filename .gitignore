@@ -7,12 +7,14 @@
 *.pdb
 *.ilk
 ludum_dare_m54/Debug/*
+ludum_dare_m54/x64/Debug/*
 *.obj
 *.lastbuildstate
 *.suo
 *.exe
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj*
 
 # Windows image file caches
 Thumbs.db
