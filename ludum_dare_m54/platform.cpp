@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include "platformdef.h"
 #include "BGL.h"
+#include "BGLController.h"
 
 internal void
 PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width, int32_t height, bool vsync = false)
@@ -105,6 +106,8 @@ int main(int argc, char *argv[])
 	uint64_t CurrentTick = SDL_GetTicks();
 	SDL_Event event;
 
+
+
 	bool Running = true;
 	while(Running)
 	{
@@ -130,6 +133,39 @@ int main(int argc, char *argv[])
 				{
 					break;
 				}
+				case SDL_CONTROLLERBUTTONDOWN:
+				{
+					BGLController::UpdateControllerButton(event.cbutton);
+					break;
+				}
+				case SDL_CONTROLLERBUTTONUP:
+				{
+					BGLController::UpdateControllerButton(event.cbutton);
+					break;
+				}
+				case SDL_CONTROLLERAXISMOTION:
+				{
+					BGLController::UpdateControllerAxis(event.caxis);
+					break;
+				}
+				case SDL_CONTROLLERDEVICEADDED:
+				{
+					std::cout << "Controller added: " << event.cdevice.which << std::endl;
+					BGLController::AddController(event.cdevice.which);
+					break;
+				}
+				case SDL_CONTROLLERDEVICEREMOVED:
+				{
+					std::cout << "Controller removed" << std::endl;
+
+					/*
+						TODO(brett): this is for when I feel like doing cleanup
+						SDL_GameController *pad = YOUR_FUNCTION_THAT_RETRIEVES_A_MAPPING( id );
+						SDL_GameControllerClose( pad );
+					*/
+
+					break;
+				}
 				case SDL_QUIT:
 				{
 					Running = false;
@@ -144,6 +180,20 @@ int main(int argc, char *argv[])
 
 		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		BGLControllerState Controller = BGLController::GetControllerState();
+
+		if(Controller.inputsStates.A)
+		{
+			std::cout << SDL_GetTicks() << "  Pressing the A button..." << std::endl;
+		}
+
+		if(Controller.inputsStates.B)
+		{
+			//std::cout << "Pressing the B button..." << std::endl;
+			std::cout << "Left Stick: " << Controller.inputsStates.LX  << ", " << Controller.inputsStates.LY << std::endl;
+		}
+		
 
 		// Update and Render
 		TestSprite.Render();

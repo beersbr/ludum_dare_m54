@@ -146,10 +146,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BGL.cpp" />
+    <ClCompile Include="BGLController.cpp" />
     <ClCompile Include="platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BGL.h" />
+    <ClInclude Include="BGLController.h" />
     <ClInclude Include="language.h" />
     <ClInclude Include="platformdef.h" />
   </ItemGroup>
