@@ -146,14 +146,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BGL.cpp" />
-    <ClCompile Include="BGLController.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="platform.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Resourcer.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BGL.h" />
-    <ClInclude Include="BGLController.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="language.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="platformdef.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Resourcer.h" />
+    <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.fragment" />
