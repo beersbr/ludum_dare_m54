@@ -83,8 +83,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	// Set screen clear color to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	InitializeFrame(0, Window.width, Window.height, 0);
 
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
@@ -133,15 +137,16 @@ int main(int argc, char *argv[])
 					break;
 				}
 			}
-
-			// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			// Update and Render
-
-
-			SDL_GL_SwapWindow(Window.sdlWindow);
 		}
+
+		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Update and Render
+		TestSprite.Render();
+
+		SDL_GL_SwapWindow(Window.sdlWindow);
+
 
 	}
 

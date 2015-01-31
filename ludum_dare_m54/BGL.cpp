@@ -66,6 +66,8 @@ void TextureHandler::Load(std::string tag, std::string filename)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SDL_FreeSurface(image);
+
+	textures[tag] = bglTexture;
 }
 
 
@@ -81,7 +83,6 @@ void TextureHandler::Bind(std::string tag, int32_t textureSlot)
 		std::cout << "Could not bind texture with given tag: " << tag << std::endl;
 		return;
 	}
-
 
 	texture.isBound = true;
 	texture.textureUnit = textureSlot;
@@ -285,6 +286,7 @@ void Sprite::Render()
 	// TODO(brett): make sure the sprite is bound
 #pragma message(__LOC__ "This should be set before the render AND NOT done every frame")
 	BGLShader shader = ShaderHandler::Get("sprite");
+	glUseProgram(shader.id);
 
 	//BGLTexture texture = TextureHandler::Get(diffuseTextureTag);
 	//BGLTexture normal = TextureHandler::Get(normalTextureTag);
@@ -294,7 +296,7 @@ void Sprite::Render()
 	TextureHandler::Bind(normalTextureTag, 1);
 
 	GLuint projectionLocation = glGetUniformLocation(shader.id, "projection");
-	GLuint modelLocation = glGetUniformLocation(shader.id, "modeltransform");
+	GLuint modelLocation = glGetUniformLocation(shader.id, "model");
 	GLuint textureLocation = glGetUniformLocation(shader.id, "textureSampler");
 	GLuint normalLocation = glGetUniformLocation(shader.id, "normalSampler");
 
@@ -320,6 +322,9 @@ void Sprite::Render()
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 
 	// NOTE(brett): Do I reset the transform after every draw?
 }
