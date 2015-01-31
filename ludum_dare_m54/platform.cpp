@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	PlatformWindow Window = {};
-	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800, 0); 
+	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800, 1); 
 
 	if(!Window.isValid)
 	{
@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+
 	InitializeFrame(0, Window.width, Window.height, 0);
 
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
@@ -101,13 +102,17 @@ int main(int argc, char *argv[])
 	TextureHandler::Load("diffuse", "./images/diffuse.png");
 	TextureHandler::Load("normal", "./images/normal.png");
 
-	Sprite TestSprite = Sprite::Create("diffuse", "normal", 100, 100, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
+	Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
 
 	uint64_t LastTick = SDL_GetTicks();
 	uint64_t CurrentTick = SDL_GetTicks();
+	float GameUpdateHz = 1000/60.0f;
+	float CycleTime = 0.0f;
+
+	int32_t frames = 0;
+	int32_t secondSum = 0;
+
 	SDL_Event event;
-
-
 
 	bool Running = true;
 	while(Running)
@@ -117,6 +122,8 @@ int main(int argc, char *argv[])
 
 		// NOTE(brett): ElapsedTick is in ms
 		uint64_t ElapsedTick = CurrentTick - LastTick;
+		CycleTime += ElapsedTick;
+
 
 		while(SDL_PollEvent(&event))
 		{
@@ -164,7 +171,6 @@ int main(int argc, char *argv[])
 						SDL_GameController *pad = YOUR_FUNCTION_THAT_RETRIEVES_A_MAPPING( id );
 						SDL_GameControllerClose( pad );
 					*/
-
 					break;
 				}
 				case SDL_QUIT:
@@ -179,17 +185,39 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		//std::cout << "Since Last Update: " << CurrentGameUpdate - LastGameUpdate << std::endl;
+
 		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
+
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		float speed = 200;
+
 		BGLControllerState Controller = BGLController::GetControllerState();
-		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(Controller.inputsStates.LX, Controller.inputsStates.LY, 0.0f));
+
+		float dt = ElapsedTick/1000.0f;
+		float dx = Controller.inputsStates.LX * speed * dt;
+		float dy = Controller.inputsStates.LY * speed * dt;
+
+		TestSprite.modelTransform = glm::translate(TestSprite.modelTransform, glm::vec3(dx, dy, 0.0f));
 
 		// Update and Render
 		TestSprite.Render();
 
+
+		// NOTE(brett): This is blocking with vsync on.
 		SDL_GL_SwapWindow(Window.sdlWindow);
 
+
+		frames += 1;
+		secondSum += ElapsedTick;
+		if(secondSum >= 1000)
+		{
+			//std::cout << "FPS: " << frames/(float)secondSum * 1000<< std::endl;
+
+			secondSum -= 1000;
+			frames = 0;
+		}
 
 	}
 
