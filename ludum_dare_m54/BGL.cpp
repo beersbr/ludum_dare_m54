@@ -150,6 +150,9 @@ void ShaderHandler::Load(std::string tag, std::string vertex, std::string fragme
 	memset(vertexFileBuffer, 0, vertexSz);
 	memset(fragmentFileBuffer, 0, fragmentSz);
 
+	fread(vertexFileBuffer, vertexSz, sizeof(char), vertexfd);
+	fread(fragmentFileBuffer, fragmentSz, sizeof(char), fragmentfd);
+
 	GLuint vertexId = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -280,7 +283,7 @@ BGLShader ShaderHandler::Get(std::string tag)
 void Sprite::Render()
 {
 	// TODO(brett): make sure the sprite is bound
-
+#pragma message(__LOC__ "This should be set before the render AND NOT done every frame")
 	BGLShader shader = ShaderHandler::Get("sprite");
 
 	//BGLTexture texture = TextureHandler::Get(diffuseTextureTag);

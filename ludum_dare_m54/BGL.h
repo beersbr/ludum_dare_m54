@@ -5,11 +5,12 @@
 #include <string>
 #include <unordered_map>
 
+#include <GL\glew.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
-#include <GL\glew.h>
+#include <gl\gl.h>
 
 #include "language.h"
 

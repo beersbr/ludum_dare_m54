@@ -50,4 +50,12 @@
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\diffuse.png">
+      <Filter>images</Filter>
+    </Image>
+    <Image Include="images\normal.png">
+      <Filter>images</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

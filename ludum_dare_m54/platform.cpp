@@ -1,4 +1,5 @@
 
+#include <GL/glew.h>
 #include "platformdef.h"
 #include "BGL.h"
 
@@ -11,13 +12,13 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 	platformWindow->vsync = vsync;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	// not sure if i need this because we are doing a 2d game. (maybe just not as big)
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 
 	platformWindow->isValid = true;
@@ -45,6 +46,14 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 		return;
 	}
 
+	glewExperimental = GL_TRUE;
+	if(glewInit() != GLEW_OK)
+	{
+		std::cout << "Could not initialize GLEW for the opengl extensions. Stopping." << std::endl;
+		exit(1);
+	}
+
+
 	SDL_GL_SetSwapInterval(platformWindow->vsync);
 }
 
@@ -58,7 +67,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	IMG_Init(IMG_INIT_PNG);
+	
+	if(IMG_Init(IMG_INIT_PNG) == 0)
+	{
+		std::cout << "SDL2 Image library failed to initialize. Stopping." << std::endl;
+		exit(1);
+	}
 
 	PlatformWindow Window = {};
 	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800); 
@@ -69,19 +83,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	glewExperimental = true;
-	if(glewInit() != GLEW_OK)
-	{
-		std::cout << "Could not initialize GLEW for the opengl extensions. Stopping." << std::endl;
-		exit(1);
-	}
-
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
+	TextureHandler::Load("diffuse", "./images/diffuse.png");
+	TextureHandler::Load("normal", "./images/normal.png");
 
-	Sprite TestSprite = Sprite::Create("diffuseTest", "normalTest", 
+	Sprite TestSprite = Sprite::Create("diffuse", "normal", 100, 100, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
 
 
 	uint64_t LastTick = SDL_GetTicks();
