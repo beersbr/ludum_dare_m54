@@ -3,7 +3,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 #include "BGL.h"
-#include "FrameData.pb.h"
+//#include "FrameData.pb.h"
 
 //Entity describes an object that can be interacted with in a game, this includes PLAYER, ENEMY, BULLET
 //The entity will be considered a drawable object, so needs to include a spritemap

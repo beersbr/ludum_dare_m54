@@ -200,6 +200,8 @@ int main(int argc, char *argv[])
 		// Update and Render
         curGame->update(frames, dt);
 
+		BGLController::FrameClean();
+
 		// NOTE(brett): This is blocking with vsync on.
 		SDL_GL_SwapWindow(Window.sdlWindow);
 
