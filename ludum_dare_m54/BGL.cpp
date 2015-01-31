@@ -373,6 +373,11 @@ void Sprite::SetAnimationFrame(uint32_t frameIndex)
 	quad[5].uv.x = uvFrameW;
 	quad[5].uv.y = uvFrameH;
 
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(quad), &quad[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
 }
 
 Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
