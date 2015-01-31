@@ -11,6 +11,8 @@ ludum_dare_m54/Debug/*
 *.lastbuildstate
 *.suo
 *.exe
+*.vcxproj
+*.vcxproj.filters
 
 # Windows image file caches
 Thumbs.db

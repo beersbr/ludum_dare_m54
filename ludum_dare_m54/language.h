@@ -13,3 +13,4 @@
 #define global				static
 #define internal			static
 
+#define String std::string
