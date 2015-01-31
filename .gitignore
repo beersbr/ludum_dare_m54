@@ -13,6 +13,7 @@ ludum_dare_m54/Debug/*
 *.exe
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj*
 
 # Windows image file caches
 Thumbs.db
