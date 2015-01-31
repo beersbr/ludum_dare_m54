@@ -1,3 +1,17 @@
+*.idb
+*.vcxproj.user
+*.tlog
+*.log
+*.sdf
+*.opensdf
+*.pdb
+*.ilk
+ludum_dare_m54/Debug/*
+*.obj
+*.lastbuildstate
+*.suo
+*.exe
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
