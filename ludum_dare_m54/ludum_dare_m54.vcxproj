@@ -146,12 +146,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BGL.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="platform.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BGL.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="language.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="platformdef.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.fragment" />
