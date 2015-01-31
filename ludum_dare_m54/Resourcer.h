@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include "Entity.h"
 #include "Tile.h"
 #include "language.h"
@@ -11,7 +13,11 @@ class Resourcer
 public:
     Resourcer(void);
     ~Resourcer(void);
-    bool LoadObjectDataForMap(String mapName, std::vector<Entity*>* inEntityList);
+    void LoadResourceFromDisk(String fileName, String tag);
+    void* GetDataFromTag(String resourceTag);
+private:
+    std::vector<String*> loadedTags;
+    std::vector<void*> loadedData;
     
 };
 

@@ -3,6 +3,7 @@
 #include "language.h"
 #include "Map.h"
 #include "Player.h"
+#include "Resourcer.h"
 #include "BGL.h"
 #include "BGLController.h"
 
@@ -16,7 +17,8 @@ public:
     bool isRunning();
 private:
     void draw();
-    bool running;    
+    bool running;
+    Resourcer resourcer;
     Map* curMap;
     Player* tmpPlayer; //extremely temporary, for testing only;
     

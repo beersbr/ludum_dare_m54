@@ -2,19 +2,19 @@ package DasSpace;
 
 //This is specific to active game data
 message Entity {
-    required int32 id; // ID will be tied to the ID of the sub-entity
-    required int32 pathID // What path are we gonna take?
-    required string spriteSheet = 1;
-    optional int32 neutralAnimationFrameStart = 2;
-    optional int32 neutralAnimationFrameEnd = 3;
-    optional int32 forwardAnimationFrameStart = 4;
-    optional int32 forwardAnimationFrameEnd = 5;
-    optional int32 backwardAnimationFrameStart = 6;
-    optional int32 backwardAnimationFrameEnd = 7;
-    optional int32 upAnimationFrameStart = 8;
-    optional int32 upAnimationFrameEnd = 9;
-    optional int32 downAnimationFrameStart = 10;
-    optional int32 downAnimationFrameEnd = 11;
+    required int32 id = 1; // ID will be tied to the ID of the sub-entity
+    required int32 pathID = 2;// What path are we gonna take?
+    required string spriteSheet = 3;
+    optional int32 neutralAnimationFrameStart = 4;
+    optional int32 neutralAnimationFrameEnd = 5;
+    optional int32 forwardAnimationFrameStart = 6;
+    optional int32 forwardAnimationFrameEnd = 7;
+    optional int32 backwardAnimationFrameStart = 8;
+    optional int32 backwardAnimationFrameEnd = 9;
+    optional int32 upAnimationFrameStart = 10;
+    optional int32 upAnimationFrameEnd = 11;
+    optional int32 downAnimationFrameStart = 12;
+    optional int32 downAnimationFrameEnd = 13;
 }
 
 //This is specific to static enemy data

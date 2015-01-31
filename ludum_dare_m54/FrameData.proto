@@ -1,0 +1,16 @@
+package DasSpace;
+
+message FrameData {
+	required string animTag = 1;
+	required int32 seqence = 2;
+	required int32 posX = 3;
+	required int32 posY = 4;
+	required int32 sizeX = 5;
+	required int32 sizeY = 6;
+}
+
+message SpriteSheet {
+	required int32 entityID = 1; //ID tying this sprite sheet to an entity
+	required string animTag = 2;
+	repeated FrameData frames = 3;
+}
