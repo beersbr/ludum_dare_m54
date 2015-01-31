@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	PlatformWindow Window = {};
-	PlatformCreateWindow(&Window, "mini ld 54", 1200, 800, 1); 
+	PlatformCreateWindow(&Window, "Mini LD 54", 1200, 800, 1); 
 
 	if(!Window.isValid)
 	{
@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 	TextureHandler::Load("normal", "./images/normal.png");
 
 	Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
+
 
 	uint64_t LastTick = SDL_GetTicks();
 	uint64_t CurrentTick = SDL_GetTicks();
