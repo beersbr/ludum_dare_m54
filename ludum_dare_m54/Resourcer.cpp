@@ -16,7 +16,7 @@ void Resourcer::LoadResourceFromDisk(std::string fileName, std::string tag)
     if(tmpStream->is_open())
     {
         //Keep this file open and place it into loaded data, we might need to change this behavior later
-        loadedTags.push_back(new std::string(tag));
+        loadedTags.push_back(std::string(tag));
 
         //Load the data as bytes, prepending it with the length
         tmpStream->seekg(0, std::ios::end);
@@ -39,7 +39,7 @@ void Resourcer::LoadResourceFromDisk(std::string fileName, std::string tag)
 void* Resourcer::GetDataFromTag(std::string resourceTag)
 {
 
-    std::vector<std::string*>::iterator iter = std::find(loadedTags.begin(), loadedTags.end(), resourceTag);
+    std::vector<std::string>::iterator iter = std::find(loadedTags.begin(), loadedTags.end(), resourceTag);
     
     if(iter == loadedTags.end())
     {

@@ -11,5 +11,5 @@
 
 #define local_persist		static
 #define global				static
-#define bglinternal            static
+#define bglinternal         static
 

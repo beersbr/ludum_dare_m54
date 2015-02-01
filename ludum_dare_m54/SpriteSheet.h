@@ -9,9 +9,9 @@
 #include "Resourcer.h"
 
 
-//Translates a given index to a location and size on the sprite
-//This gets the coordinates for all the different animations and sets up the frame.
-//When we want to change to a certain animation, we will have the frame data here.
+// Translates a given index to a location and size on the sprite
+// This gets the coordinates for all the different animations and sets up the frame.
+// When we want to change to a certain animation, we will have the frame data here.
 class SpriteSheet
 {
 public:

@@ -1,6 +1,8 @@
 #pragma once
-#include <glm/glm.hpp>
+
 #include "language.h"
+#include <glm/glm.hpp>
+
 
 class Tile
 {

@@ -38,7 +38,7 @@ bool SpriteSheet::initFramesFromData()
     rapidjson::Document doc;
     doc.Parse(jsonBuf);
 
-    
+    return true;
 }
 
 BGLRect* SpriteSheet::getFrameArray()
