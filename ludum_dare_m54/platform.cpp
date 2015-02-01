@@ -105,15 +105,14 @@ int main(int argc, char *argv[])
     textureFileList.push_back(std::pair<std::string, std::string>("masterSprite", "./images/ship_spritesheet.png"));
 
     Game* curGame = new Game(resFileList, textureFileList);
-
     curGame->startGame("WhoCares?");
 
-	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
+	//ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
-	TextureHandler::Load("diffuse", "./images/diffuse.png");
-	TextureHandler::Load("normal", "./images/normal.png");
+	//TextureHandler::Load("diffuse", "./images/diffuse.png");
+	//TextureHandler::Load("normal", "./images/normal.png");
 
-	Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
+	//Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
 
 
 	uint64_t LastTick = SDL_GetTicks();
@@ -205,7 +204,7 @@ int main(int argc, char *argv[])
 		float dt = ElapsedTick/1000.0f;
 
 		// Update and Render
-        curGame->update(frames, dt);
+         curGame->update(frames, dt);
 
 		BGLController::FrameClean();
 
