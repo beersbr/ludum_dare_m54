@@ -304,7 +304,7 @@ void Sprite::Render()
 
 	// binding this texture to texture unit 0
 	glUniform1d(textureLocation, 0);
-	glUniform1d(normalLocation, 1);
+	//glUniform1d(normalLocation, 1);
 
 	// TODO(brett): no lights yet, that will have to be done in the batching
 	// NOTE(brett): maybe the lights are static parts of the sprite that can be turned
@@ -404,7 +404,7 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 	sprite.textureWidth = texture.width;
 	sprite.textureHeight = texture.height;
 
-	sprite.viewRect = BGLRectMake(-w/2.0, -h/2.0, w/2.0, h/2.0);
+	sprite.viewRect = BGLRectMake(-w/2.0, -h/2.0, w, h);
 	sprite.order = order;
 	sprite.totalFrames = frameCount;
 	sprite.currentFrame = 0;
