@@ -16,6 +16,9 @@ ludum_dare_m54/x64/Debug/*
 *.vcxproj.filters
 *.vcxproj*
 
+#google protobuff stuff
+#thirdparty/protobuf-2.6.0*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

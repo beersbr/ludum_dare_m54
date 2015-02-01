@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
 #include "language.h"
 #include "Map.h"
 #include "Player.h"
@@ -10,14 +12,15 @@
 class Game
 {
 public:
-    Game(void);
+    Game(std::vector<std::pair<std::string, std::string>> resourceFileList, std::vector<std::pair<std::string, std::string>> textureFileList);
     ~Game(void);
-    void startGame(String mapName);
+    void startGame(std::string mapName);
     void update(int frameCount, float dt);
     bool isRunning();
 private:
     void draw();
     bool running;
+    void loadEntity(std::string entityTag);
     Resourcer resourcer;
     Map* curMap;
     Player* tmpPlayer; //extremely temporary, for testing only;

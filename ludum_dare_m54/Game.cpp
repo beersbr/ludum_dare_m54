@@ -1,11 +1,21 @@
 #include "Game.h"
 
-Game::Game(void)
+Game::Game(std::vector<std::pair<std::string, std::string>> resourceFileList, std::vector<std::pair<std::string, std::string>> textureFileList)
 {
     running = false;
     //Load the master sprite sheet into the graphcis card
-    TextureHandler::Load("masterSprite", "./images/ship_spritesheet.png");
     curMap = new Map("MPButtPlanet"); // This shit is NOT Loadable yet
+
+    for(int i = 0; i < resourceFileList.size(); i++)
+    {
+        resourcer.LoadResourceFromDisk(resourceFileList[i].second, resourceFileList[i].first);
+    }
+
+    for(int i = 0; i < textureFileList.size(); i++)
+    {
+        TextureHandler::Load(textureFileList[i].second, textureFileList[i].first);
+    }
+
 }
 
 
@@ -13,14 +23,8 @@ Game::~Game(void)
 {
 }
 
-void Game::startGame(String mapName)
+void Game::startGame(std::string mapName)
 {
-    //Load all the map game stuff, set running to true and call update
-    //If we fail to load stuff, we should crash fatally.
-    
-    tmpPlayer = new Player();
-
-    tmpPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tmpPlayer->spriteData.getFrameArray());
 
 }
 
@@ -46,4 +50,9 @@ void Game::update(int frameCount, float dt)
 
     tmpPlayer->sprite.Render();
     
+}
+
+void Game::loadEntity(std::string entityTag)
+{
+
 }

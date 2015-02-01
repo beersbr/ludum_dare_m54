@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include "Entity.h"
 #include "Tile.h"
 #include "language.h"
@@ -13,10 +13,10 @@ class Resourcer
 public:
     Resourcer(void);
     ~Resourcer(void);
-    void LoadResourceFromDisk(String fileName, String tag);
-    void* GetDataFromTag(String resourceTag);
+    void LoadResourceFromDisk(std::string fileName, std::string tag);
+    void* GetDataFromTag(std::string resourceTag);
 private:
-    std::vector<String*> loadedTags;
+    std::vector<std::string*> loadedTags;
     std::vector<void*> loadedData;
     
 };
