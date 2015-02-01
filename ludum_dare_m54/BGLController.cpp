@@ -155,7 +155,7 @@ void BGLController::UpdateMouseMotion(SDL_MouseMotionEvent event)
 
 void BGLController::FrameClean()
 {
-	for(int i = 0; i < pressedButtonSz; ++i)
+	for(uint32_t i = 0; i < pressedButtonSz; ++i)
 	{
 		pressedButtons[i]->pressed = false;
 	}
