@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(std::vector<std::pair<std::string, std::string>> resourceFileList, std::vector<std::pair<std::string, std::string>> textureFileList)
+Game::Game(std::vector<std::pair<std::string, std::string>>& resourceFileList, std::vector<std::pair<std::string, std::string>>& textureFileList)
 {
     running = false;
     //Load the master sprite sheet into the graphcis card
@@ -13,7 +13,7 @@ Game::Game(std::vector<std::pair<std::string, std::string>> resourceFileList, st
 
     for(int i = 0; i < textureFileList.size(); i++)
     {
-        TextureHandler::Load(textureFileList[i].second, textureFileList[i].first);
+        TextureHandler::Load(textureFileList[i].first, textureFileList[i].second);
     }
 
 }
@@ -25,7 +25,9 @@ Game::~Game(void)
 
 void Game::startGame(std::string mapName)
 {
-
+    tmpPlayer = new Player();
+    tmpPlayer->spriteSheet = new SpriteSheet("PlayerSheet", &resourcer);
+    tmpPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tmpPlayer->spriteSheet->getFrameArray());
 }
 
 void Game::update(int frameCount, float dt)

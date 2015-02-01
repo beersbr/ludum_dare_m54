@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
 #include "language.h"
 #include "BGL.h"
 #include "Resourcer.h"
@@ -20,7 +20,7 @@ public:
     ~SpriteSheet(void);
     BGLRect* getFrameArray();
 private:
-    int entityID; //Entity this sprite sheet is related to
+    std::string entityID; //Entity this sprite sheet is related to
     std::string animTag; //Descriptor of which frames this sprite is
     Resourcer* resRef;
     std::vector<BGLRect> frameData; //Each index in the this vector will return the information representing where on the sprite sheet that the drawer needs to draw.

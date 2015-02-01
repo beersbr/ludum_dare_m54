@@ -98,8 +98,15 @@ int main(int argc, char *argv[])
 
 	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
-    //Game* curGame = new Game();
-    //curGame->startGame("WhoCares?");
+    std::vector<std::pair<std::string, std::string>> resFileList;
+    std::vector<std::pair<std::string, std::string>> textureFileList;
+
+    resFileList.push_back(std::pair<std::string, std::string>("PlayerSheet", "./json/PlayerSheet.json"));
+    textureFileList.push_back(std::pair<std::string, std::string>("masterSprite", "./images/ship_spritesheet.png"));
+
+    Game* curGame = new Game(resFileList, textureFileList);
+
+    curGame->startGame("WhoCares?");
 
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
@@ -198,7 +205,7 @@ int main(int argc, char *argv[])
 		float dt = ElapsedTick/1000.0f;
 
 		// Update and Render
-        // curGame->update(frames, dt);
+        curGame->update(frames, dt);
 
 		BGLController::FrameClean();
 

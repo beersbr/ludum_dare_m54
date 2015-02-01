@@ -12,7 +12,7 @@
 class Game
 {
 public:
-    Game(std::vector<std::pair<std::string, std::string>> resourceFileList, std::vector<std::pair<std::string, std::string>> textureFileList);
+    Game(std::vector<std::pair<std::string, std::string>>& resourceFileList, std::vector<std::pair<std::string, std::string>>& textureFileList);
     ~Game(void);
     void startGame(std::string mapName);
     void update(int frameCount, float dt);
@@ -22,7 +22,7 @@ private:
     bool running;
     void loadEntity(std::string entityTag);
     Resourcer resourcer;
-    Map* curMap;
+    Map* curMap;       //Will tell us what entities to load.
     Player* tmpPlayer; //extremely temporary, for testing only;
     
 };

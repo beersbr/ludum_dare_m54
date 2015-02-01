@@ -1,7 +1,7 @@
 #include "SpriteSheet.h"
 
 
-SpriteSheet::SpriteSheet(std::string animTag, Resourcer* resourcer) : animTag(animTag), entityID(-1), resRef(resourcer)
+SpriteSheet::SpriteSheet(std::string animTag, Resourcer* resourcer) : animTag(animTag), resRef(resourcer)
 {
     /*
     //We can use this to initialize sprite sheet data, for now make it ugly static
@@ -14,6 +14,7 @@ SpriteSheet::SpriteSheet(std::string animTag, Resourcer* resourcer) : animTag(an
         frameVect.push_back(BGLRectMake((GLfloat)0.0f, (GLfloat)tmpPosY, (GLfloat)sizeX, (GLfloat)sizeY));
     }
     */
+    initFramesFromData();
 
 }
 
@@ -37,6 +38,46 @@ bool SpriteSheet::initFramesFromData()
 
     rapidjson::Document doc;
     doc.Parse(jsonBuf);
+    if(doc.HasParseError())
+    {
+        std::cout << "[-] Couldn't find SpriteSheet in JSON Document" << std::endl;
+        return false;
+    }
+
+    const rapidjson::Value& spriteObj = doc["SpriteSheet"];
+
+    if(!spriteObj.HasMember("EntityID"))
+    {
+        std::cout << "[-] EntityID is required in SpriteSheet JSON" << std::endl;
+        return false;
+    }
+
+    if(!spriteObj.HasMember("AnimTag"))
+    {
+        std::cout << "[-] AnimTag is required in SpriteSheet JSON" << std::endl;
+        return false;
+    }
+
+    if(!(spriteObj.HasMember("Frames") && spriteObj["Frames"].IsArray()))
+    {
+        std::cout << "[-] Frames array (of arrays) is required for SpriteSheet JSON" << std::endl;
+        return false;
+    }
+
+    entityID = spriteObj["EntityID"].GetString();
+    animTag = spriteObj["AnimTag"].GetString();
+
+    const rapidjson::Value& framesArray = spriteObj["Frames"];
+    for(rapidjson::SizeType i = 0; i < framesArray.Size(); i++)
+    {
+        const rapidjson::Value& jsonFD = framesArray[i];
+        if(!(jsonFD.IsArray() && jsonFD.Size() == 4))
+        {
+            std::cout << "[-] Illegal value for Frame data in SpriteSheet Frames array" << std::endl;
+            return false;
+        }
+        frameData.push_back(BGLRectMake((GLfloat)jsonFD[0].GetInt(), (GLfloat)jsonFD[1].GetInt(), (GLfloat)jsonFD[2].GetInt(), (GLfloat)jsonFD[3].GetInt()));
+    }
 
     return true;
 }
