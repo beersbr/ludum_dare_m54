@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_DEPTH);
 
 	// Set screen clear color to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
@@ -102,10 +103,7 @@ int main(int argc, char *argv[])
 		std::cout << "Could not initialize SDL2 AUDIO via BGLAudio. Stopping." << std::endl;
 		exit(1);
 	}
-
-	BGLAudio::SetVolume(MIX_MAX_VOLUME/2);
-
-
+	BGLAudio::SetVolume(MIX_MAX_VOLUME/3);
 
 	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
@@ -115,8 +113,10 @@ int main(int argc, char *argv[])
     resFileList.push_back(std::pair<std::string, std::string>("PlayerSheet", "./json/PlayerSheet.json"));
     textureFileList.push_back(std::pair<std::string, std::string>("masterSprite", "./images/ship_spritesheet.png"));
 
-    Game* curGame = new Game(resFileList, textureFileList);
-    curGame->startGame("WhoCares?");
+    //Game* curGame = new Game(resFileList, textureFileList);
+	//curGame->startGame("WhoCares?");
+
+	Game* curGame = new Game();
 
 	uint64_t LastTick = SDL_GetTicks();
 	uint64_t CurrentTick = SDL_GetTicks();
@@ -203,8 +203,6 @@ int main(int argc, char *argv[])
 
 		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
 
-		glClear(GL_COLOR_BUFFER_BIT);
-
 		float dt = ElapsedTick/1000.0f;
 
 		// Update and Render
@@ -219,7 +217,7 @@ int main(int argc, char *argv[])
 		secondSum += ElapsedTick;
 		if(secondSum >= 1000)
 		{
-			std::cout << "FPS: " << frames/(float)secondSum * 1000<< std::endl;
+			std::cout << "FPS: " << frames/(float)secondSum * 1000 << std::endl;
 
 			secondSum -= 1000;
 			frames = 0;

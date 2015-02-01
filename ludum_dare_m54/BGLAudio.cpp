@@ -6,7 +6,9 @@ std::unordered_map<std::string, Mix_Chunk *> BGLAudio::sounds;
 
 bool BGLAudio::Initialize()
 {
+	Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
 	int32_t result = Mix_OpenAudio(PLAYBACK_FREQUENCY, AUDIO_FORMAT, MIXER_CHANNELS, AUDIO_BUFFER);
+	Mix_AllocateChannels(16);
 	return (result == 0);
 }
 

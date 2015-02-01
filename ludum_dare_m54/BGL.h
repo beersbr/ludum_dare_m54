@@ -14,7 +14,7 @@
 
 #include "language.h"
 
-
+// The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 
 typedef struct
@@ -23,7 +23,13 @@ typedef struct
 	GLfloat w, h;
 } BGLRect;
 
+// Creates a BGL rect object
 BGLRect BGLRectMake(GLfloat x, GLfloat y, GLfloat w, GLfloat h);
+
+// A quick boolean check to tell if two rectangles overlap in any way
+bool BGLRectOverlap(BGLRect a, BGLRect b);
+
+// Check if two rectanles equal each other
 bool operator==(BGLRect a, BGLRect b);
 
 
@@ -53,16 +59,24 @@ typedef struct
 } BGLFrame;
 
 
-global glm::mat4 Projection;
+global glm::mat4 BGLProjection;
+global glm::mat4 BGLCamera;
 global BGLFrame Frame = {};
 
+// Inializes the current frame. This function will set up the screen space to be shown.
+// TODO(brett): make this actually set up the render frame for post effects
+void InitializeFrame(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f);
 
-void
-InitializeFrame(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f);
+
 class FrameManager
 {
 	// TODO(brett): get the frame manager set up so we can run shaders on the entire frame vs each sprite
 };
+
+// This will set the camera which is the viewspace for the screen.
+// The camera shows the same number of pixes that the view was set up with. It
+// currently just acts as an offset.
+void SetCamera(glm::vec2 const offset);
 
 class TextureHandler
 {

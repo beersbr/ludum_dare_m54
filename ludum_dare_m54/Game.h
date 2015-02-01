@@ -8,6 +8,7 @@
 #include "Resourcer.h"
 #include "BGL.h"
 #include "BGLController.h"
+#include "BGLAudio.h"
 
 class Game
 {
@@ -18,6 +19,7 @@ public:
     void startGame(std::string mapName);
     void update(int frameCount, float dt);
     bool isRunning();
+
 private:
     void draw();
     bool running;
@@ -26,5 +28,13 @@ private:
     Map* curMap;       //Will tell us what entities to load.
     Player* tempPlayer; //extremely temporary, for testing only;
     
+
+	Sprite tileSprites[5];
+	Sprite map[20][60];
+	BGLRect camera;
+
+	float shootDelay;
+	float shootElapsed;
+
 };
 

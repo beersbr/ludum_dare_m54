@@ -1,27 +1,46 @@
 
 #include "BGL.h"
 
-BGLRect BGLRectMake(GLfloat x, GLfloat y, GLfloat w, GLfloat h)
+inline BGLRect
+BGLRectMake(GLfloat x, GLfloat y, GLfloat w, GLfloat h)
 {
 	BGLRect rect = {x, y, w, h};
 	return (rect);
 }
 
-bool operator==(BGLRect a, BGLRect b)
+bool
+operator==(BGLRect a, BGLRect b)
 {
 	return(a.x == b.x && a.y == b.y && a.w == b.w && a.h == b.h);
 }
 
+bool 
+BGLRectOverlap(BGLRect a, BGLRect b)
+{
+	if(a.x > b.x + b.w) return false;
+	if(a.x + a.w < b.x) return false;
 
-void
-InitializeFrame(float left, float right, float bottom, float top, float near, float far)
+	if(a.y > b.y + b.h) return false;
+	if(a.y + a.h < b.y) return false;
+	return true;
+}
+
+void InitializeFrame(float left, float right, float bottom, float top, float near, float far)
 {
 	Frame.id = 0; // The screen
 	
 	glGenVertexArrays(1, &Frame.vao);
 	glBindVertexArray(Frame.vao);
 
-	Projection = glm::ortho(left, right, bottom, top, near, far);
+	BGLProjection = glm::ortho(left, right, bottom, top, near, far);
+
+	BGLCamera = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));
+}
+
+void 
+SetCamera(glm::vec2 const offset)
+{
+	BGLCamera = glm::translate(glm::mat4(), glm::vec3(-offset, 0.0f));
 }
 
 
@@ -299,6 +318,7 @@ void Sprite::Render()
 
 	GLuint projectionLocation = glGetUniformLocation(shader.id, "projection");
 	GLuint modelLocation = glGetUniformLocation(shader.id, "model");
+	GLuint cameraLocation = glGetUniformLocation(shader.id, "camera");
 	GLuint textureLocation = glGetUniformLocation(shader.id, "textureSampler");
 	GLuint normalLocation = glGetUniformLocation(shader.id, "normalSampler");
 
@@ -310,8 +330,9 @@ void Sprite::Render()
 	// NOTE(brett): maybe the lights are static parts of the sprite that can be turned
 	// on and off?
 
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (GLfloat *)&Projection[0]);
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (GLfloat *)&BGLProjection[0]);
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, (GLfloat *)&modelTransform);
+	glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, (GLfloat *)&BGLCamera);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
