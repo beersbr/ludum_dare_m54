@@ -1,7 +1,7 @@
 #include "Map.h"
 
 
-Map::Map(String mapName)
+Map::Map(std::string mapName)
 {
     //Figure out how we want to manage resources and get the name from that
     return;
@@ -14,7 +14,7 @@ Map::~Map(void)
     return;
 }
 
-bool loadMapData(String mapName)
+bool loadMapData(std::string mapName)
 {
     //Get stuff from objects and load
     return false;

@@ -5,7 +5,7 @@
 #include "BGLController.h"
 #include "Game.h"
 
-internal void
+bglinternal void
 PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width, int32_t height, bool vsync = false)
 {
 
@@ -98,8 +98,8 @@ int main(int argc, char *argv[])
 
 	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
-    Game* curGame = new Game();
-    curGame->startGame("WhoCares?");
+    //Game* curGame = new Game();
+    //curGame->startGame("WhoCares?");
 
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 		float dt = ElapsedTick/1000.0f;
 
 		// Update and Render
-        curGame->update(frames, dt);
+        // curGame->update(frames, dt);
 
 		// NOTE(brett): This is blocking with vsync on.
 		SDL_GL_SwapWindow(Window.sdlWindow);

@@ -9,12 +9,12 @@ class Map
 {
 
 public:
-    Map(String mapName);
+    Map(std::string mapName);
     ~Map(void);
     std::vector<Entity*>* getObjectList();
 private:
-    String mapName;
-    bool loadMapData(String mapName); // This will populate the object list and the tileList
+    std::string mapName;
+    bool loadMapData(std::string mapName); // This will populate the object list and the tileList
     std::vector<Entity*>* EntityList; // All of the objects we need to have in the map
     //Background image data goes here
 };

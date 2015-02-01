@@ -1,0 +1,6 @@
+{
+    "SpriteSheet": {
+        "EntityID" : "PlayerShip",
+        "AnimTag" : "ShipNeutral",
+        "Frames" : [[0, 0, 64, 29], [0, 29, 64, 29], [0, 58, 64, 29], [0, 87, 64, 29], [0, 116, 64, 29]],
+    }

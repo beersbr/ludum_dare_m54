@@ -2,8 +2,11 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
 #include "language.h"
 #include "BGL.h"
+#include "Resourcer.h"
 
 
 //Translates a given index to a location and size on the sprite
@@ -12,9 +15,15 @@
 class SpriteSheet
 {
 public:
+    SpriteSheet(std::string animTag, Resourcer* resourcer);
     SpriteSheet(void);
     ~SpriteSheet(void);
     BGLRect* getFrameArray();
-    std::vector<BGLRect> frameVect; //Each index in the this vector will return the information representing where on the sprite sheet that the drawer needs to draw.
+private:
+    int entityID; //Entity this sprite sheet is related to
+    std::string animTag; //Descriptor of which frames this sprite is
+    Resourcer* resRef;
+    std::vector<BGLRect> frameData; //Each index in the this vector will return the information representing where on the sprite sheet that the drawer needs to draw.
+    bool initFramesFromData();
 };
 

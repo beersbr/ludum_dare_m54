@@ -11,6 +11,5 @@
 
 #define local_persist		static
 #define global				static
-#define internal			static
+#define bglinternal            static
 
-#define String std::string
