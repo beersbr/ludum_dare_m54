@@ -15,9 +15,35 @@ Game::Game(std::vector<std::pair<std::string, std::string>> resourceFileList, st
     {
         TextureHandler::Load(textureFileList[i].second, textureFileList[i].first);
     }
-
 }
 
+
+Game::Game()
+{
+	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
+	BGLShader shader = ShaderHandler::Get("sprite");
+	std::cout << "ShaderID: " << shader.id << std::endl;
+	glUseProgram(shader.id);
+
+	TextureHandler::Load("diffuse", "./images/diffuse.png");
+	TextureHandler::Load("normal", "./images/normal.png");
+	TextureHandler::Load("testship", "images/ship_spritesheet.png");
+
+	BGLTexture diffuse = TextureHandler::Get("testship");
+
+
+
+	BGLRect erects[] = {
+		{0, 0, 64, 29  },
+		{0, 29, 64, 29 },
+		{0, 58, 64, 29 },
+		{0, 87, 64, 29 }
+	};
+
+	imNotATemporaryPlayerAtAllYouSavage = new Player();
+
+	imNotATemporaryPlayerAtAllYouSavage->sprite = Sprite::Create("testship", "", 500, 200, 0, 4, &erects[0]);
+}
 
 Game::~Game(void)
 {
@@ -34,6 +60,12 @@ void Game::update(int frameCount, float dt)
 	float dy = 0.0f;
 	float speed = 200.0f;
 	BGLInputState GameInput = BGLController::GetInputState();
+
+	if(GameInput.controllerSz > 0)
+	{
+		dx = GameInput.controllers[0].LX * speed * dt;
+		dy = GameInput.controllers[0].LY * speed * dt;
+	}
 
 	if(GameInput.keyboard.keys[SDLK_w].down)
 	{
@@ -52,21 +84,17 @@ void Game::update(int frameCount, float dt)
 		dx = speed * dt * 1.0;
 	}
 
-	if(GameInput.controllerSz > 0)
-	{
-		dx = GameInput.controllers[0].LX * speed * dt;
-		dy = GameInput.controllers[0].LY * speed * dt;
-	}
+	
 
-	tmpPlayer->sprite.modelTransform = glm::translate(tmpPlayer->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
+	imNotATemporaryPlayerAtAllYouSavage->sprite.modelTransform = glm::translate(imNotATemporaryPlayerAtAllYouSavage->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
 
     //fuck it, change the frame ASAP!
     if(!(frameCount % 4))
     {
-        tmpPlayer->sprite.SetAnimationFrame(tmpPlayer->sprite.currentFrame+1);
+        imNotATemporaryPlayerAtAllYouSavage->sprite.SetAnimationFrame(imNotATemporaryPlayerAtAllYouSavage->sprite.currentFrame+1);
     }
 
-    tmpPlayer->sprite.Render();
+    imNotATemporaryPlayerAtAllYouSavage->sprite.Render();
     
 }
 

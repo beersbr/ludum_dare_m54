@@ -349,27 +349,27 @@ void Sprite::SetAnimationFrame(uint32_t frameIndex)
 	quad[0].uv.y = uvFrameY;
 
 	quad[1].pos.x = viewRect.x;
-	quad[1].pos.y = viewRect.h;
+	quad[1].pos.y = viewRect.y+viewRect.h;
 	quad[1].uv.x = uvFrameX;
 	quad[1].uv.y = uvFrameH;
 
-	quad[2].pos.x = viewRect.w;
+	quad[2].pos.x = viewRect.x+viewRect.w;
 	quad[2].pos.y = viewRect.y;
 	quad[2].uv.x = uvFrameW;
 	quad[2].uv.y = uvFrameY;
 
-	quad[3].pos.x = viewRect.w;
+	quad[3].pos.x = viewRect.x+viewRect.w;
 	quad[3].pos.y = viewRect.y;
 	quad[3].uv.x = uvFrameW;
 	quad[3].uv.y = uvFrameY;
 
 	quad[4].pos.x = viewRect.x;
-	quad[4].pos.y = viewRect.h;
+	quad[4].pos.y = viewRect.y+viewRect.h;
 	quad[4].uv.x = uvFrameX;
 	quad[4].uv.y = uvFrameH;
 
-	quad[5].pos.x = viewRect.w;
-	quad[5].pos.y = viewRect.h;
+	quad[5].pos.x = viewRect.x+viewRect.w;
+	quad[5].pos.y = viewRect.y+viewRect.h;
 	quad[5].uv.x = uvFrameW;
 	quad[5].uv.y = uvFrameH;
 
@@ -404,11 +404,13 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 	sprite.textureWidth = texture.width;
 	sprite.textureHeight = texture.height;
 
-	sprite.viewRect = BGLRectMake(-w/2, -h/2, w/2, h/2);
+	sprite.viewRect = BGLRectMake(-w/2.0, -h/2.0, w/2.0, h/2.0);
 	sprite.order = order;
 	sprite.totalFrames = frameCount;
 	sprite.currentFrame = 0;
 	
+
+	// copy the frames 
 	for(unsigned int i = 0; i < frameCount; ++i)
 	{
 		//sprite.frames[i] = BGLRectMake(frames[i].x, frames[i].y, frames[i].w, frames[i].h);
@@ -424,32 +426,32 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 	float uvFrameH = uvFrameY + (sprite.frames[sprite.currentFrame].h / (float)sprite.textureHeight);
 
 	sprite.quad[0].pos.x = sprite.viewRect.x;
-	sprite.quad[0].pos.y = sprite.viewRect.x;
+	sprite.quad[0].pos.y = sprite.viewRect.y;
 	sprite.quad[0].uv.x = uvFrameX;
 	sprite.quad[0].uv.y = uvFrameY;
 
 	sprite.quad[1].pos.x = sprite.viewRect.x;
-	sprite.quad[1].pos.y = sprite.viewRect.h;
+	sprite.quad[1].pos.y = sprite.viewRect.y+sprite.viewRect.h;
 	sprite.quad[1].uv.x = uvFrameX;
 	sprite.quad[1].uv.y = uvFrameH;
 
-	sprite.quad[2].pos.x = sprite.viewRect.w;
+	sprite.quad[2].pos.x = sprite.viewRect.x+sprite.viewRect.w;
 	sprite.quad[2].pos.y = sprite.viewRect.y;
 	sprite.quad[2].uv.x = uvFrameW;
 	sprite.quad[2].uv.y = uvFrameY;
 
-	sprite.quad[3].pos.x = sprite.viewRect.w;
+	sprite.quad[3].pos.x = sprite.viewRect.x+sprite.viewRect.w;
 	sprite.quad[3].pos.y = sprite.viewRect.y;
 	sprite.quad[3].uv.x = uvFrameW;
 	sprite.quad[3].uv.y = uvFrameY;
 
 	sprite.quad[4].pos.x = sprite.viewRect.x;
-	sprite.quad[4].pos.y = sprite.viewRect.h;
+	sprite.quad[4].pos.y = sprite.viewRect.y+sprite.viewRect.h;
 	sprite.quad[4].uv.x = uvFrameX;
 	sprite.quad[4].uv.y = uvFrameH;
 
-	sprite.quad[5].pos.x = sprite.viewRect.w;
-	sprite.quad[5].pos.y = sprite.viewRect.h;
+	sprite.quad[5].pos.x = sprite.viewRect.x+sprite.viewRect.w;
+	sprite.quad[5].pos.y = sprite.viewRect.y+sprite.viewRect.h;
 	sprite.quad[5].uv.x = uvFrameW;
 	sprite.quad[5].uv.y = uvFrameH;
 

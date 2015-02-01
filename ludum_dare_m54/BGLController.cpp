@@ -123,7 +123,7 @@ void BGLController::UpdateKeyboardButton(SDL_KeyboardEvent event)
 	// Not pressed anymore
 	if(!state)
 	{
-		inputs->keys[event.keysym.sym + offset].pressed = true;
+		inputs->keys[event.keysym.sym - offset].pressed = true;
 		pressedButtons[pressedButtonSz] = &inputs->keys[event.keysym.sym-offset];
 	}
 }

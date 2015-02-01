@@ -98,15 +98,15 @@ int main(int argc, char *argv[])
 
 	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
-    //Game* curGame = new Game();
-    //curGame->startGame("WhoCares?");
+    Game* curGame = new Game();
+    curGame->startGame("WhoCares?");
 
-	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
+	//ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
-	TextureHandler::Load("diffuse", "./images/diffuse.png");
-	TextureHandler::Load("normal", "./images/normal.png");
+	//TextureHandler::Load("diffuse", "./images/diffuse.png");
+	//TextureHandler::Load("normal", "./images/normal.png");
 
-	Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
+	//Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
 
 
 	uint64_t LastTick = SDL_GetTicks();
@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 		float dt = ElapsedTick/1000.0f;
 
 		// Update and Render
-        // curGame->update(frames, dt);
+         curGame->update(frames, dt);
 
 		BGLController::FrameClean();
 
