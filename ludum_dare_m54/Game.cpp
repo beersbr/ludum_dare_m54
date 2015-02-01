@@ -30,8 +30,6 @@ Game::Game()
 
 	BGLTexture diffuse = TextureHandler::Get("testship");
 
-
-
 	BGLRect erects[] = {
 		{0, 0, 64, 29  },
 		{0, 29, 64, 29 },
@@ -40,7 +38,6 @@ Game::Game()
 	};
 
 	player = new Player();
-
 	player->sprite = Sprite::Create("testship", "", 500, 200, 0, 4, &erects[0]);
 }
 
@@ -51,6 +48,7 @@ Game::~Game(void)
 void Game::startGame(std::string mapName)
 {
     curMap = new Map(mapName, &resourcer);
+    //Should also probably create the player entity here
 }
 
 
@@ -83,4 +81,15 @@ void Game::update(int frameCount, float dt)
 	{
 		dx = speed * dt * 1.0;
 	}
+
+    player->sprite.modelTransform = glm::translate(player->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
+
+    //fuck it, change the frame ASAP!
+    if(!(frameCount % 4))
+    {
+        player->sprite.SetAnimationFrame(player->sprite.currentFrame+1);
+    }
+
+    player->sprite.Render();
+    
 }

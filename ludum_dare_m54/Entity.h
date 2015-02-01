@@ -21,5 +21,8 @@ public:
     Sprite sprite;                      // Actual BGL sprite
     int curFrame;                       // Current frame of animation as dictated by the sprite sheet class
 
+
+	virtual void Update(float dt) = 0;
+
 };
 

@@ -3,6 +3,7 @@
 #include "platformdef.h"
 #include "BGL.h"
 #include "BGLController.h"
+#include "BGLAudio.h"
 #include "Game.h"
 
 bglinternal void
@@ -62,7 +63,7 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 
 int main(int argc, char *argv[])
 {
-	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	if(SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO) != 0)
 	{
 		std::cout << "Could not initialize SDL2. Stopping." << std::endl;
 		exit(1);
@@ -94,6 +95,16 @@ int main(int argc, char *argv[])
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
+	if(!BGLAudio::Initialize())
+	{
+		std::cout << "Could not initialize SDL2 AUDIO via BGLAudio. Stopping." << std::endl;
+		exit(1);
+	}
+
+	BGLAudio::SetVolume(MIX_MAX_VOLUME/2);
+
+
+
 	InitializeFrame(0.0f, (float)Window.width, (float)Window.height, 0.0f);
 
     std::vector<std::pair<std::string, std::string>> resFileList;
@@ -108,14 +119,6 @@ int main(int argc, char *argv[])
     Game* curGame = new Game(resFileList, textureFileList);
     curGame->startGame("map01");
 
-	//ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
-
-	//TextureHandler::Load("diffuse", "./images/diffuse.png");
-	//TextureHandler::Load("normal", "./images/normal.png");
-
-	//Sprite TestSprite = Sprite::Create("diffuse", "normal", 256, 256, 0, 1, &(BGLRectMake(0, 0, 64, 64)));
-
-
 	uint64_t LastTick = SDL_GetTicks();
 	uint64_t CurrentTick = SDL_GetTicks();
 	float GameUpdateHz = 1000/60.0f;
@@ -125,6 +128,7 @@ int main(int argc, char *argv[])
 	int32_t secondSum = 0;
 
 	SDL_Event event;
+
 
 	bool Running = true;
 	while(Running)
@@ -221,8 +225,9 @@ int main(int argc, char *argv[])
 			secondSum -= 1000;
 			frames = 0;
 		}
-
 	}
+
+	BGLAudio::Cleanup();
 
 	return 0;
 

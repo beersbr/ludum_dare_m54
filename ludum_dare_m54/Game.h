@@ -26,6 +26,7 @@ private:
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
     Player* player; //yeah, we actually do need this.
+
     
 };
 

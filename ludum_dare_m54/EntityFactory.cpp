@@ -10,7 +10,7 @@ EntityFactory::~EntityFactory(void)
 {
 }
 
-Entity* EntityFactory::CreateEntity(const char* jsonBuf)
+void EntityFactory::CreateBasicEntity(const char* jsonBuf, Entity* entity)
 {
     rapidjson::Document doc;
     
@@ -19,34 +19,34 @@ Entity* EntityFactory::CreateEntity(const char* jsonBuf)
     if(doc.HasParseError())
     {
         std::cout << "[-] Error parsing entity json file" << std::endl;
-        return NULL;
+        return;
     }
 
     if(!(doc.HasMember("size") && doc["size"].IsArray() && doc.HasMember("imageName") && doc.HasMember("normalName") && doc.HasMember("spriteSheets")))
     {
         std::cout << "[-] Error parsing entity from JSON, malformed entity data" << std::endl;
-        return NULL;
+        return;
     }
 
     if(!(doc["size"].Size() == 2))
     {
         std::cout << "[-] Error parsing entity from JSON, malformed size array" << std::endl;
-        return NULL;
+        return;
     }
 
-    Entity* tmp = new Entity();
-    tmp->size = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
+    //Entity* tmp = new Entity();
+    entity->size = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
     
     rapidjson::StringBuffer sb;
     rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
     doc["spriteSheets"].Accept(writer);
 
-    tmp->sheetData = GetSpriteSheet(sb.GetString());
-    tmp->spriteSheet = (*tmp->sheetData)[0];
+    entity->sheetData = GetSpriteSheet(sb.GetString());
+    entity->spriteSheet = (*entity->sheetData)[0];
     
-    tmp->sprite = Sprite::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), tmp->size[0], tmp->size[1], 0, (uint32_t)tmp->spriteSheet->frameData.size(), tmp->spriteSheet->getFrameArray());
+    entity->sprite = Sprite::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), entity->size[0], entity->size[1], 0, (uint32_t)entity->spriteSheet->frameData.size(), entity->spriteSheet->getFrameArray());
 
-    return tmp;
+    return;
 }
 
 std::vector<SpriteSheet*>* EntityFactory::GetSpriteSheet(const char* jsonBuf)
@@ -107,4 +107,35 @@ std::vector<SpriteSheet*>* EntityFactory::GetSpriteSheet(const char* jsonBuf)
         tmpSheets->push_back(tmpSheet);
     }
     return tmpSheets;
+}
+
+Player* EntityFactory::CreatePlayerEntity(const char* jsonBuf)
+{
+    //Call basic stuff, then do whatever is relevant to Player specifically
+    Player* tmp = new Player();
+    
+    CreateBasicEntity(jsonBuf, tmp);
+
+    return tmp;
+}
+
+Enemy* EntityFactory::CreateEnemyEntity(const char* jsonBuf)
+{
+    //Call basic stuff, then do whatever is relevant to Enemy specifically
+    Enemy* tmp = new Enemy();
+
+    CreateBasicEntity(jsonBuf, tmp);
+
+    return tmp;
+
+}
+
+Tile* EntityFactory::CreateTileEntity(const char* jsonBuf)
+{
+    //Call basic stuff, then do whatever is relevant to Tile specifically
+    Tile* tmp = new Tile();
+
+    CreateBasicEntity(jsonBuf, tmp);
+
+    return tmp;
 }
