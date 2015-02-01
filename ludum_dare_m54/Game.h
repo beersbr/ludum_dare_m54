@@ -21,10 +21,11 @@ public:
 private:
     void draw();
     bool running;
-    void loadEntity(std::string entityTag);
+    void initPlayer();
+    //void loadEntity(std::string entityTag); //map is gonna do all that
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
-    Player* imNotATemporaryPlayerAtAllYouSavage; //extremely temporary, for testing only;
+    Player* player; //yeah, we actually do need this.
     
 };
 

@@ -1,0 +1,5 @@
+{
+    "mapName" : "MAP01",
+    "enemies" : ["monsterOne"],
+    "tiles" : ["tileOne"]
+}
