@@ -24,7 +24,7 @@ private:
     void loadEntity(std::string entityTag);
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
-    Player* imNotATemporaryPlayerAtAllYouSavage; //extremely temporary, for testing only;
+    Player* tempPlayer; //extremely temporary, for testing only;
     
 };
 
