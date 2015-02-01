@@ -12,13 +12,14 @@ class Entity
 public:
     Entity(void);
     ~Entity(void);
-    glm::vec2 pos;                    // x,y position in top left cornder
-    //glm::vec2 dir;                  // Direction? Might incldue facing for enemy firing, think on this one.
-    glm::vec2 vel;                    // current vlocity in x,y direction
-    glm::vec2 size;                   // How big is the object, to the game?
-    SpriteSheet* spriteSheet;		  // currently used spritesheet
-    Sprite sprite;                    // Actual BGL sprite
-    int curFrame;                     // Current frame of animation as dictated by the sprite sheet class
+    glm::vec2 pos;                      // x,y position in top left cornder
+    //glm::vec2 dir;                    // Direction? Might incldue facing for enemy firing, think on this one.
+    glm::vec2 vel;                      // current vlocity in x,y direction
+    glm::vec2 size;                     // How big is the object, to the game?
+    std::vector<SpriteSheet*>* sheetData; //All sprite sheets this entity can use
+    SpriteSheet* spriteSheet;		    // currently used spritesheet
+    Sprite sprite;                      // Actual BGL sprite
+    int curFrame;                       // Current frame of animation as dictated by the sprite sheet class
 
 };
 

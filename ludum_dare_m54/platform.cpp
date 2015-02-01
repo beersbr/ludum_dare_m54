@@ -60,8 +60,6 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 	SDL_GL_SetSwapInterval(platformWindow->vsync);
 }
 
-
-
 int main(int argc, char *argv[])
 {
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -102,10 +100,13 @@ int main(int argc, char *argv[])
     std::vector<std::pair<std::string, std::string>> textureFileList;
 
     resFileList.push_back(std::pair<std::string, std::string>("PlayerSheet", "./json/PlayerSheet.json"));
+    resFileList.push_back(std::pair<std::string, std::string>("map01", "./json/maps/map01.json"));
+    resFileList.push_back(std::pair<std::string, std::string>("monsterOne", "./json/enemies/monsterOne.json"));
+    resFileList.push_back(std::pair<std::string, std::string>("tileOne", "./json/tiles/tile01.json"));
     textureFileList.push_back(std::pair<std::string, std::string>("masterSprite", "./images/ship_spritesheet.png"));
 
     Game* curGame = new Game(resFileList, textureFileList);
-    curGame->startGame("WhoCares?");
+    curGame->startGame("map01");
 
 	//ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 
