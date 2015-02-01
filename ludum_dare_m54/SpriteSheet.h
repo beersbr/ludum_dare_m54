@@ -15,15 +15,11 @@
 class SpriteSheet
 {
 public:
-    SpriteSheet(std::string animTag, Resourcer* resourcer);
     SpriteSheet(void);
     ~SpriteSheet(void);
     BGLRect* getFrameArray();
-private:
-    std::string entityID; //Entity this sprite sheet is related to
+    //std::string entityID; //Entity this sprite sheet is related to | D: I don't think I have a good use for this yet.
     std::string animTag; //Descriptor of which frames this sprite is
-    Resourcer* resRef;
     std::vector<BGLRect> frameData; //Each index in the this vector will return the information representing where on the sprite sheet that the drawer needs to draw.
-    bool initFramesFromData();
 };
 

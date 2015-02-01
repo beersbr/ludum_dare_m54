@@ -1,16 +1,17 @@
 #pragma once
 
 #include "language.h"
+#include "Entity.h"
 #include <glm/glm.hpp>
 
 
-class Tile
+class Tile : public Entity
 {
 public:
     Tile(void);
     Tile(int srx, int sry, int posx, int posy);
     ~Tile(void);
-    glm::vec2 src; //Source on the tile map
-    glm::vec2 pos; //Location in the game
+
+    virtual void Update(float dt);
 };
 

@@ -23,12 +23,14 @@ public:
 private:
     void draw();
     bool running;
-    void loadEntity(std::string entityTag);
+    void initPlayer();
+    //void loadEntity(std::string entityTag); //map is gonna do all that
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
-    Player* tempPlayer; //extremely temporary, for testing only;
-    
+    Player* player; //yeah, we actually do need this.
 
+    
+	Player *tempPlayer;
 	Sprite tileSprites[5];
 	Sprite map[20][60];
 	BGLRect camera;

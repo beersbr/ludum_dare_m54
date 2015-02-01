@@ -4,7 +4,6 @@ Game::Game(std::vector<std::pair<std::string, std::string>>& resourceFileList, s
 {
     running = false;
     //Load the master sprite sheet into the graphcis card
-    curMap = new Map("MPButtPlanet"); // This shit is NOT Loadable yet
 
     for(int i = 0; i < resourceFileList.size(); i++)
     {
@@ -42,6 +41,8 @@ Game::Game()
 	tileSprites[2] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
 	tileSprites[3] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
 	tileSprites[4] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
+	player = new Player();
+	player->sprite = Sprite::Create("testship", "", 500, 200, 0, 4, &erects[0]);
 
 	BGLAudio::LoadAudio("laser", "sounds/laser.wav");
 
@@ -63,7 +64,9 @@ Game::Game()
 	camera = BGLRectMake(0, 0, 1200, 800);
 	shootDelay = 0.15f;
 	shootElapsed = shootDelay;
+
 }
+
 
 void Game::update(int frameCount, float dt)
 {
@@ -100,7 +103,6 @@ void Game::update(int frameCount, float dt)
 		dx = speed * dt * 1.0;
 	}
 
-
 	shootElapsed += dt;
 	if(GameInput.controllerSz > 0)
 	{
@@ -118,7 +120,7 @@ void Game::update(int frameCount, float dt)
     //fuck it, change the frame ASAP!
     if(!(frameCount % 4))
     {
-        tempPlayer->sprite.SetAnimationFrame(tempPlayer->sprite.currentFrame+1);
+        player->sprite.SetAnimationFrame(player->sprite.currentFrame+1);
     }
 
 	// RENDERING 
@@ -147,18 +149,12 @@ void Game::update(int frameCount, float dt)
     
 }
 
-void Game::loadEntity(std::string entityTag)
-{
-
-}
-
 Game::~Game(void)
 {
 }
 
 void Game::startGame(std::string mapName)
 {
-    tempPlayer = new Player();
-    tempPlayer->spriteSheet = new SpriteSheet("PlayerSheet", &resourcer);
-    tempPlayer->sprite = Sprite::Create("masterSprite", "", 64, 29, 0, 4, tempPlayer->spriteSheet->getFrameArray());
+    curMap = new Map(mapName, &resourcer);
+    //Should also probably create the player entity here
 }

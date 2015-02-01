@@ -1,0 +1,17 @@
+{
+    "entityID" : "tileOne",
+    "size" : [64, 29],
+    "imageName" : "masterSprite",
+    "normalName" : "",
+    "spriteSheets" : [
+        {
+            "animTag" : "neutral",
+            "frames" : [
+                [0, 0, 32, 32],
+                [0, 32, 32, 32],
+                [0, 64, 32, 32]
+            ]
+        }
+    ]
+}
+        

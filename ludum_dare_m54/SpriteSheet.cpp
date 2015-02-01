@@ -1,6 +1,6 @@
 #include "SpriteSheet.h"
 
-
+/**
 SpriteSheet::SpriteSheet(std::string animTag, Resourcer* resourcer) : animTag(animTag), resRef(resourcer)
 {
     /*
@@ -13,10 +13,10 @@ SpriteSheet::SpriteSheet(std::string animTag, Resourcer* resourcer) : animTag(an
         int tmpPosY = i*sizeY;
         frameVect.push_back(BGLRectMake((GLfloat)0.0f, (GLfloat)tmpPosY, (GLfloat)sizeX, (GLfloat)sizeY));
     }
-    */
-    initFramesFromData();
+    //initFramesFromData();
 
 }
+**/
 
 SpriteSheet::SpriteSheet(void)
 {
@@ -27,6 +27,7 @@ SpriteSheet::~SpriteSheet(void)
 {
 }
 
+/*
 bool SpriteSheet::initFramesFromData()
 {
     char* jsonBuf = (char*)resRef->GetDataFromTag(animTag);
@@ -81,7 +82,7 @@ bool SpriteSheet::initFramesFromData()
 
     return true;
 }
-
+*/
 BGLRect* SpriteSheet::getFrameArray()
 {
     return &frameData[0];
