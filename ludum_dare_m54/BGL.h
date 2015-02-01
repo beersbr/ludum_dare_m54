@@ -68,10 +68,16 @@ global BGLFrame Frame = {};
 void InitializeFrame(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f);
 
 
-class FrameManager
+class LayerManager
 {
 	// TODO(brett): get the frame manager set up so we can run shaders on the entire frame vs each sprite
 };
+
+typedef struct
+{
+	GLuint id;
+} BGLLayer;
+
 
 // This will set the camera which is the viewspace for the screen.
 // The camera shows the same number of pixes that the view was set up with. It
