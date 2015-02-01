@@ -3,6 +3,8 @@
 
 
 BGLInputState BGLController::SystemInputs = {};
+BGLButtonState *BGLController::pressedButtons[PRESSED_BUTTON_MAX];
+uint32_t BGLController::pressedButtonSz = 0;
 
 void BGLController::AddController(int32_t id)
 {
@@ -60,7 +62,7 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 	}
 
 	ControllerInputs *inputs = &(SystemInputs.controllers[event.which]);
-	uint8_t state = (event.state == SDL_PRESSED) ? 1 : 0;
+	bool state = (event.state == SDL_PRESSED) ? 1 : 0;
 
 	// NOTE(brett): I think I can probably do this with a cleverly constructed array
 	switch(event.button)
@@ -73,9 +75,10 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 		default:
 		{
 			inputs->buttons[event.button].down = state;
-			if(state == SDL_RELEASED)
+			if(!state)
 			{
 				inputs->buttons[event.button].pressed = true;
+				pressedButtons[pressedButtonSz] = &inputs->buttons[event.button];
 			}
 
 			break;
@@ -104,12 +107,62 @@ void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 	}
 }
 
+void BGLController::UpdateKeyboardButton(SDL_KeyboardEvent event)
+{
+	KeyboardInputs *inputs = &SystemInputs.keyboard;
+
+	int32_t offset = 0;
+	bool state = (event.state == SDL_PRESSED);
+	if(event.keysym.sym >= SDLK_CAPSLOCK)
+	{
+		offset += SDLK_CAPSLOCK;
+	}
+
+	inputs->keys[event.keysym.sym - offset].down = state;
+
+	// Not pressed anymore
+	if(!state)
+	{
+		inputs->keys[event.keysym.sym + offset].pressed = true;
+		pressedButtons[pressedButtonSz] = &inputs->keys[event.keysym.sym-offset];
+	}
+}
+
+
+BGLButtonState BGLController::GetKey(SDL_Keycode key)
+{
+	KeyboardInputs *inputs = &SystemInputs.keyboard;
+
+	int32_t offset = 0;
+	if(key >= SDLK_CAPSLOCK)
+	{
+		offset += SDLK_CAPSLOCK;
+	}
+
+	return(inputs->keys[key - offset]);
+}
+
+
+void BGLController::UpdateMouseButton(SDL_MouseButtonEvent event)
+{
+
+}
+
+void BGLController::UpdateMouseMotion(SDL_MouseMotionEvent event)
+{
+
+}
+
+void BGLController::FrameClean()
+{
+	for(int i = 0; i < pressedButtonSz; ++i)
+	{
+		pressedButtons[i]->pressed = false;
+	}
+}
+
+
 BGLInputState BGLController::GetInputState()
 {
-	// TODO(brett): need to make a way to get multiple controllers... because
-	// that makes this game multiplayer instantly
-
-
-	// TODO(brett): if no controller is present then we need to return nothing
 	return SystemInputs;
 }

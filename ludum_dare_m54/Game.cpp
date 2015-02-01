@@ -34,6 +34,24 @@ void Game::update(int frameCount, float dt)
 	float dy = 0.0f;
 	float speed = 200.0f;
 	BGLInputState GameInput = BGLController::GetInputState();
+
+	if(GameInput.keyboard.keys[SDLK_w].down)
+	{
+		dy = speed * dt * -1.0;
+	}
+	if(GameInput.keyboard.keys[SDLK_s].down)
+	{
+		dy = speed * dt * 1.0;
+	}
+	if(GameInput.keyboard.keys[SDLK_a].down)
+	{
+		dx = speed * dt * -1.0;
+	}
+	if(GameInput.keyboard.keys[SDLK_d].down)
+	{
+		dx = speed * dt * 1.0;
+	}
+
 	if(GameInput.controllerSz > 0)
 	{
 		dx = GameInput.controllers[0].LX * speed * dt;
