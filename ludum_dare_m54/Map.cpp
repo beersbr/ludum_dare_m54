@@ -100,3 +100,11 @@ bool Map::loadMapData(std::string mapName)
 
     return false;
 }
+
+void Map::parseBMP(std::string mapName)
+{
+    //Get file info from the resourcer
+    char* bmp = (char*)res->GetDataFromTag("bmp_" + mapName);
+
+
+}
