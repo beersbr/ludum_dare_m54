@@ -29,6 +29,9 @@ void InitializeFrame(float left, float right, float bottom, float top, float nea
 {
 	Frame.id = 0; // The screen
 	
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	glGenVertexArrays(1, &Frame.vao);
 	glBindVertexArray(Frame.vao);
 
@@ -37,8 +40,147 @@ void InitializeFrame(float left, float right, float bottom, float top, float nea
 	BGLCamera = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
-void 
-SetCamera(glm::vec2 const offset)
+
+BGLLayer BGLLayerManager::layers[BGL_MAX_LAYERS];
+uint32_t BGLLayerManager::layerSz = 0;
+LayerVertex BGLLayerManager::quad[6];
+GLuint BGLLayerManager::vbo = 0;
+
+GLint BGLLayerManager::LayerPosition0;
+GLint BGLLayerManager::LayerPosition1;
+GLint BGLLayerManager::LayerPosition2;
+GLint BGLLayerManager::LayerPosition3;
+GLint BGLLayerManager::LayerPosition4;
+
+
+void BGLLayerManager::InitLayers(uint32_t width, uint32_t height)
+{
+
+	layerSz = BGL_MAX_LAYERS;
+
+	quad[0].x = -1.0f; quad[0].y =  1.0f; quad[0].u =  0.0f; quad[0].v =  1.0f;
+	quad[1].x = -1.0f; quad[1].y = -1.0f; quad[1].u =  0.0f; quad[1].v =  0.0f;
+	quad[2].x =  1.0f; quad[2].y =  1.0f; quad[2].u =  1.0f; quad[2].v =  1.0f;
+	quad[3].x =  1.0f; quad[3].y =  1.0f; quad[3].u =  1.0f; quad[3].v =  1.0f;
+	quad[4].x = -1.0f; quad[4].y = -1.0f; quad[4].u =  0.0f; quad[4].v =  0.0f;
+	quad[5].x =  1.0f; quad[5].y = -1.0f; quad[5].u =  1.0f; quad[5].v =  0.0f;
+
+	glGenBuffers(1, &vbo);
+	if(vbo == 0)
+	{
+		std::cout << "ERROR: Could not generate the vbo for the framebuffers" << std::endl;
+	}
+
+	BGLShaderHandler::Load("finalFrame", "shaders/layer.vertex", "shaders/layer.fragment");
+	BGLShaderHandler::Enable("finalFrame");
+	BGLShader shader = BGLShaderHandler::Get("finalFrame");
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quad), &quad[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	LayerPosition0 = glGetUniformLocation(shader.id, "layer0");
+	LayerPosition1 = glGetUniformLocation(shader.id, "layer1");
+
+	for(int32_t i = 0; i < BGL_MAX_LAYERS; ++i)
+	{
+		BGLLayer layer = {};
+
+		glGenFramebuffers(1, &layer.frameId);
+		if(layer.frameId == 0)
+		{
+			std::cout << "WARNING: Could not create opengl framebuffer." << std::endl;
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, layer.frameId);
+
+
+		glGenTextures(1, &layer.texId);
+		if(layer.texId == 0)
+		{
+			std::cout << "WARNING: Could not create opengl writable texture." << std::endl;
+		}
+
+		layer.width = width;
+		layer.height = height;
+
+		glBindTexture(GL_TEXTURE_2D, layer.texId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, layer.width, layer.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, layer.texId, 0);
+
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			std::cout << "ERROR: Framebuffer is invalid." << std::endl;
+			break;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		layers[i] = layer;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+}
+
+void BGLLayerManager::UseLayer(uint32_t layer)
+{
+	if(layer > layerSz)
+	{
+		std::cout << "Cannot bind layer that does not exist" << std::endl;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, layers[layer].frameId);
+}
+
+void BGLLayerManager::RenderLayers()
+{
+
+	BGLShaderHandler::Enable("finalFrame");
+	BGLShader shader = BGLShaderHandler::Get("finalFrame");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	LayerPosition0 = glGetUniformLocation(shader.id, "layer0");
+	LayerPosition1 = glGetUniformLocation(shader.id, "layer1");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, layers[1].texId);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, layers[0].texId);
+
+	glUniform1d(LayerPosition0, 0);
+	glUniform1d(LayerPosition1, 1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LayerVertex), (void *)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(LayerVertex), (void *)(sizeof(GLfloat)*2));
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+
+}
+
+void BGLLayerManager::Cleanup()
+{
+	for(uint32_t i = 0; i < layerSz; ++i)
+	{
+		glDeleteFramebuffers(1, &(layers[i].frameId));
+	}
+}
+
+
+void  SetCamera(glm::vec2 const offset)
 {
 	BGLCamera = glm::translate(glm::mat4(), glm::vec3(-offset, 0.0f));
 }
@@ -258,20 +400,23 @@ void ShaderHandler::Load(std::string tag, std::string vertex, std::string fragme
 	shader.id = shaderId;
 
 	shaders[tag] = shader;
+
+	std::cout << "Compiled [" << vertex << ", " << fragment << "]: " << shader.id << std::endl;
+
 }
 
 
 void ShaderHandler::Enable(std::string tag)
 {
-	BGLShader shader = shaders[tag];
-	if(shader.id == 0)
+
+	if(shaders[tag].id == 0)
 	{
 		std::cout << "Could not bind shader with given tag: " << tag << std::endl;
 		return;
 	}
 
-	glUseProgram(shader.id);
-	shader.isBound = true;
+	glUseProgram(shaders[tag].id);
+	shaders[tag].isBound = true;
 	boundShader = tag;
 }
 
@@ -291,12 +436,12 @@ void ShaderHandler::Disable(std::string tag)
 }
 
 
-bool ShaderHandler::IsBound(std::string tag)
+bool BGLShaderHandler::IsBound(std::string tag)
 {
 	return (tag == boundShader);
 }
 
-BGLShader ShaderHandler::Get(std::string tag)
+BGLShader BGLShaderHandler::Get(std::string tag)
 {
 	return (shaders[tag]);
 }
@@ -306,8 +451,8 @@ void Sprite::Render()
 {
 	// TODO(brett): make sure the sprite is bound
 #pragma message(__LOC__ "This should be set before the render AND NOT done every frame")
-	BGLShader shader = ShaderHandler::Get("sprite");
-	glUseProgram(shader.id);
+	BGLShader shader = BGLShaderHandler::Get("sprite");
+	BGLShaderHandler::Enable("sprite");
 
 	//BGLTexture texture = TextureHandler::Get(diffuseTextureTag);
 	//BGLTexture normal = TextureHandler::Get(normalTextureTag);
@@ -364,41 +509,39 @@ void Sprite::SetAnimationFrame(uint32_t frameIndex)
 	float uvFrameW = uvFrameX + (frames[currentFrame].w / (float)textureWidth);
 	float uvFrameH = uvFrameY + (frames[currentFrame].h / (float)textureHeight);
 
-	quad[0].pos.x = viewRect.x;
-	quad[0].pos.y = viewRect.y;
-	quad[0].uv.x = uvFrameX;
-	quad[0].uv.y = uvFrameY;
+	this->quad[0].pos.x = viewRect.x;
+	this->quad[0].pos.y = viewRect.y;
+	this->quad[0].uv.x = uvFrameX;
+	this->quad[0].uv.y = uvFrameY;
 
-	quad[1].pos.x = viewRect.x;
-	quad[1].pos.y = viewRect.y+viewRect.h;
-	quad[1].uv.x = uvFrameX;
-	quad[1].uv.y = uvFrameH;
+	this->quad[1].pos.x = viewRect.x;
+	this->quad[1].pos.y = viewRect.y+viewRect.h;
+	this->quad[1].uv.x = uvFrameX;
+	this->quad[1].uv.y = uvFrameH;
 
-	quad[2].pos.x = viewRect.x+viewRect.w;
-	quad[2].pos.y = viewRect.y;
-	quad[2].uv.x = uvFrameW;
-	quad[2].uv.y = uvFrameY;
+	this->quad[2].pos.x = viewRect.x+viewRect.w;
+	this->quad[2].pos.y = viewRect.y;
+	this->quad[2].uv.x = uvFrameW;
+	this->quad[2].uv.y = uvFrameY;
 
-	quad[3].pos.x = viewRect.x+viewRect.w;
-	quad[3].pos.y = viewRect.y;
-	quad[3].uv.x = uvFrameW;
-	quad[3].uv.y = uvFrameY;
+	this->quad[3].pos.x = viewRect.x+viewRect.w;
+	this->quad[3].pos.y = viewRect.y;
+	this->quad[3].uv.x = uvFrameW;
+	this->quad[3].uv.y = uvFrameY;
 
-	quad[4].pos.x = viewRect.x;
-	quad[4].pos.y = viewRect.y+viewRect.h;
-	quad[4].uv.x = uvFrameX;
-	quad[4].uv.y = uvFrameH;
+	this->quad[4].pos.x = viewRect.x;
+	this->quad[4].pos.y = viewRect.y+viewRect.h;
+	this->quad[4].uv.x = uvFrameX;
+	this->quad[4].uv.y = uvFrameH;
 
-	quad[5].pos.x = viewRect.x+viewRect.w;
-	quad[5].pos.y = viewRect.y+viewRect.h;
-	quad[5].uv.x = uvFrameW;
-	quad[5].uv.y = uvFrameH;
+	this->quad[5].pos.x = viewRect.x+viewRect.w;
+	this->quad[5].pos.y = viewRect.y+viewRect.h;
+	this->quad[5].uv.x = uvFrameW;
+	this->quad[5].uv.y = uvFrameH;
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(quad), &quad[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(this->quad), &this->quad[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
 }
 
 Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
@@ -425,14 +568,14 @@ Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, fl
 	sprite.textureWidth = texture.width;
 	sprite.textureHeight = texture.height;
 
-	sprite.viewRect = BGLRectMake(-w/2.0, -h/2.0, w, h);
+	sprite.viewRect = BGLRectMake(-w/2.0f, -h/2.0f, w, h);
 	sprite.order = order;
 	sprite.totalFrames = frameCount;
 	sprite.currentFrame = 0;
 	
 
 	// copy the frames 
-	for(unsigned int i = 0; i < frameCount; ++i)
+	for(uint32_t i = 0; i < frameCount; ++i)
 	{
 		//sprite.frames[i] = BGLRectMake(frames[i].x, frames[i].y, frames[i].w, frames[i].h);
 		sprite.frames[i] = frames[i];

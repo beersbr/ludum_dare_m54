@@ -16,22 +16,13 @@
 
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
+#define BGL_MAX_LAYERS 5
 
 typedef struct
 {
 	GLfloat x, y;
 	GLfloat w, h;
 } BGLRect;
-
-// Creates a BGL rect object
-BGLRect BGLRectMake(GLfloat x, GLfloat y, GLfloat w, GLfloat h);
-
-// A quick boolean check to tell if two rectangles overlap in any way
-bool BGLRectOverlap(BGLRect a, BGLRect b);
-
-// Check if two rectanles equal each other
-bool operator==(BGLRect a, BGLRect b);
-
 
 // NOTE(brett): perhaps the texture can hold a tag as this structure is
 // pretty closely bound to the texturehandler
@@ -58,25 +49,77 @@ typedef struct
 	GLuint vao;
 } BGLFrame;
 
+typedef struct 
+{
+	glm::vec2 pos;
+	glm::vec2 uv;
+} BGLSpriteVertex;
+
+
+typedef struct
+{
+	GLfloat x, y;
+	GLfloat u, v;
+} LayerVertex;
+
 
 global glm::mat4 BGLProjection;
 global glm::mat4 BGLCamera;
 global BGLFrame Frame = {};
+
+// Creates a BGL rect object
+BGLRect BGLRectMake(GLfloat x, GLfloat y, GLfloat w, GLfloat h);
+
+// A quick boolean check to tell if two rectangles overlap in any way
+bool BGLRectOverlap(BGLRect a, BGLRect b);
+
+// Check if two rectanles equal each other
+bool operator==(BGLRect a, BGLRect b);
+
 
 // Inializes the current frame. This function will set up the screen space to be shown.
 // TODO(brett): make this actually set up the render frame for post effects
 void InitializeFrame(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f);
 
 
-class LayerManager
-{
-	// TODO(brett): get the frame manager set up so we can run shaders on the entire frame vs each sprite
-};
-
 typedef struct
 {
-	GLuint id;
+	GLuint frameId;
+	GLuint texId;
+
+	uint32_t width;
+	uint32_t height;
 } BGLLayer;
+
+
+// This is the layer manager. It takes control of rendering the layers
+// in the way they should be and giving access to the programmer to 
+// decide which layers to be drawn to.
+// Layers are from 0 to BGL_MAX_LAYERS.
+// REMARK: 
+// Layer 0 is the closest layer to the screen. Layer 1 sits BEHIND layer 0 etc.
+class BGLLayerManager
+{
+public: 
+	// TODO(brett): get the frame manager set up so we can run shaders on the entire frame vs each sprite
+	static void InitLayers(uint32_t width, uint32_t height);
+	static void UseLayer(uint32_t layer);
+	static void RenderLayers();
+	static void CleanLayer(uint32_t layer);
+	
+	static void Cleanup();
+
+private:
+	static BGLLayer layers[BGL_MAX_LAYERS];
+	static uint32_t layerSz;
+	static LayerVertex quad[6];
+	static GLuint vbo;
+	static GLint LayerPosition0;
+	static GLint LayerPosition1;
+	static GLint LayerPosition2;
+	static GLint LayerPosition3;
+	static GLint LayerPosition4;
+};
 
 
 // This will set the camera which is the viewspace for the screen.
@@ -128,13 +171,9 @@ private:
 	static std::string boundShader;
 };
 
+// TODO(brett): Need to make sure things are named consistently 
+typedef ShaderHandler BGLShaderHandler;
 
-
-typedef struct 
-{
-	glm::vec2 pos;
-	glm::vec2 uv;
-} BGLSpriteVertex;
 
 class Sprite
 {
