@@ -145,7 +145,14 @@ void Game::update(int frameCount, float dt)
 
 	auto it = Entity::createdEntities.begin();
 	for( ; it != Entity::createdEntities.end(); ++it)
-		(*it)->Render();
+	{
+		//glm::vec4 pos = (*it)->sprite.model * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		BGLRect rect = BGLRectMake((*it)->pos.x - 10, (*it)->pos.y - 10, 20, 20);
+
+		if(BGLRectOverlap(camera, rect))
+			(*it)->Render();
+	}
+	
 
 	player.Render();   
 }
