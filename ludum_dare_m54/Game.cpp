@@ -134,7 +134,12 @@ void Game::update(int frameCount, float dt)
 
 		// NOTE(brett): With large maps the game hardly runs without culling
 		if(BGLRectOverlap(camera, tileRect))
+		{
+			// TODO(brett): Need a fast way to get the world coord rect from a sprite. That way 
+			// I can cull objects that are not on the screen but are still "hot" (or alive?)
 			tiles[i].Render();
+		}
+		
 	}
 
 

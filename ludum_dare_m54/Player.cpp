@@ -62,7 +62,20 @@ void Player::Update(BGLInputState *state, float dt)
 	{
 		// NOTE(brett): This can be done better if we know the current game render rate. 
 		// If we know the render rate we know if we are leaking time in frames
-		if(state->controllers[0].X.down && shootBulletsElapsed > shootBulletsInterval)
+		if((state->controllers[0].X.down) && shootBulletsElapsed > shootBulletsInterval)
+		{
+			// TODO(brett): this is annoying so I disabled it until I can get a different sound lib in 
+			BGLAudio::PlayAudio("laser");
+			// NOTE(brett): this works better than the sdl version. Though we just get a filename. it is going to 
+			// be used until fmod gets added
+			//PlaySoundA("sounds/laser.wav", NULL, SND_FILENAME|SND_ASYNC);
+			shootBulletsElapsed = 0.0f;
+			createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
+		}
+	}
+	if (state->keyboard.keys[SDLK_l].down)
+	{
+		if(shootBulletsElapsed > shootBulletsInterval)
 		{
 			// TODO(brett): this is annoying so I disabled it until I can get a different sound lib in 
 			BGLAudio::PlayAudio("laser");
