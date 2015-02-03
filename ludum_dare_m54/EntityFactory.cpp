@@ -44,7 +44,7 @@ void EntityFactory::CreateBasicEntity(const char* jsonBuf, Entity* entity)
     entity->sheetData = GetSpriteSheet(sb.GetString());
     entity->spriteSheet = (*entity->sheetData)[0];
     
-    entity->sprite = Sprite::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), entity->size[0], entity->size[1], 0, (uint32_t)entity->spriteSheet->frameData.size(), entity->spriteSheet->getFrameArray());
+    entity->sprite = BGLSprite::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), entity->size[0], entity->size[1], 0, (uint32_t)entity->spriteSheet->frameData.size(), entity->spriteSheet->getFrameArray());
 
     return;
 }

@@ -27,16 +27,23 @@ private:
     //void loadEntity(std::string entityTag); //map is gonna do all that
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
-    Player* player; //yeah, we actually do need this.
+    Player player; //yeah, we actually do need this.
 
     
 	Player *tempPlayer;
-	Sprite tileSprites[5];
-	Sprite map[20][60];
-	BGLRect camera;
+	BGLSprite tileSprites[5];
 
-	float shootDelay;
-	float shootElapsed;
+	BGLSprite tiles[5000];
+	int32_t mapSz;
+
+
+	int32_t mapWidth;
+	int32_t mapHeight;
+
+	BGLRect camera;
+	float cameraMoveSpeed;
+
+	BGLSprite backgroundSprite;
 
 };
 

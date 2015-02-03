@@ -27,6 +27,7 @@ Game::Game()
 	TextureHandler::Load("normal", "./images/normal.png");
 	TextureHandler::Load("testship", "images/ship_spritesheet.png");
 	TextureHandler::Load("spritesheet", "./images/sheet_test.png");
+	TextureHandler::Load("background", "./images/background.png");
 
 	BGLTexture diffuse = TextureHandler::Get("testship");
 	BGLRect erects[] = {
@@ -36,117 +37,112 @@ Game::Game()
 		{0, 87, 64, 29 }
 	};
 
-	tileSprites[0] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
-	tileSprites[1] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 208, 16, 16));
-	tileSprites[2] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
-	tileSprites[3] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
-	tileSprites[4] = Sprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
-	player = new Player();
-	player->sprite = Sprite::Create("testship", "", 500, 200, 0, 4, &erects[0]);
+
+	backgroundSprite = BGLSprite::Create("background", "", 1200, 800, -2, 1, &BGLRectMake(0, 0, 400, 300));
+	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
+
+
+	//tileSprites[0] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
+	tileSprites[1] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 208, 16, 16));
+	//tileSprites[2] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
+	//tileSprites[3] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
+	//tileSprites[4] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
+	player = Player();
+	player.sprite = BGLSprite::Create("testship", "", 100, 60, 0, 4, &erects[0]);
 
 	BGLAudio::LoadAudio("laser", "sounds/laser.wav");
 
 	srand(SDL_GetTicks());
 
+	// NOTE(brett): this is used for the camera
+	float tileWidth = 40.0f;
+	float tileHeight = 40.0f;
+
+	mapWidth = tileWidth*120;
+	mapHeight = tileHeight*20;
+
+	mapSz = 0;
+
 	for(uint32_t y = 0; y < 20; ++y)
 	{
-		for(uint32_t x = 0; x < 60; ++x)
+		for(uint32_t x = 0; x < 120; ++x)
 		{
+			if(!(y < 4 || y > 15)) continue;
 
-			map[y][x] = tileSprites[rand()%5];
-			map[y][x].modelTransform = glm::translate(glm::mat4(), glm::vec3(x*40.0f+20.0f, y*40.0f+20.0f, 0.0f)); 
+			tiles[mapSz] = tileSprites[1];
+			tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(x*tileWidth+tileWidth/2.0f, y*tileHeight+tileHeight/2.0f, 0.0f));
+			mapSz += 1;
 		}
 	}
 
 	tempPlayer = new Player();
-	tempPlayer->sprite = Sprite::Create("testship", "", 80, 40, 0, 4, &erects[0]);
+	tempPlayer->sprite = BGLSprite::Create("testship", "", 80, 40, 0, 4, &erects[0]);
 
 	camera = BGLRectMake(0, 0, 1200, 800);
-	shootDelay = 0.15f;
-	shootElapsed = shootDelay;
-
 }
 
 
 void Game::update(int frameCount, float dt)
 {
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	float dx = 0.0f;
-	float dy = 0.0f;
-	float speed = 350.0f;
-
 	float cameraSpeed = 50.0f;
+
+	camera.x += cameraSpeed * dt;
+	SetCamera(glm::vec2(camera.x, camera.y));
+	BGLRect cameraRect = BGLRectMake(camera.x, camera.y, camera.w + 40, camera.h);
 
 	BGLInputState GameInput = BGLController::GetInputState();
 
-	if(GameInput.controllerSz > 0)
+	player.Update(&GameInput, dt);
+
+	// NOTE(brett): Make sure the player does not leave the current view space
+	if(player.pos.x < camera.x)
 	{
-		dx = GameInput.controllers[0].LX * speed * dt;
-		dy = GameInput.controllers[0].LY * speed * dt;
+		player.pos.x += camera.x - player.pos.x;
+	}
+	else if(player.pos.x > (camera.x + camera.w))
+	{
+		player.pos.x -= player.pos.x - (camera.x + camera.w);
+	}
+	if(player.pos.y < camera.y)
+	{
+		player.pos.y += camera.y - player.pos.y;
+	}
+	else if(player.pos.y > (camera.y + camera.h))
+	{
+		player.pos.y -= player.pos.y - (camera.y + camera.h);
 	}
 
-	if(GameInput.keyboard.keys[SDLK_w].down)
-	{
-		dy = speed * dt * -1.0;
-	}
-	if(GameInput.keyboard.keys[SDLK_s].down)
-	{
-		dy = speed * dt * 1.0;
-	}
-	if(GameInput.keyboard.keys[SDLK_a].down)
-	{
-		dx = speed * dt * -1.0;
-	}
-	if(GameInput.keyboard.keys[SDLK_d].down)
-	{
-		dx = speed * dt * 1.0;
-	}
+	player.pos.x += cameraSpeed*dt;
 
-	shootElapsed += dt;
-	if(GameInput.controllerSz > 0)
-	{
-		if(GameInput.controllers[0].X.down && shootDelay < shootElapsed)
-		{
-			BGLAudio::PlayAudio("laser");
-			shootElapsed = shootElapsed - shootDelay;
-		}
-	}
 
-	// we want the player to move with the camera 
-	dx += cameraSpeed * dt;
-	tempPlayer->sprite.modelTransform = glm::translate(tempPlayer->sprite.modelTransform, glm::vec3(dx, dy, 0.0f));
-
-    //fuck it, change the frame ASAP!
-    if(!(frameCount % 4))
-    {
-        player->sprite.SetAnimationFrame(player->sprite.currentFrame+1);
-    }
+	// NOTE(brett): this is where we update each component type using the static update function
+	KinematicComponent::Update(dt);
 
 	// RENDERING 
-	
-	camera.x += cameraSpeed * dt;
-	SetCamera(glm::vec2(camera.x, camera.y));
 
+	//glClear(GL_COLOR_BUFFER_BIT);
+	// TODO(brett): Make sure to test the performance of all the glm::functions. If they are taking too long
+	// then I can just access the array and manipulate the matrix components directly (should not be an issue
+	// for just tranlations)
+	backgroundSprite.Render();
+	backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(camera.x + 600.0, camera.y + 400.0, 0.0f));
 
-	BGLRect cameraRect = BGLRectMake(camera.x, camera.y, camera.w + 40, camera.h);
-	for(uint32_t y = 0; y < 20; ++y)
+	for(int32_t i = 0; i < mapSz; ++i)
 	{
-		for(uint32_t x = 0; x < 60; ++x)
-		{
-			
-			BGLRect tileRect = BGLRectMake(x*40, y*40, 40, 40);
+		glm::vec4 pos = tiles[i].model * glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		BGLRect tileRect = BGLRectMake(pos.x-20, pos.y-20, 40, 40);
 
-			if(BGLRectOverlap(camera, tileRect))
-			{
-				map[y][x].Render();
-			}
-			
-		}
-	}	
+		// NOTE(brett): With large maps the game hardly runs without culling
+		if(BGLRectOverlap(camera, tileRect))
+			tiles[i].Render();
+	}
 
-    tempPlayer->sprite.Render();
-    
+
+	auto it = Entity::createdEntities.begin();
+	for( ; it != Entity::createdEntities.end(); ++it)
+		(*it)->Render();
+
+	player.Render();   
 }
 
 Game::~Game(void)

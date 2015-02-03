@@ -447,7 +447,7 @@ BGLShader BGLShaderHandler::Get(std::string tag)
 }
 
 
-void Sprite::Render()
+void BGLSprite::Render()
 {
 	// TODO(brett): make sure the sprite is bound
 #pragma message(__LOC__ "This should be set before the render AND NOT done every frame")
@@ -476,7 +476,7 @@ void Sprite::Render()
 	// on and off?
 
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (GLfloat *)&BGLProjection[0]);
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, (GLfloat *)&modelTransform);
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, (GLfloat *)&model);
 	glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, (GLfloat *)&BGLCamera);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -497,7 +497,7 @@ void Sprite::Render()
 	// NOTE(brett): Do I reset the transform after every draw?
 }
 
-void Sprite::SetAnimationFrame(uint32_t frameIndex)
+void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
 {
     uint32_t newFrame = frameIndex % totalFrames;
     currentFrame = newFrame;
@@ -544,9 +544,21 @@ void Sprite::SetAnimationFrame(uint32_t frameIndex)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Sprite Sprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
+
+void BGLSprite::AdvanceAnimationFrame()
 {
-	Sprite sprite = {};
+	SetAnimationFrame(currentFrame+1);
+}
+
+void BGLSprite::SetRelativeAnimationFrame(uint32_t frameIndex)
+{
+	SetAnimationFrame(currentFrame + frameIndex);
+}
+
+
+BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
+{
+	BGLSprite sprite = {};
 
 	if(frameCount > SPRITE_MAX_FRAMES)
 	{

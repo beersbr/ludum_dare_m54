@@ -2,6 +2,9 @@
 
 #include "language.h"
 
+
+#include <Windows.h>
+
 #include <unordered_map>
 #include <SDL.h>
 #include <SDL_mixer.h>

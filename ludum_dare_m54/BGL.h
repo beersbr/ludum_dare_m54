@@ -1,5 +1,18 @@
 #pragma once
 
+/**
+
+BGLE :: Brett's openGL Engine (boggle)
+
+A set of functionality for handling opengl and sprites. 
+
+TODO(brett): add the sounds component to this.
+TODO(brett): split definitions and code up for creating the lib
+
+Version 0.02
+
+*/
+
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -175,14 +188,14 @@ private:
 typedef ShaderHandler BGLShaderHandler;
 
 
-class Sprite
+class BGLSprite
 {
 public:
 
 	
 	// 0, 0 is top right hand corner of sprite
 	// diffuseTag and normalTag are to have the same coordinates
-	static Sprite Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames);
+	static BGLSprite Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames);
 
 	// TODO(brett): for batching if it is needed... NOT finished
 	static void BeginRender();
@@ -202,7 +215,7 @@ public:
 
 	void SetAnimationFrame(uint32_t frameIndex); // set the curretn frame MOD max frames;
 	void SetRelativeAnimationFrame(uint32_t frameIndex); // move relative to the current frame and set the currentframe
-	void AdvanceAnimationFrame(uint32_t frameIndex);
+	void AdvanceAnimationFrame();
 
 public:
 	BGLSpriteVertex quad[6];
@@ -212,7 +225,7 @@ public:
 	glm::vec2 scale;
 	
 	// this is the model transform for moving/rotating/scaling
-	glm::mat4 modelTransform;
+	glm::mat4 model;
 
 	// this is for ordering the background withe foreground. 
 	int32_t order; 
@@ -228,6 +241,12 @@ public:
 	std::string diffuseTextureTag;
 	std::string normalTextureTag;
 
+	// TODO(brett): this is for a newer version of BGL in preperation for batching
+	BGLShader  *shader;
+	BGLTexture *diffuseTexture;
+	BGLTexture *normalTexture;
+
 	GLuint vbo;
 };
+
 
