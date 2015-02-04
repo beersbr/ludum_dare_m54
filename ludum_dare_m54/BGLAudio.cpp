@@ -12,6 +12,16 @@ bool BGLAudio::Initialize()
 	return (result == 0);
 }
 
+void BGLAudio::LoadMusic(std::string tag, std::string path)
+{
+
+}
+
+void BGLAudio::PlayMusic(std::string tag, int32_t loops)
+{
+
+}
+
 void BGLAudio::LoadAudio(std::string tag, std::string path)
 {
 	Mix_Chunk *sound = 0;

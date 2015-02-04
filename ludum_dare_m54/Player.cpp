@@ -7,7 +7,7 @@ Player::Player(void) : Entity(true)
 	shootBulletsInterval = 0.15f;
 	shootBulletsElapsed = 0.0f;
 
-	animationFrameInterval = 0.25f;
+	animationFrameInterval = 0.1f;
 	currentFrameTime = 0.0f;
 }
 

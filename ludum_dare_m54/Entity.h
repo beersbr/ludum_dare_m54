@@ -35,19 +35,32 @@ public:
 
 
 	template <typename T>
-	void addComponent(std::string name)
+	void AddComponent(std::string name)
 	{
+		// TODO(brett): if the component already exists we need to get rid of the old one
+		// if(components[T::family]) ...
 
-		std::string family = T::Family;
-
-		components[family] = new T(this);
+		components[T::Family] = new T(this);
 
 		// NOTE(brett): this is where we would fetch some data from a json file
-		std::unordered_map<std::string, float> data;
-		data["vx"] = 600.0f;
-		data["vy"] = 0.0f;
+		// std::unordered_map<std::string, float> data = resource_handler[T::family][name]
 
-		components[family]->Initialize(data);
+		std::unordered_map<std::string, std::unordered_map<std::string, float> > data;
+		data["player_simple_projectile"]["vx"] = 2000.0f;
+		data["player_simple_projectile"]["vy"] = 0.0f;
+
+		data["enemy_simple_ai"]["vx"] = -200.0f;
+		data["enemy_simple_ai"]["vy"] = 0.0f;
+
+		components[T::Family]->name = name;
+		components[T::Family]->Initialize(data[name]);
+	}
+
+
+	template <typename T>
+	T* GetComponent()
+	{
+		return (T *)components[T::Family];
 	}
 
 	// TODO(brett): see if we can manipulate entities purely with data
@@ -62,17 +75,16 @@ public:
 
 
 // NOTE(brett): this will all be moved. Just here for testing.
-
 class KinematicComponent : public Component
 {
 public:
 	KinematicComponent(Entity *who)
 	{
 		owner = who;
-		
-		name = "player_simple_projectile";
-		entities.push_back(this);
+		entityComponents.push_back(this);
 	}
+
+	
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
@@ -83,19 +95,54 @@ public:
 	static void Update(float dt);
 
 	static std::string Family;
-
 public:
 	glm::vec2 vel;
 
 private:
-	static std::list<KinematicComponent *> entities;
+	static std::list<KinematicComponent *> entityComponents;
 };
 
-static 
-void createPlayerBullet(glm::vec2 pos, glm::vec2 size)
+
+class AIComponent : public Component
 {
+public:
+	AIComponent(Entity *who)
+	{
+		owner = who;
+		entityComponents.push_back(this);
+		liveTime = 0.0f;
+		spawnPos = owner->pos;
+	}
 
 
+	virtual void Initialize(std::unordered_map<std::string, float> args)
+	{
+		// TODO(brett): need values for an ai component. Probably a "script" which would just be a
+		// class defined somewhere else that would dictate functionality
+
+	}
+
+	static void Update(float dt);
+
+public:
+	static std::string Family;
+
+	// NOTE(brett): this might always be the player and can probably
+	// be static
+	Entity *target;
+
+	float liveTime;
+	glm::vec2 spawnPos;
+
+
+private:
+	static std::list<AIComponent *> entityComponents;
+};
+
+
+static void 
+createPlayerBullet(glm::vec2 pos, glm::vec2 size)
+{
 	// NOTE(brett): Entity should provide a pool to add entities to. For now I'm throwing it on the heap
 
 	// NOTE(brett): this would pull from the kinematic :: create_player_bullet tag and just give the data to the
@@ -104,5 +151,16 @@ void createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
 	e->pos = pos;
 
-	e->addComponent<KinematicComponent>("player_simple_projectile");
+	e->AddComponent<KinematicComponent>("player_simple_projectile");
+}
+
+static void
+createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
+{
+	Entity *e = new Entity(false);
+	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
+	e->pos = pos;
+
+	e->AddComponent<KinematicComponent>("enemy_simple_ai");
+	e->AddComponent<AIComponent>("");
 }

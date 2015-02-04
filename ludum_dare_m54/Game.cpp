@@ -38,7 +38,7 @@ Game::Game()
 	};
 
 
-	backgroundSprite = BGLSprite::Create("background", "", 1200, 800, -2, 1, &BGLRectMake(0, 0, 400, 300));
+	backgroundSprite = BGLSprite::Create("background", "", 1201, 801, -2, 1, &BGLRectMake(0, 0, 400, 300));
 	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
 
 
@@ -49,6 +49,8 @@ Game::Game()
 	//tileSprites[4] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
 	player = Player();
 	player.sprite = BGLSprite::Create("testship", "", 100, 60, 0, 4, &erects[0]);
+	player.pos.x = 100.0f;
+	player.pos.y = 400.0f;
 
 	BGLAudio::LoadAudio("laser", "sounds/laser.wav");
 
@@ -75,9 +77,6 @@ Game::Game()
 		}
 	}
 
-	tempPlayer = new Player();
-	tempPlayer->sprite = BGLSprite::Create("testship", "", 80, 40, 0, 4, &erects[0]);
-
 	camera = BGLRectMake(0, 0, 1200, 800);
 }
 
@@ -91,6 +90,15 @@ void Game::update(int frameCount, float dt)
 	BGLRect cameraRect = BGLRectMake(camera.x, camera.y, camera.w + 40, camera.h);
 
 	BGLInputState GameInput = BGLController::GetInputState();
+
+
+	local_persist float spawnTimer = 0.0f;
+	spawnTimer += dt;
+	if(GameInput.keyboard.keys[SDLK_0].down && spawnTimer > 1.0f)
+	{
+		createPlayerEnemy(glm::vec2(camera.x + camera.w, camera.y + camera.h/2.0f), glm::vec2(60.0f, 30.0f));
+		spawnTimer = 0.0f;
+	}
 
 	player.Update(&GameInput, dt);
 
@@ -116,6 +124,7 @@ void Game::update(int frameCount, float dt)
 
 
 	// NOTE(brett): this is where we update each component type using the static update function
+	AIComponent::Update(dt);
 	KinematicComponent::Update(dt);
 
 	// RENDERING 

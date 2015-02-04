@@ -447,6 +447,9 @@ BGLShader BGLShaderHandler::Get(std::string tag)
 }
 
 
+
+GLuint BGLSprite::BGLSpriteVBO = 0;
+
 void BGLSprite::Render()
 {
 	// TODO(brett): make sure the sprite is bound
@@ -631,13 +634,13 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 	sprite.quad[5].uv.x = uvFrameW;
 	sprite.quad[5].uv.y = uvFrameH;
 
-
+	glm::vec2 f;
 	glGenBuffers(1, &sprite.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, sprite.vbo);
 	glBufferData(GL_ARRAY_BUFFER,
 				sizeof(sprite.quad),
 				&sprite.quad[0],
-				GL_DYNAMIC_DRAW);
+				GL_STREAM_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 

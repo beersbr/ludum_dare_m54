@@ -30,6 +30,7 @@ Version 0.02
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 #define BGL_MAX_LAYERS 5
+#define BGL_BATCH_SPRITE_MAX 8192
 
 typedef struct
 {
@@ -247,6 +248,8 @@ public:
 	BGLTexture *normalTexture;
 
 	GLuint vbo;
+
+	uint64_t spritesSz;
+	uint64_t spriteOffset;
+	static GLuint BGLSpriteVBO;
 };
-
-

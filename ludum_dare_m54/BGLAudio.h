@@ -23,6 +23,10 @@ public:
 	static bool Initialize();
 	static void LoadAudio(std::string tag, std::string path);
 	static void PlayAudio(std::string tag, int32_t loops = 0);
+
+	void LoadMusic(std::string tag, std::string path);
+	void PlayMusic(std::string tag, int32_t loops);
+
 	static void SetVolume(uint32_t volume);
 
 	static void Cleanup();
