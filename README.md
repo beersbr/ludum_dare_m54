@@ -4,7 +4,33 @@ A fun game dev project in c++/opengl/json
 
 *jan 4, 2015*
 
-## NOTE (33)
+#### TODO (24)
+1. ludum_dare_m54/BGL.cpp:455            make sure the sprite is bound
+2. ludum_dare_m54/BGL.cpp:477            no lights yet, that will have to be done in the batching
+3. ludum_dare_m54/BGL.cpp:508            move this code out int the animation frame functions
+4. ludum_dare_m54/BGL.cpp:600            move this code out int the animation frame functions
+5. ludum_dare_m54/BGL.h:9                add the sounds component to this.
+6. ludum_dare_m54/BGL.h:10               split definitions and code up for creating the lib
+7. ludum_dare_m54/BGL.h:95               make this actually set up the render frame for post effects
+8. ludum_dare_m54/BGL.h:118              get the frame manager set up so we can run shaders on the entire frame vs each sprite
+9. ludum_dare_m54/BGL.h:188              Need to make sure things are named consistently 
+10. ludum_dare_m54/BGL.h:201             for batching if it is needed... NOT finished
+11. ludum_dare_m54/BGL.h:206             might get some speed boost if the buffer is changed from data to an 
+12. ludum_dare_m54/BGL.h:210             Get these finished after we have sprites on the screen
+13. ludum_dare_m54/BGL.h:245             this is for a newer version of BGL in preperation for batching
+14. ludum_dare_m54/BGLAudio.cpp:61       Before we use this function we need to make sure none of the channels are playing
+15. ludum_dare_m54/Entity.h:49           if the component already exists we need to get rid of the old one
+16. ludum_dare_m54/Entity.h:74           see if we can manipulate entities purely with data
+17. ludum_dare_m54/Entity.h:80           this is just for testing
+18. ludum_dare_m54/Entity.h:202          add a transform component that would hold all the transformations
+19. ludum_dare_m54/Entity.h:204          that would mean that the renderer needs to change a big to be
+20. ludum_dare_m54/Game.cpp:139          Make sure to test the performance of all the glm::functions. If they are taking too long
+21. ludum_dare_m54/Game.cpp:153          Need a fast way to get the world coord rect from a sprite. That way 
+22. ludum_dare_m54/platform.cpp:189      this is for when I feel like doing cleanup
+23. ludum_dare_m54/Player.cpp:67         this is annoying so I disabled it until I can get a different sound lib in 
+24. ludum_dare_m54/Player.cpp:80         this is annoying so I disabled it until I can get a different sound lib in 
+
+#### NOTE (33)
 1. ludum_dare_m54/BGL.cpp:463            this is a bit redundant... perhaps the texture will have the tag (noted in BGL.h)
 2. ludum_dare_m54/BGL.cpp:478            maybe the lights are static parts of the sprite that can be turned
 3. ludum_dare_m54/BGL.cpp:500            Do I reset the transform after every draw?
@@ -38,30 +64,3 @@ A fun game dev project in c++/opengl/json
 31. ludum_dare_m54/Player.cpp:69         this works better than the sdl version. Though we just get a filename. it is going to 
 32. ludum_dare_m54/Player.cpp:82         this works better than the sdl version. Though we just get a filename. it is going to 
 33. ludum_dare_m54/Resourcer.h:10        Dont need these as they cause circular dependencies.
-
-## TODO (24)
-1. ludum_dare_m54/BGL.cpp:455            make sure the sprite is bound
-2. ludum_dare_m54/BGL.cpp:477            no lights yet, that will have to be done in the batching
-3. ludum_dare_m54/BGL.cpp:508            move this code out int the animation frame functions
-4. ludum_dare_m54/BGL.cpp:600            move this code out int the animation frame functions
-5. ludum_dare_m54/BGL.h:9                add the sounds component to this.
-6. ludum_dare_m54/BGL.h:10               split definitions and code up for creating the lib
-7. ludum_dare_m54/BGL.h:95               make this actually set up the render frame for post effects
-8. ludum_dare_m54/BGL.h:118              get the frame manager set up so we can run shaders on the entire frame vs each sprite
-9. ludum_dare_m54/BGL.h:188              Need to make sure things are named consistently 
-10. ludum_dare_m54/BGL.h:201             for batching if it is needed... NOT finished
-11. ludum_dare_m54/BGL.h:206             might get some speed boost if the buffer is changed from data to an 
-12. ludum_dare_m54/BGL.h:210             Get these finished after we have sprites on the screen
-13. ludum_dare_m54/BGL.h:245             this is for a newer version of BGL in preperation for batching
-14. ludum_dare_m54/BGLAudio.cpp:61       Before we use this function we need to make sure none of the channels are playing
-15. ludum_dare_m54/Entity.h:49           if the component already exists we need to get rid of the old one
-16. ludum_dare_m54/Entity.h:74           see if we can manipulate entities purely with data
-17. ludum_dare_m54/Entity.h:80           this is just for testing
-18. ludum_dare_m54/Entity.h:202          add a transform component that would hold all the transformations
-19. ludum_dare_m54/Entity.h:204          that would mean that the renderer needs to change a big to be
-20. ludum_dare_m54/Game.cpp:139          Make sure to test the performance of all the glm::functions. If they are taking too long
-21. ludum_dare_m54/Game.cpp:153          Need a fast way to get the world coord rect from a sprite. That way 
-22. ludum_dare_m54/platform.cpp:189      this is for when I feel like doing cleanup
-23. ludum_dare_m54/Player.cpp:67         this is annoying so I disabled it until I can get a different sound lib in 
-24. ludum_dare_m54/Player.cpp:80         this is annoying so I disabled it until I can get a different sound lib in 
-
