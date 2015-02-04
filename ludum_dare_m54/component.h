@@ -10,6 +10,8 @@ class Entity;
 class Component
 {
 public:
+	Component(Entity *who);
+	virtual ~Component();
 	Entity *owner;
 
 	std::string family;

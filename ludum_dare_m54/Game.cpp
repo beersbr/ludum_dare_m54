@@ -94,7 +94,7 @@ void Game::update(int frameCount, float dt)
 
 	local_persist float spawnTimer = 0.0f;
 	spawnTimer += dt;
-	if(GameInput.keyboard.keys[SDLK_0].down && spawnTimer > 1.0f)
+	if(GameInput.keyboard.keys[SDLK_0].down && spawnTimer > 0.3f)
 	{
 		createPlayerEnemy(glm::vec2(camera.x + camera.w, camera.y + camera.h/2.0f), glm::vec2(60.0f, 30.0f));
 		spawnTimer = 0.0f;
@@ -123,12 +123,18 @@ void Game::update(int frameCount, float dt)
 	player.pos.x += cameraSpeed*dt;
 
 
+	// NOTE(brett): some of the systems are atomic and can be performed concurrently. The behavior
+	// is a good example of that. Maybe we can do all the behaviors at once?
 	// NOTE(brett): this is where we update each component type using the static update function
-	AIComponent::Update(dt);
 	KinematicComponent::Update(dt);
+	BehaviorComponent::Update(dt);
 
+
+	////////////////////////////////////////////////////
 	// RENDERING 
+	////////////////////////////////////////////////////
 
+	// NOTE(brett): dont need to clear as we are drawing a big sprite in the background
 	//glClear(GL_COLOR_BUFFER_BIT);
 	// TODO(brett): Make sure to test the performance of all the glm::functions. If they are taking too long
 	// then I can just access the array and manipulate the matrix components directly (should not be an issue

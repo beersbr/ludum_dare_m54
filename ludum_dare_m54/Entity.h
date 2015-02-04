@@ -9,6 +9,14 @@
 #include "SpriteSheet.h"
 #include "component.h"
 
+
+enum EntityType { 
+	ENEMY, 
+	PROJECTILE, 
+	TILE, 
+	ENTITY_TYPE_COUNT
+};
+
 // Entity describes an object that can be interacted with in a game, this includes PLAYER, ENEMY, BULLET
 // The entity will be considered a drawable object, so needs to include a spritemap
 class Entity
@@ -17,6 +25,9 @@ public:
     Entity(void);
 	Entity(bool dontTrack);
     ~Entity(void);
+
+	EntityType typeId;
+	std::string tag;
 
     glm::vec2 pos;                      // x,y position in top left cornder
     //glm::vec2 dir;                    // Direction? Might incldue facing for enemy firing, think on this one.
@@ -28,8 +39,6 @@ public:
     BGLSprite sprite;                      // Actual BGL sprite
     int curFrame;                       // Current frame of animation as dictated by the sprite sheet class
 
-	int32_t typeId;						// this is the id for entities to be able to differ from one another
-
 	virtual void Update(float dt);	
 	virtual void Render();
 
@@ -39,7 +48,6 @@ public:
 	{
 		// TODO(brett): if the component already exists we need to get rid of the old one
 		// if(components[T::family]) ...
-
 		components[T::Family] = new T(this);
 
 		// NOTE(brett): this is where we would fetch some data from a json file
@@ -70,21 +78,25 @@ public:
 
 
 	// TODO(brett): this is just for testing
-	static std::vector<Entity *> createdEntities;
+	static std::list<Entity *> createdEntities;
 };
 
 
 // NOTE(brett): this will all be moved. Just here for testing.
+// NOTE(brett): not actually sure this component type is needed at all
 class KinematicComponent : public Component
 {
 public:
-	KinematicComponent(Entity *who)
+	KinematicComponent(Entity *who) : Component(who)
 	{
-		owner = who;
+	
 		entityComponents.push_back(this);
 	}
 
-	
+	virtual ~KinematicComponent()
+	{
+		entityComponents.remove(this);
+	}
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
@@ -103,23 +115,21 @@ private:
 };
 
 
-class AIComponent : public Component
+class PhysicsComponent : public Component
 {
 public:
-	AIComponent(Entity *who)
+	PhysicsComponent(Entity *who) : Component(who)
 	{
-		owner = who;
-		entityComponents.push_back(this);
-		liveTime = 0.0f;
-		spawnPos = owner->pos;
-	}
 
+	}
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
-		// TODO(brett): need values for an ai component. Probably a "script" which would just be a
-		// class defined somewhere else that would dictate functionality
+	}
 
+	virtual ~PhysicsComponent()
+	{
+		entityComponents.remove(this);
 	}
 
 	static void Update(float dt);
@@ -127,20 +137,116 @@ public:
 public:
 	static std::string Family;
 
-	// NOTE(brett): this might always be the player and can probably
-	// be static
-	Entity *target;
-
-	float liveTime;
-	glm::vec2 spawnPos;
-
-
 private:
-	static std::list<AIComponent *> entityComponents;
+	static std::list<PhysicsComponent *> entityComponents;
 };
 
 
-static void 
+class Behavior
+{
+public:
+
+	Behavior()
+	{
+		actor = 0;
+	}
+
+	// This happens when a behavior is loaded by the system
+	virtual void Load(Entity *owner)
+	{ 
+		actor = owner; 
+	}
+
+	// NOTE(brett): we can do things based on events here because entities are tagged
+	// NOTE(brett): this function would be called by a collider comopnent in the physics family
+	//virtual void OnCollide(Entity *other){}
+
+	// This is where any startup code from the programmer should go
+	// This is called after Load
+	virtual void Start(){};
+
+	// This is called each update step of the game
+	virtual void Update(float dt){};
+	virtual void End(){};
+
+public:
+	Entity *actor;
+};
+
+
+class CosineEnemyBehavior : public Behavior
+{
+public:
+	float start_x;
+	float start_y;
+	float elapsedTime;
+
+	virtual void Start()
+	{
+		// NOTE(brett): could grab stuff out of the entities transform data OR could do something if
+		// we have collided
+
+		start_x = actor->pos.x;
+		start_y = actor->pos.y;
+		elapsedTime = 0.0f;
+	}
+
+	virtual void Update(float dt)
+	{
+		elapsedTime += dt;
+
+
+		// NOTE(brett): Because the position of the entity is part of the entity
+		// I am just manipulating it directly instead of using a transform.
+		
+		// TODO(brett): add a transform component that would hold all the transformations
+		// that an entity could have. That includes rotation and scaling
+		// TODO(brett): that would mean that the renderer needs to change a big to be
+		// a little smarter on how we access data.
+		actor->pos.y = 150.0 * cosf(elapsedTime * 4.0f) + 400;
+		actor->pos.x -= 100.0 * dt;
+	}
+};
+
+// The behavior comopnent gives all the other components a purpose. It allows the
+// entity to respond to any event that any of the other components might throw.
+//
+// NOTE(brett): Perhaps the entity should just have a list of behavior 'scripts'
+// and the behavior component gives an api into manipulating that variable
+class BehaviorComponent : public Component
+{
+public:
+	BehaviorComponent(Entity *who) : Component(who)
+	{
+		entityComponents.push_back(this);
+	}
+	
+	virtual void Initialize(std::unordered_map<std::string, float> args)
+	{
+		// NOTE(brett): maybe the behaviors (when loaded, probably at the game load) will be put into a map
+		// that this object can then use to create them from -- as they will be in a dynamic lib
+		behavior = new CosineEnemyBehavior();
+		behavior->Load(owner);
+		behavior->Start();
+	}
+
+	virtual ~BehaviorComponent()
+	{
+		entityComponents.remove(this);
+	}
+
+public:
+	static void Update(float dt);
+
+public:
+	static std::string Family;
+
+private:
+	Behavior *behavior;
+	static std::list<BehaviorComponent *> entityComponents;
+};
+
+bglinternal void 
 createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 {
 	// NOTE(brett): Entity should provide a pool to add entities to. For now I'm throwing it on the heap
@@ -154,13 +260,12 @@ createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 	e->AddComponent<KinematicComponent>("player_simple_projectile");
 }
 
-static void
+bglinternal void
 createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
 {
 	Entity *e = new Entity(false);
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
 	e->pos = pos;
 
-	e->AddComponent<KinematicComponent>("enemy_simple_ai");
-	e->AddComponent<AIComponent>("");
+	e->AddComponent<BehaviorComponent>("");
 }
