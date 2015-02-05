@@ -125,6 +125,7 @@ public:
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
+
 	}
 
 	virtual ~PhysicsComponent()

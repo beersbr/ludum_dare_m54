@@ -646,3 +646,12 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 
 	return sprite;
 }
+
+
+GLfloat BGLSpriteBatch::verts[8] = {
+	-0.5f,  0.5f,
+	-0.5f, -0.5f,
+	 0.5f,  0.5f, 
+	 0.5f, -0.5f
+};
+

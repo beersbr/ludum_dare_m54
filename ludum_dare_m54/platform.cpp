@@ -1,4 +1,5 @@
 
+#include <chrono>
 #include <GL/glew.h>
 #include "platformdef.h"
 #include "BGL.h"
@@ -130,7 +131,6 @@ int main(int argc, char *argv[])
 	int32_t secondSum = 0;
 
 	SDL_Event event;
-
 
 	bool Running = true;
 	while(Running)

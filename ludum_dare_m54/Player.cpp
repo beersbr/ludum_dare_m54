@@ -77,7 +77,6 @@ void Player::Update(BGLInputState *state, float dt)
 	{
 		if(shootBulletsElapsed > shootBulletsInterval)
 		{
-			// TODO(brett): this is annoying so I disabled it until I can get a different sound lib in 
 			BGLAudio::PlayAudio("laser");
 			// NOTE(brett): this works better than the sdl version. Though we just get a filename. it is going to 
 			// be used until fmod gets added

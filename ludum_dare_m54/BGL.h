@@ -30,7 +30,7 @@ Version 0.02
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 #define BGL_MAX_LAYERS 5
-#define BGL_BATCH_SPRITE_MAX 8192
+#define BGL_BATCH_SPRITE_MAX 10000
 
 typedef struct
 {
@@ -252,4 +252,42 @@ public:
 	uint64_t spritesSz;
 	uint64_t spriteOffset;
 	static GLuint BGLSpriteVBO;
+};
+
+
+typedef struct 
+{
+	GLfloat x, y;
+	GLfloat scaleX, scaleY;
+	GLfloat u, v;
+
+	GLbyte textureIndex;
+
+} BGLSpriteBatchVertex;
+
+class BGLSpriteBatch
+{
+public:
+	GLuint VAO;
+	GLuint VBO;
+
+	BGLSpriteBatch()
+	{
+		glGenVertexArrays(1, &VAO);
+		if(!VAO)
+		{
+			std::cout << "ERROR: Could not create opengl VAO for spriteBatch" << std::endl;
+		}
+
+		glBindVertexArray(VAO);
+		glGenBuffers(1, &VBO);
+		if(!VBO)
+		{
+			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
+		}
+	}
+
+	
+private:
+	static GLfloat verts[8];
 };
