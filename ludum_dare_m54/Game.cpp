@@ -94,7 +94,7 @@ void Game::update(int frameCount, float dt)
 
 	local_persist float spawnTimer = 0.0f;
 	spawnTimer += dt;
-	if(GameInput.keyboard.keys[SDLK_0].down && spawnTimer > 0.3f)
+	if(/*GameInput.keyboard.keys[SDLK_0].down &&*/ spawnTimer > 0.3f)
 	{
 		createPlayerEnemy(glm::vec2(camera.x + camera.w, camera.y + camera.h/2.0f), glm::vec2(60.0f, 30.0f));
 		spawnTimer = 0.0f;
@@ -129,6 +129,8 @@ void Game::update(int frameCount, float dt)
 	KinematicComponent::Update(dt);
 	PhysicsComponent::Update(dt);
 	BehaviorComponent::Update(dt);
+
+	
 
 	std::list<Entity *>::iterator createdEntityIterator = Entity::createdEntities.begin();
 	for( ; createdEntityIterator != Entity::createdEntities.end(); )

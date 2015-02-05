@@ -4,7 +4,7 @@
 Player::Player(void) : Entity(true)
 {
 	moveSpeed = 350.0;
-	shootBulletsInterval = 0.15f;
+	shootBulletsInterval = 0.3f;
 	shootBulletsElapsed = 0.0f;
 
 	animationFrameInterval = 0.1f;
@@ -73,7 +73,7 @@ void Player::Update(BGLInputState *state, float dt)
 			createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
 		}
 	}
-	if (state->keyboard.keys[SDLK_l].down)
+	if (state->keyboard.keys[SDLK_j].down)
 	{
 		if(shootBulletsElapsed > shootBulletsInterval)
 		{
