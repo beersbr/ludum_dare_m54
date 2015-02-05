@@ -127,8 +127,29 @@ void Game::update(int frameCount, float dt)
 	// is a good example of that. Maybe we can do all the behaviors at once?
 	// NOTE(brett): this is where we update each component type using the static update function
 	KinematicComponent::Update(dt);
+	PhysicsComponent::Update(dt);
 	BehaviorComponent::Update(dt);
 
+	std::list<Entity *>::iterator createdEntityIterator = Entity::createdEntities.begin();
+	for( ; createdEntityIterator != Entity::createdEntities.end(); )
+	{
+		if((*createdEntityIterator)->deleted)
+			createdEntityIterator = Entity::createdEntities.erase(createdEntityIterator);
+		else
+			createdEntityIterator++;
+	}
+
+	// TODO(brett): Can proabaly just add deleted objects to a list and maybe add a behavior for OnDelete
+	std::list<Entity *>::iterator entityIi = Entity::deletedEntities.begin();
+
+	for( ; entityIi != Entity::deletedEntities.end(); entityIi++)
+	{
+		if(!(*entityIi)) continue;
+		(*entityIi)->CleanupComponents();
+		delete (*entityIi);
+		(*entityIi) = 0;
+	}
+	Entity::deletedEntities.clear();
 
 	////////////////////////////////////////////////////
 	// RENDERING 

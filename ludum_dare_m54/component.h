@@ -14,8 +14,8 @@ public:
 	virtual ~Component();
 	Entity *owner;
 
-	std::string family;
 	std::string name;
 
 	virtual void Initialize(std::unordered_map<std::string, float> args) = 0;
+	virtual void Cleanup() = 0;
 };

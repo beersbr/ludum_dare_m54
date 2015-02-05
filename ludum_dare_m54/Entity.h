@@ -29,6 +29,10 @@ public:
 	EntityType typeId;
 	std::string tag;
 
+	glm::mat4 transform;		// this is going to be the position fo the entity as well as the rotation and scaling
+	bool deleted;
+	void Delete();
+
     glm::vec2 pos;                      // x,y position in top left cornder
     //glm::vec2 dir;                    // Direction? Might incldue facing for enemy firing, think on this one.
     glm::vec2 vel;                      // current vlocity in x,y direction
@@ -60,6 +64,12 @@ public:
 		data["enemy_simple_ai"]["vx"] = -200.0f;
 		data["enemy_simple_ai"]["vy"] = 0.0f;
 
+		data["AABB"]["type"]    = AABB;
+		data["AABB"]["width"]   = 40.0f;
+		data["AABB"]["height"]  = 40.0f;
+		data["AABB"]["offsetX"] = 0.0f;
+		data["AABB"]["offsetY"] = 0.0f;
+
 		components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[name]);
 	}
@@ -71,6 +81,17 @@ public:
 		return (T *)components[T::Family];
 	}
 
+
+	void CleanupComponents()
+	{
+		std::unordered_map<std::string, Component *>::iterator it = components.begin();
+		for( ; it != components.end(); ++it)
+		{
+			if(it->second)
+				it->second->Cleanup();
+		}
+	}
+
 	// TODO(brett): see if we can manipulate entities purely with data
 	//void addComponent(std::string family, std::string type);
 	//void removeComponent(std::string family);
@@ -79,11 +100,12 @@ public:
 
 	// TODO(brett): this is just for testing
 	static std::list<Entity *> createdEntities;
+	static std::list<Entity *> deletedEntities;
 };
 
 
 // NOTE(brett): this will all be moved. Just here for testing.
-// NOTE(brett): not actually sure this component type is needed at all
+// TODO(brett): This component is not needed anymore. These type of things will be done on the script
 class KinematicComponent : public Component
 {
 public:
@@ -104,6 +126,13 @@ public:
 		vel.y = args["vy"];
 	}
 
+
+	virtual void Cleanup()
+	{
+		entityComponents.remove(this);
+		owner = 0;
+	}
+
 	static void Update(float dt);
 
 	static std::string Family;
@@ -114,18 +143,23 @@ private:
 	static std::list<KinematicComponent *> entityComponents;
 };
 
-
+enum PhysicsColliderType { CIRCLE, AABB };
 class PhysicsComponent : public Component
 {
 public:
 	PhysicsComponent(Entity *who) : Component(who)
 	{
-
+		entityComponents.push_back(this);
 	}
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
-
+		type = args["type"];
+		radius = args["radius"];
+		width = args["width"];
+		height = args["height"];
+		offsetX = args["offsetX"];
+		offsetY = args["offsetY"];
 	}
 
 	virtual ~PhysicsComponent()
@@ -133,10 +167,27 @@ public:
 		entityComponents.remove(this);
 	}
 
+	virtual void Cleanup()
+	{
+		entityComponents.remove(this);
+		owner = 0;
+	}
+
 	static void Update(float dt);
 
 public:
 	static std::string Family;
+
+	glm::vec2 size;
+	float radius;
+
+	float width;
+	float height;
+
+	float offsetX;
+	float offsetY;
+
+	int32_t type;
 
 private:
 	static std::list<PhysicsComponent *> entityComponents;
@@ -152,6 +203,11 @@ public:
 		actor = 0;
 	}
 
+	~Behavior()
+	{
+		actor = 0;
+	}
+
 	// This happens when a behavior is loaded by the system
 	virtual void Load(Entity *owner)
 	{ 
@@ -162,13 +218,15 @@ public:
 	// NOTE(brett): this function would be called by a collider comopnent in the physics family
 	//virtual void OnCollide(Entity *other){}
 
+	virtual void OnCollide(Entity *other){}
+
 	// This is where any startup code from the programmer should go
 	// This is called after Load
-	virtual void Start(){};
+	virtual void Start(){}
 
 	// This is called each update step of the game
-	virtual void Update(float dt){};
-	virtual void End(){};
+	virtual void Update(float dt){}
+	virtual void End(){}
 
 public:
 	Entity *actor;
@@ -192,6 +250,16 @@ public:
 		elapsedTime = 0.0f;
 	}
 
+	virtual void OnCollide(Entity *e)
+	{
+		std::cout << actor->tag << " collided with " << e->tag << std::endl;
+		if(e->tag == "Bullet")
+		{
+			e->Delete();
+			actor->Delete();
+		}
+	}
+
 	virtual void Update(float dt)
 	{
 		elapsedTime += dt;
@@ -207,6 +275,7 @@ public:
 		actor->pos.y = 150.0 * cosf(elapsedTime * 4.0f) + 400;
 		actor->pos.x -= 100.0 * dt;
 	}
+
 };
 
 // The behavior comopnent gives all the other components a purpose. It allows the
@@ -236,14 +305,21 @@ public:
 		entityComponents.remove(this);
 	}
 
+	virtual void Cleanup()
+	{
+		entityComponents.remove(this);
+		owner = 0;
+		delete behavior;
+	}
+
 public:
 	static void Update(float dt);
-
-public:
 	static std::string Family;
 
-private:
+public:
 	Behavior *behavior;
+
+private:
 	static std::list<BehaviorComponent *> entityComponents;
 };
 
@@ -257,8 +333,10 @@ createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 	Entity *e = new Entity(false);
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
 	e->pos = pos;
-
+	e->tag = "Bullet";
 	e->AddComponent<KinematicComponent>("player_simple_projectile");
+	e->AddComponent<PhysicsComponent>("AABB");
+
 }
 
 bglinternal void
@@ -267,6 +345,7 @@ createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
 	Entity *e = new Entity(false);
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
 	e->pos = pos;
-
+	e->tag = "Enemy";
 	e->AddComponent<BehaviorComponent>("");
+	e->AddComponent<PhysicsComponent>("AABB");
 }
