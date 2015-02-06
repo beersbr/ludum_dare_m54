@@ -2,24 +2,27 @@
 
 Game::Game(std::vector<std::pair<std::string, std::string>>& resourceFileList, std::vector<std::pair<std::string, std::string>>& textureFileList)
 {
-    running = false;
-    //Load the master sprite sheet into the graphcis card
+	running = false;
+	//Load the master sprite sheet into the graphcis card
 
-    for(int i = 0; i < resourceFileList.size(); i++)
-    {
-        resourcer.LoadResourceFromDisk(resourceFileList[i].second, resourceFileList[i].first);
-    }
+	for(int i = 0; i < resourceFileList.size(); i++)
+	{
+		resourcer.LoadResourceFromDisk(resourceFileList[i].second, resourceFileList[i].first);
+	}
 
-    for(int i = 0; i < textureFileList.size(); i++)
-    {
-        TextureHandler::Load(textureFileList[i].first, textureFileList[i].second);
-    }
+	for(int i = 0; i < textureFileList.size(); i++)
+	{
+		TextureHandler::Load(textureFileList[i].first, textureFileList[i].second);
+	}
 }
 
 Game::Game()
 {
 	ShaderHandler::Load("sprite", "shaders/sprite.vertex", "shaders/sprite.fragment");
 	BGLShader shader = ShaderHandler::Get("sprite");
+	ShaderHandler::Load("spriteEx", "shaders/spriteEx.vertex", "shaders/spriteEx.fragment");
+	BGLShader shaderEx = ShaderHandler::Get("spriteEx");
+
 	std::cout << "ShaderID: " << shader.id << std::endl;
 	glUseProgram(shader.id);
 
@@ -42,11 +45,11 @@ Game::Game()
 	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
 
 
-	//tileSprites[0] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
+	tileSprites[0] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
 	tileSprites[1] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 208, 16, 16));
-	//tileSprites[2] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
-	//tileSprites[3] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
-	//tileSprites[4] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
+	tileSprites[2] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
+	tileSprites[3] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
+	tileSprites[4] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
 	player = Player();
 	player.sprite = BGLSprite::Create("testship", "", 100, 60, 0, 4, &erects[0]);
 	player.pos.x = 100.0f;
@@ -57,8 +60,8 @@ Game::Game()
 	srand(SDL_GetTicks());
 
 	// NOTE(brett): this is used for the camera
-	float tileWidth = 40.0f;
-	float tileHeight = 40.0f;
+	float tileWidth = 20.0f;
+	float tileHeight = 20.0f;
 
 	mapWidth = tileWidth*120;
 	mapHeight = tileHeight*20;
@@ -78,11 +81,47 @@ Game::Game()
 	}
 
 	camera = BGLRectMake(0, 0, 1200, 800);
+
+
+	mapSz = 0;
+	for(uint32_t y = 0; y < 10000; ++y)
+	{
+		tiles[mapSz] = tileSprites[1];
+		int randX = rand()%1200;
+		int randY = rand()%800;
+		tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(randX*tileWidth+tileWidth/2.0f, randY*tileHeight+tileHeight/2.0f, 0.0f));
+		mapSz += 1;
+	}
+
 }
 
 
 void Game::update(int frameCount, float dt)
 {
+
+	BGLShader shader = ShaderHandler::Get("sprite");
+	glUseProgram(shader.id);
+	//backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(600.0, 400.0, 0.0f));
+	//backgroundSprite.Render();
+
+	BGLShader shaderEx = ShaderHandler::Get("spriteEx");
+	batcher.shader = shaderEx;
+
+	batcher.BeginBatch();
+	for(uint32_t i = 0; i < 1000; i++)
+	{
+		int randX = rand()%1200;
+		int randY = rand()%800;
+
+		glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(2.0, 2.0, 1.0));
+
+		batcher.DrawSprite(tiles[i], glm::vec2(randX, randY), glm::vec2(10, 10), glm::vec3(0, 0, 0));
+	}
+	batcher.RenderBatch(BGLProjection, glm::mat4());
+
+
+	return;
+
 	float cameraSpeed = 50.0f;
 
 	camera.x += cameraSpeed * dt;
@@ -130,7 +169,7 @@ void Game::update(int frameCount, float dt)
 	PhysicsComponent::Update(dt);
 	BehaviorComponent::Update(dt);
 
-	
+
 
 	std::list<Entity *>::iterator createdEntityIterator = Entity::createdEntities.begin();
 	for( ; createdEntityIterator != Entity::createdEntities.end(); )
@@ -177,7 +216,7 @@ void Game::update(int frameCount, float dt)
 			// I can cull objects that are not on the screen but are still "hot" (or alive?)
 			tiles[i].Render();
 		}
-		
+
 	}
 
 
@@ -190,7 +229,7 @@ void Game::update(int frameCount, float dt)
 		if(BGLRectOverlap(camera, rect))
 			(*it)->Render();
 	}
-	
+
 
 	player.Render();   
 }
@@ -201,6 +240,6 @@ Game::~Game(void)
 
 void Game::startGame(std::string mapName)
 {
-    curMap = new Map(mapName, &resourcer);
-    //Should also probably create the player entity here
+	curMap = new Map(mapName, &resourcer);
+	//Should also probably create the player entity here
 }

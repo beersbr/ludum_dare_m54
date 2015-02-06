@@ -452,6 +452,9 @@ GLuint BGLSprite::BGLSpriteVBO = 0;
 
 void BGLSprite::Render()
 {
+
+	glBindVertexArray(Frame.vao);
+
 	// TODO(brett): make sure the sprite is bound
 #pragma message(__LOC__ "This should be set before the render AND NOT done every frame")
 	BGLShader shader = BGLShaderHandler::Get("sprite");
@@ -492,7 +495,7 @@ void BGLSprite::Render()
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -501,7 +504,7 @@ void BGLSprite::Render()
 }
 
 void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
-{
+{ 
     uint32_t newFrame = frameIndex % totalFrames;
     currentFrame = newFrame;
 
@@ -514,31 +517,37 @@ void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
 
 	this->quad[0].pos.x = viewRect.x;
 	this->quad[0].pos.y = viewRect.y;
+
 	this->quad[0].uv.x = uvFrameX;
 	this->quad[0].uv.y = uvFrameY;
 
 	this->quad[1].pos.x = viewRect.x;
 	this->quad[1].pos.y = viewRect.y+viewRect.h;
+
 	this->quad[1].uv.x = uvFrameX;
 	this->quad[1].uv.y = uvFrameH;
 
 	this->quad[2].pos.x = viewRect.x+viewRect.w;
 	this->quad[2].pos.y = viewRect.y;
+
 	this->quad[2].uv.x = uvFrameW;
 	this->quad[2].uv.y = uvFrameY;
 
 	this->quad[3].pos.x = viewRect.x+viewRect.w;
 	this->quad[3].pos.y = viewRect.y;
+
 	this->quad[3].uv.x = uvFrameW;
 	this->quad[3].uv.y = uvFrameY;
 
 	this->quad[4].pos.x = viewRect.x;
 	this->quad[4].pos.y = viewRect.y+viewRect.h;
+
 	this->quad[4].uv.x = uvFrameX;
 	this->quad[4].uv.y = uvFrameH;
 
 	this->quad[5].pos.x = viewRect.x+viewRect.w;
 	this->quad[5].pos.y = viewRect.y+viewRect.h;
+
 	this->quad[5].uv.x = uvFrameW;
 	this->quad[5].uv.y = uvFrameH;
 
@@ -648,10 +657,12 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 }
 
 
-GLfloat BGLSpriteBatch::verts[8] = {
+GLfloat BGLSpriteBatch::verts[12] = {
 	-0.5f,  0.5f,
 	-0.5f, -0.5f,
 	 0.5f,  0.5f, 
+	 0.5f,  0.5f,
+	-0.5f, -0.5f,
 	 0.5f, -0.5f
 };
 

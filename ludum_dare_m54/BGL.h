@@ -259,9 +259,9 @@ typedef struct
 {
 	GLfloat x, y;
 	GLfloat scaleX, scaleY;
-	GLfloat u, v;
+	GLfloat rotatex, rotatey, rotatez;
 
-	GLbyte textureIndex;
+	GLubyte textureIndex;
 
 } BGLSpriteBatchVertex;
 
@@ -269,10 +269,24 @@ class BGLSpriteBatch
 {
 public:
 	GLuint VAO;
-	GLuint VBO;
+	GLuint GeometryVBO;
+	GLuint SpriteVBO;
+	GLuint TextureCoordVBO;
+
+	glm::mat4 view;
+
+	// the number of sprites that have been put into the buffer
+	uint32_t spritesIndex;
+
+	BGLShader shader;
+
+public:
 
 	BGLSpriteBatch()
 	{
+		shader = shader;
+		spritesIndex = 0;
+
 		glGenVertexArrays(1, &VAO);
 		if(!VAO)
 		{
@@ -280,14 +294,146 @@ public:
 		}
 
 		glBindVertexArray(VAO);
-		glGenBuffers(1, &VBO);
-		if(!VBO)
+		glGenBuffers(1, &GeometryVBO);
+		if(!GeometryVBO)
 		{
 			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
 		}
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
+		glEnableVertexAttribArray(5);
+
+		glBindBuffer(GL_ARRAY_BUFFER, GeometryVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verts), &verts[0], GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *)0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &TextureCoordVBO);
+		if(!TextureCoordVBO)
+		{
+			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, TextureCoordVBO);
+		glBufferData(GL_ARRAY_BUFFER, BGL_BATCH_SPRITE_MAX * 2 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
+		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *)0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+		glGenBuffers(1, &SpriteVBO);
+		if(!SpriteVBO)
+		{
+			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(BGLSpriteBatchVertex)*BGL_BATCH_SPRITE_MAX, 0, GL_STREAM_DRAW);
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)0);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*2));
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*4));
+		glVertexAttribPointer(5, 1, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*7));
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glVertexAttribDivisor(0, 0);
+		//glVertexAttribDivisor(4, 0);
+
+		glVertexAttribDivisor(1, 1);
+		glVertexAttribDivisor(2, 1);
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(5, 1);
+
+		glBindVertexArray(Frame.vao);
 	}
 
-	
+
+	void BeginBatch()
+	{
+		glBindVertexArray(VAO);
+		//glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
+
+		glUseProgram(shader.id);
+
+		BGLTexture t = TextureHandler::Get("spritesheet");
+		TextureHandler::Bind("spritesheet", 0);
+	}
+
+	void DrawSprite(BGLSprite sprite, glm::vec2 posCenter, glm::vec2 scale, glm::vec3 rotation)
+	{
+		if(spritesIndex == BGL_BATCH_SPRITE_MAX)
+			return;
+
+		glBindBuffer(GL_ARRAY_BUFFER, TextureCoordVBO);
+
+		GLfloat uvs[12] = {
+			sprite.quad[0].uv.x, sprite.quad[0].uv.y,
+			sprite.quad[1].uv.x, sprite.quad[1].uv.y,
+			sprite.quad[2].uv.x, sprite.quad[2].uv.y,
+			sprite.quad[3].uv.x, sprite.quad[3].uv.y,
+			sprite.quad[4].uv.x, sprite.quad[4].uv.y,
+			sprite.quad[5].uv.x, sprite.quad[5].uv.y,
+		};
+
+		glBufferSubData(GL_ARRAY_BUFFER,
+						spritesIndex*12*sizeof(GLfloat),
+						12 * sizeof(GLfloat),
+						(void *)uvs);
+
+		glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
+		BGLSpriteBatchVertex vert = { posCenter.x, posCenter.y,
+									  scale.x, scale.y,
+									  rotation.x, rotation.y, rotation.z, 0};
+
+		glBufferSubData(GL_ARRAY_BUFFER,
+						spritesIndex*sizeof(BGLSpriteBatchVertex),
+						sizeof(BGLSpriteBatchVertex),
+						(void *)&vert);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		spritesIndex += 1;
+
+	}
+
+	void RenderBatch(glm::mat4 projection, glm::mat4 view)
+	{
+		// TODO(brett): Get the shader and texture tracking working properly so we dont have to set
+		// this evertytime we draw
+		glUseProgram(shader.id);
+
+		GLint projectionLocation = glGetUniformLocation(shader.id, "projection");
+		GLint viewLocation = glGetUniformLocation(shader.id, "view");
+		GLint textureLocation = glGetUniformLocation(shader.id, "textureSampler");
+
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (GLfloat *)&projection[0]);
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, (GLfloat *)&view[0]);
+		glUniform1d(textureLocation, 0);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
+		glEnableVertexAttribArray(5);
+
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, spritesIndex);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
+		glDisableVertexAttribArray(5);
+
+		glBindVertexArray(Frame.vao);
+		spritesIndex = 0;
+	}
+
+
 private:
-	static GLfloat verts[8];
+
+	static GLfloat verts[12];
 };

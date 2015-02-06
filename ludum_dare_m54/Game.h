@@ -33,7 +33,7 @@ private:
 	Player *tempPlayer;
 	BGLSprite tileSprites[5];
 
-	BGLSprite tiles[5000];
+	BGLSprite tiles[10000];
 	int32_t mapSz;
 
 
@@ -44,6 +44,8 @@ private:
 	float cameraMoveSpeed;
 
 	BGLSprite backgroundSprite;
+
+	BGLSpriteBatch batcher;
 
 };
 
