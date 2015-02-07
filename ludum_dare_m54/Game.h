@@ -9,6 +9,7 @@
 #include "BGL.h"
 #include "BGLController.h"
 #include "BGLAudio.h"
+#include "components.h"
 
 class Game
 {
@@ -49,3 +50,31 @@ private:
 
 };
 
+
+
+bglinternal void 
+createPlayerBullet(glm::vec2 pos, glm::vec2 size)
+{
+	// NOTE(brett): Entity should provide a pool to add entities to. For now I'm throwing it on the heap
+
+	// NOTE(brett): this would pull from the kinematic :: create_player_bullet tag and just give the data to the
+	// appropriate components (drawable, kinematic, collidable, etc)
+	Entity *e = new Entity(false);
+	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
+	e->pos = pos;
+	e->tag = "Bullet";
+	e->AddComponent<KinematicComponent>("player_simple_projectile");
+	e->AddComponent<PhysicsComponent>("AABB");
+
+}
+
+bglinternal void
+createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
+{
+	Entity *e = new Entity(false);
+	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
+	e->pos = pos;
+	e->tag = "Enemy";
+	e->AddComponent<BehaviorComponent>("");
+	e->AddComponent<PhysicsComponent>("AABB");
+}

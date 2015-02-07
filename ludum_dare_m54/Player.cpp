@@ -70,7 +70,7 @@ void Player::Update(BGLInputState *state, float dt)
 			// be used until fmod gets added
 			//PlaySoundA("sounds/laser.wav", NULL, SND_FILENAME|SND_ASYNC);
 			shootBulletsElapsed = 0.0f;
-			createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
+			//createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
 		}
 	}
 	if (state->keyboard.keys[SDLK_j].down)
@@ -82,7 +82,7 @@ void Player::Update(BGLInputState *state, float dt)
 			// be used until fmod gets added
 			//PlaySoundA("sounds/laser.wav", NULL, SND_FILENAME|SND_ASYNC);
 			shootBulletsElapsed = 0.0f;
-			createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
+			//createPlayerBullet(glm::vec2(pos.x + 40, pos.y), glm::vec2(20, 20));
 		}
 	}
 

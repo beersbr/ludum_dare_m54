@@ -2,7 +2,6 @@
 
 #include "rapidjson/rapidjson.h"
 #include <string>
-
 #include <unordered_map>
 
 class Entity;
