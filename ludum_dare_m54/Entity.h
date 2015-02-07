@@ -70,7 +70,7 @@ public:
 		data["AABB"]["offsetX"] = 0.0f;
 		data["AABB"]["offsetY"] = 0.0f;
 
-		components[T::Family]->name = name;
+		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[name]);
 	}
 
