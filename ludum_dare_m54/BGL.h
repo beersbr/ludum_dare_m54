@@ -30,7 +30,7 @@ Version 0.02
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 #define BGL_MAX_LAYERS 5
-#define BGL_BATCH_SPRITE_MAX 10000
+#define BGL_BATCH_SPRITE_MAX 100000
 
 typedef struct
 {
@@ -233,6 +233,7 @@ public:
 
 	BGLRect viewRect;
 	BGLRect frames[SPRITE_MAX_FRAMES]; // max of 64 frames per animation
+	BGLRect frameRect;
 	uint32_t totalFrames;
 	uint32_t currentFrame;
 
@@ -260,8 +261,8 @@ typedef struct
 	GLfloat x, y;
 	GLfloat scaleX, scaleY;
 	GLfloat rotatex, rotatey, rotatez;
-
-	GLubyte textureIndex;
+	GLfloat tx, ty, tw, th;
+	GLint	textureIndex;
 
 } BGLSpriteBatchVertex;
 
@@ -271,14 +272,16 @@ public:
 	GLuint VAO;
 	GLuint GeometryVBO;
 	GLuint SpriteVBO;
-	GLuint TextureCoordVBO;
 
 	glm::mat4 view;
+
+	BGLSpriteBatchVertex spriteArray[BGL_BATCH_SPRITE_MAX];
 
 	// the number of sprites that have been put into the buffer
 	uint32_t spritesIndex;
 
 	BGLShader shader;
+	
 
 public:
 
@@ -300,26 +303,13 @@ public:
 			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
 		}
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
-		glEnableVertexAttribArray(4);
-		glEnableVertexAttribArray(5);
 
 		glBindBuffer(GL_ARRAY_BUFFER, GeometryVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verts), &verts[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *)0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glGenBuffers(1, &TextureCoordVBO);
-		if(!TextureCoordVBO)
-		{
-			std::cout << "ERROR: Could not create opengl VBO for spriteBatch" << std::endl;
-		}
-		glBindBuffer(GL_ARRAY_BUFFER, TextureCoordVBO);
-		glBufferData(GL_ARRAY_BUFFER, BGL_BATCH_SPRITE_MAX * 2 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
-		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *)0);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *)0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *)2);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
@@ -332,20 +322,28 @@ public:
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(BGLSpriteBatchVertex)*BGL_BATCH_SPRITE_MAX, 0, GL_STREAM_DRAW);
 
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)0);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*2));
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*4));
-		glVertexAttribPointer(5, 1, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*7));
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
+		glEnableVertexAttribArray(5);
+		glEnableVertexAttribArray(6);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)0);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*2));
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*4));
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)7);
+		glVertexAttribPointer(6, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*11));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glVertexAttribDivisor(0, 0);
-		//glVertexAttribDivisor(4, 0);
+		glVertexAttribDivisor(1, 0);
 
-		glVertexAttribDivisor(1, 1);
 		glVertexAttribDivisor(2, 1);
 		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
 		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
 
 		glBindVertexArray(Frame.vao);
 	}
@@ -354,7 +352,7 @@ public:
 	void BeginBatch()
 	{
 		glBindVertexArray(VAO);
-		//glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
 
 		glUseProgram(shader.id);
 
@@ -367,32 +365,32 @@ public:
 		if(spritesIndex == BGL_BATCH_SPRITE_MAX)
 			return;
 
-		glBindBuffer(GL_ARRAY_BUFFER, TextureCoordVBO);
-
-		GLfloat uvs[12] = {
-			sprite.quad[0].uv.x, sprite.quad[0].uv.y,
-			sprite.quad[1].uv.x, sprite.quad[1].uv.y,
-			sprite.quad[2].uv.x, sprite.quad[2].uv.y,
-			sprite.quad[3].uv.x, sprite.quad[3].uv.y,
-			sprite.quad[4].uv.x, sprite.quad[4].uv.y,
-			sprite.quad[5].uv.x, sprite.quad[5].uv.y,
-		};
-
-		glBufferSubData(GL_ARRAY_BUFFER,
-						spritesIndex*12*sizeof(GLfloat),
-						12 * sizeof(GLfloat),
-						(void *)uvs);
-
-		glBindBuffer(GL_ARRAY_BUFFER, SpriteVBO);
 		BGLSpriteBatchVertex vert = { posCenter.x, posCenter.y,
 									  scale.x, scale.y,
-									  rotation.x, rotation.y, rotation.z, 0};
+									  rotation.x, rotation.y, rotation.z,
+									  sprite.frameRect.x, sprite.frameRect.y, 
+									  sprite.frameRect.w, sprite.frameRect.h,
+									  0 };
 
-		glBufferSubData(GL_ARRAY_BUFFER,
-						spritesIndex*sizeof(BGLSpriteBatchVertex),
-						sizeof(BGLSpriteBatchVertex),
-						(void *)&vert);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		spriteArray[spritesIndex] = vert;
+
+		spritesIndex += 1;
+
+	}
+
+	void DrawSprite(BGLSprite *sprite, glm::vec2 posCenter, glm::vec2 scale, glm::vec3 rotation)
+	{
+		if(spritesIndex == BGL_BATCH_SPRITE_MAX)
+			return;
+
+		BGLSpriteBatchVertex vert = { posCenter.x, posCenter.y,
+									  scale.x, scale.y,
+									  rotation.x, rotation.y, rotation.z,
+									  sprite->frameRect.x, sprite->frameRect.y, 
+									  sprite->frameRect.w, sprite->frameRect.h,
+									  0 };
+
+		spriteArray[spritesIndex] = vert;
 
 		spritesIndex += 1;
 
@@ -412,28 +410,26 @@ public:
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, (GLfloat *)&view[0]);
 		glUniform1d(textureLocation, 0);
 
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
-		glEnableVertexAttribArray(4);
-		glEnableVertexAttribArray(5);
+		glBufferSubData(GL_ARRAY_BUFFER, 
+						0,
+						spritesIndex * sizeof(BGLSpriteBatchVertex),
+						(void *)&spriteArray[0]);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, spritesIndex);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(3);
-		glDisableVertexAttribArray(4);
-		glDisableVertexAttribArray(5);
-
 		glBindVertexArray(Frame.vao);
+
+
+	}
+
+
+	void ClearBatch()
+	{
 		spritesIndex = 0;
 	}
 
 
 private:
 
-	static GLfloat verts[12];
+	static GLfloat verts[24];
 };

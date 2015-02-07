@@ -74,7 +74,7 @@ Game::Game()
 		{
 			if(!(y < 4 || y > 15)) continue;
 
-			tiles[mapSz] = tileSprites[1];
+			tiles[mapSz] = tileSprites[rand()%5];
 			tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(x*tileWidth+tileWidth/2.0f, y*tileHeight+tileHeight/2.0f, 0.0f));
 			mapSz += 1;
 		}
@@ -84,9 +84,9 @@ Game::Game()
 
 
 	mapSz = 0;
-	for(uint32_t y = 0; y < 10000; ++y)
+	for(uint32_t y = 0; y < 100000; ++y)
 	{
-		tiles[mapSz] = tileSprites[1];
+		tiles[mapSz] = tileSprites[rand()%5];
 		int randX = rand()%1200;
 		int randY = rand()%800;
 		tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(randX*tileWidth+tileWidth/2.0f, randY*tileHeight+tileHeight/2.0f, 0.0f));
@@ -101,24 +101,23 @@ void Game::update(int frameCount, float dt)
 
 	BGLShader shader = ShaderHandler::Get("sprite");
 	glUseProgram(shader.id);
-	//backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(600.0, 400.0, 0.0f));
-	//backgroundSprite.Render();
+	backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(600.0, 400.0, 0.0f));
+	backgroundSprite.Render();
 
 	BGLShader shaderEx = ShaderHandler::Get("spriteEx");
 	batcher.shader = shaderEx;
 
 	batcher.BeginBatch();
-	for(uint32_t i = 0; i < 1000; i++)
+	for(uint32_t i = 0; i < 10000; i++)
 	{
 		int randX = rand()%1200;
 		int randY = rand()%800;
 
-		glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(2.0, 2.0, 1.0));
-
-		batcher.DrawSprite(tiles[i], glm::vec2(randX, randY), glm::vec2(10, 10), glm::vec3(0, 0, 0));
+		batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(10, 10), glm::vec3(0, 0, 0));
 	}
-	batcher.RenderBatch(BGLProjection, glm::mat4());
-
+	glm::mat4 prj = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
+	batcher.RenderBatch(prj, glm::mat4());
+	batcher.ClearBatch();
 
 	return;
 
@@ -168,8 +167,6 @@ void Game::update(int frameCount, float dt)
 	KinematicComponent::Update(dt);
 	PhysicsComponent::Update(dt);
 	BehaviorComponent::Update(dt);
-
-
 
 	std::list<Entity *>::iterator createdEntityIterator = Entity::createdEntities.begin();
 	for( ; createdEntityIterator != Entity::createdEntities.end(); )

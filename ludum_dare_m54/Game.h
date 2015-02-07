@@ -33,7 +33,7 @@ private:
 	Player *tempPlayer;
 	BGLSprite tileSprites[5];
 
-	BGLSprite tiles[10000];
+	BGLSprite tiles[100000];
 	int32_t mapSz;
 
 

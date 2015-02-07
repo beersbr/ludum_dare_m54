@@ -515,6 +515,8 @@ void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
 	float uvFrameW = uvFrameX + (frames[currentFrame].w / (float)textureWidth);
 	float uvFrameH = uvFrameY + (frames[currentFrame].h / (float)textureHeight);
 
+	frameRect = BGLRectMake(uvFrameX, uvFrameY, uvFrameW, uvFrameH);
+
 	this->quad[0].pos.x = viewRect.x;
 	this->quad[0].pos.y = viewRect.y;
 
@@ -613,6 +615,8 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 	float uvFrameW = uvFrameX + (sprite.frames[sprite.currentFrame].w / (float)sprite.textureWidth);
 	float uvFrameH = uvFrameY + (sprite.frames[sprite.currentFrame].h / (float)sprite.textureHeight);
 
+	sprite.frameRect = BGLRectMake(uvFrameX, uvFrameY, uvFrameW, uvFrameH);
+
 	sprite.quad[0].pos.x = sprite.viewRect.x;
 	sprite.quad[0].pos.y = sprite.viewRect.y;
 	sprite.quad[0].uv.x = uvFrameX;
@@ -643,6 +647,7 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 	sprite.quad[5].uv.x = uvFrameW;
 	sprite.quad[5].uv.y = uvFrameH;
 
+
 	glm::vec2 f;
 	glGenBuffers(1, &sprite.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, sprite.vbo);
@@ -657,12 +662,12 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 }
 
 
-GLfloat BGLSpriteBatch::verts[12] = {
-	-0.5f,  0.5f,
-	-0.5f, -0.5f,
-	 0.5f,  0.5f, 
-	 0.5f,  0.5f,
-	-0.5f, -0.5f,
-	 0.5f, -0.5f
+GLfloat BGLSpriteBatch::verts[24] = {
+	-0.5f,  0.5f,   1.0f, 0.0f,
+	-0.5f, -0.5f,	0.0f, 0.0f,
+	 0.5f,  0.5f,	1.0f, 1.0f,
+	 0.5f,  0.5f,	1.0f, 0.0f,
+	-0.5f, -0.5f,	0.0f, 0.0f,
+	 0.5f, -0.5f,	1.0f, 0.0f
 };
 
