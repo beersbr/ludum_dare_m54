@@ -108,7 +108,7 @@ void Game::update(int frameCount, float dt)
 	batcher.shader = shaderEx;
 
 	batcher.BeginBatch();
-	for(uint32_t i = 0; i < 10000; i++)
+	for(uint32_t i = 0; i < 100000; i++)
 	{
 		int randX = rand()%1200;
 		int randY = rand()%800;
