@@ -164,7 +164,6 @@ void Game::update(int frameCount, float dt)
 	// NOTE(brett): some of the systems are atomic and can be performed concurrently. The behavior
 	// is a good example of that. Maybe we can do all the behaviors at once?
 	// NOTE(brett): this is where we update each component type using the static update function
-	KinematicComponent::Update(dt);
 	PhysicsComponent::Update(dt);
 	BehaviorComponent::Update(dt);
 

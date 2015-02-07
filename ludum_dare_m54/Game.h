@@ -63,7 +63,6 @@ createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
 	e->pos = pos;
 	e->tag = "Bullet";
-	e->AddComponent<KinematicComponent>("player_simple_projectile");
 	e->AddComponent<PhysicsComponent>("AABB");
 
 }

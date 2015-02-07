@@ -1,19 +1,6 @@
 
 #include "components.h"
 
-std::string KinematicComponent::Family = "kinematic";
-std::list<KinematicComponent *> KinematicComponent::entityComponents;
-
-void KinematicComponent::Update(float dt)
-{
-	std::list<KinematicComponent *>::iterator it = entityComponents.begin();
-	for( ; it != entityComponents.end(); ++it)
-	{
-		(*it)->owner->pos += (*it)->vel * dt;
-	}
-}
-
-
 std::string PhysicsComponent::Family = "physics";
 std::list<PhysicsComponent *> PhysicsComponent::entityComponents;
 

@@ -4,45 +4,6 @@
 #include "component.h"
 #include "Entity.h"
 
-// NOTE(brett): this will all be moved. Just here for testing.
-// TODO(brett): This component is not needed anymore. These type of things will be done on the script
-class KinematicComponent : public Component
-{
-public:
-	KinematicComponent(Entity *who) : Component(who)
-	{
-	
-		entityComponents.push_back(this);
-	}
-
-	virtual ~KinematicComponent()
-	{
-		entityComponents.remove(this);
-	}
-
-	virtual void Initialize(std::unordered_map<std::string, float> args)
-	{
-		vel.x = args["vx"];
-		vel.y = args["vy"];
-	}
-
-
-	virtual void Cleanup()
-	{
-		entityComponents.remove(this);
-		owner = 0;
-	}
-
-	static void Update(float dt);
-
-	static std::string Family;
-public:
-	glm::vec2 vel;
-
-private:
-	static std::list<KinematicComponent *> entityComponents;
-};
-
 enum PhysicsColliderType { CIRCLE, AABB };
 class PhysicsComponent : public Component
 {
