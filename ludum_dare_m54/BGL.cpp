@@ -515,7 +515,7 @@ void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
 	float uvFrameW = uvFrameX + (frames[currentFrame].w / (float)textureWidth);
 	float uvFrameH = uvFrameY + (frames[currentFrame].h / (float)textureHeight);
 
-	frameRect = BGLRectMake(uvFrameX, uvFrameY, uvFrameW, uvFrameH);
+	frameRect = BGLRectMake(uvFrameX, uvFrameY, (frames[currentFrame].w / (float)textureWidth), (frames[currentFrame].h / (float)textureHeight));
 
 	this->quad[0].pos.x = viewRect.x;
 	this->quad[0].pos.y = viewRect.y;
@@ -615,7 +615,10 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 	float uvFrameW = uvFrameX + (sprite.frames[sprite.currentFrame].w / (float)sprite.textureWidth);
 	float uvFrameH = uvFrameY + (sprite.frames[sprite.currentFrame].h / (float)sprite.textureHeight);
 
-	sprite.frameRect = BGLRectMake(uvFrameX, uvFrameY, uvFrameW, uvFrameH);
+	sprite.frameRect = BGLRectMake(uvFrameX, 
+								uvFrameY, 
+								(sprite.frames[sprite.currentFrame].w / (float)sprite.textureWidth), 
+								(sprite.frames[sprite.currentFrame].h / (float)sprite.textureHeight));
 
 	sprite.quad[0].pos.x = sprite.viewRect.x;
 	sprite.quad[0].pos.y = sprite.viewRect.y;
@@ -663,11 +666,10 @@ BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float
 
 
 GLfloat BGLSpriteBatch::verts[24] = {
-	-0.5f,  0.5f,   1.0f, 0.0f,
+	-0.5f,  0.5f,   0.0f, 1.0f,
 	-0.5f, -0.5f,	0.0f, 0.0f,
 	 0.5f,  0.5f,	1.0f, 1.0f,
-	 0.5f,  0.5f,	1.0f, 0.0f,
+	 0.5f,  0.5f,	1.0f, 1.0f,
 	-0.5f, -0.5f,	0.0f, 0.0f,
 	 0.5f, -0.5f,	1.0f, 0.0f
 };
-

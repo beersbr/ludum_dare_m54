@@ -1,12 +1,16 @@
 #version 330 core
 
+in vec2 UV;
 
 uniform sampler2D textureSampler;
-uniform sampler2D normalSampler;
+// uniform sampler2D normalSampler;
 
 out vec4 FinalColor;
 
+
+
 void main()
 {
-	FinalColor = vec4(1.0, 0.0, 1.0, 1.0); // texture(textureSampler, UV);
+	FinalColor = vec4(1.0, 0.0, 1.0, 1.0);
+	FinalColor = texture(textureSampler, UV); 
 }

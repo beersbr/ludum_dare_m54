@@ -17,3 +17,26 @@ typedef struct
 	bool vsync;
 	bool isValid;
 } PlatformWindow;
+
+
+#define SharedLibrarySearchPathFunction(name) void name(char const *searchPath)
+typedef SharedLibrarySearchPathFunction(SetSharedLibraryPathFn);
+
+
+SharedLibrarySearchPathFunction(SetSharedLibraryPathStub)
+{
+	std::cout << "WARNING: Not setting any special shared library path" << std::endl;
+}
+
+
+
+#ifdef __WIN32__
+#include <Windows.h>
+SharedLibrarySearchPathFunction(WIN32_SetSharedLibraryPath)
+{
+	SetDllDirectoryA(searchPath);
+}
+
+global
+SetSharedLibraryPathFn *SetSharedLibPath = &WIN32_SetSharedLibraryPath;
+#endif

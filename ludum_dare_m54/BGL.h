@@ -312,7 +312,6 @@ public:
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *)2);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
 		glGenBuffers(1, &SpriteVBO);
 		if(!SpriteVBO)
 		{
@@ -336,8 +335,8 @@ public:
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glVertexAttribDivisor(0, 0);
-		glVertexAttribDivisor(1, 0);
+		//glVertexAttribDivisor(0, 0);
+		//glVertexAttribDivisor(1, 0);
 
 		glVertexAttribDivisor(2, 1);
 		glVertexAttribDivisor(3, 1);
@@ -357,7 +356,8 @@ public:
 		glUseProgram(shader.id);
 
 		BGLTexture t = TextureHandler::Get("spritesheet");
-		TextureHandler::Bind("spritesheet", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, t.id);
 	}
 
 	void DrawSprite(BGLSprite sprite, glm::vec2 posCenter, glm::vec2 scale, glm::vec3 rotation)
@@ -393,7 +393,6 @@ public:
 		spriteArray[spritesIndex] = vert;
 
 		spritesIndex += 1;
-
 	}
 
 	void RenderBatch(glm::mat4 projection, glm::mat4 view)
@@ -418,8 +417,6 @@ public:
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, spritesIndex);
 
 		glBindVertexArray(Frame.vao);
-
-
 	}
 
 

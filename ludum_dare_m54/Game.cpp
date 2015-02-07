@@ -86,7 +86,7 @@ Game::Game()
 	mapSz = 0;
 	for(uint32_t y = 0; y < 100000; ++y)
 	{
-		tiles[mapSz] = tileSprites[rand()%5];
+		tiles[mapSz] = tileSprites[1];
 		int randX = rand()%1200;
 		int randY = rand()%800;
 		tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(randX*tileWidth+tileWidth/2.0f, randY*tileHeight+tileHeight/2.0f, 0.0f));
@@ -108,12 +108,12 @@ void Game::update(int frameCount, float dt)
 	batcher.shader = shaderEx;
 
 	batcher.BeginBatch();
-	for(uint32_t i = 0; i < 100000; i++)
+	for(uint32_t i = 0; i < 1; i++)
 	{
-		int randX = rand()%1200;
-		int randY = rand()%800;
+		//int randX = rand()%1200;
+		//int randY = rand()%800;
 
-		batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(10, 10), glm::vec3(0, 0, 0));
+		batcher.DrawSprite(&tiles[i], glm::vec2(600, 400), glm::vec2(600, 400), glm::vec3(0, 0, 0));
 	}
 	glm::mat4 prj = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
 	batcher.RenderBatch(prj, glm::mat4());

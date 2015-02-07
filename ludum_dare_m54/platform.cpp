@@ -69,7 +69,6 @@ int main(int argc, char *argv[])
 		std::cout << "Could not initialize SDL2. Stopping." << std::endl;
 		exit(1);
 	}
-
 	
 	if(IMG_Init(IMG_INIT_PNG) == 0)
 	{
@@ -78,7 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	PlatformWindow Window = {};
-	PlatformCreateWindow(&Window, "Mini LD 54", 1200, 800, 0); 
+	PlatformCreateWindow(&Window, "Mini LD 54", 1200, 800, 1); 
 
 	if(!Window.isValid)
 	{
@@ -93,7 +92,7 @@ int main(int argc, char *argv[])
 	glDisable(GL_DEPTH);
 
 	// Set screen clear color to black
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
