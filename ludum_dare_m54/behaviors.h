@@ -3,6 +3,12 @@
 
 #include <iostream>
 #include "behaviorBase.h"
+#include "Entity.h"
+
+#include "BGLController.h"
+#include "BGLAudio.h"
+
+#include "rapidjson/document.h"
 
 class CosineEnemyBehavior : public Behavior
 {
@@ -49,6 +55,80 @@ public:
 	
 private:
 	static BehaviorRegistery<CosineEnemyBehavior> registration;
+};
+
+
+class PlayerBehavior : public Behavior
+{
+public:
+	glm::vec2 speed;
+	glm::vec2 vel;
+
+	float elapsedTime;
+
+public:
+	virtual void Initialize(rapidjson::Value configObject)
+	{
+
+	}
+
+	virtual void Start()
+	{
+
+	}
+
+
+	virtual void Update(float dt)
+	{
+		BGLInputState InputState = BGLController::GetInputState();
+
+		float dx = 0.0f,
+			  dy = 0.0f;
+
+		if(InputState.controllerSz > 0)
+		{
+			dx = InputState.controllers[0].LX * speed.x * dt;
+			dy = InputState.controllers[0].LY * speed.y * dt;
+		}
+
+		if(InputState.keyboard.keys[SDLK_w].down)
+		{
+			dy = speed.y * dt * -1.0;
+		}
+		if(InputState.keyboard.keys[SDLK_s].down)
+		{
+			dy = speed.y * dt * 1.0;
+		}
+		if(InputState.keyboard.keys[SDLK_a].down)
+		{
+			dx = speed.x * dt * -1.0;
+		}
+		if(InputState.keyboard.keys[SDLK_d].down)
+		{
+			dx = speed.x * dt * 1.0;
+		}
+
+		//// NOTE(brett): Make sure the player does not leave the current view space
+		//if(player.pos.x < camera.x)
+		//{
+		//	player.pos.x += camera.x - player.pos.x;
+		//}
+		//else if(player.pos.x > (camera.x + camera.w))
+		//{
+		//	player.pos.x -= player.pos.x - (camera.x + camera.w);
+		//}
+		//if(player.pos.y < camera.y)
+		//{
+		//	player.pos.y += camera.y - player.pos.y;
+		//}
+		//else if(player.pos.y > (camera.y + camera.h))
+		//{
+		//	player.pos.y -= player.pos.y - (camera.y + camera.h);
+		//}
+
+		//player.pos.x += cameraSpeed*dt;
+	}
+
 };
 
 #endif

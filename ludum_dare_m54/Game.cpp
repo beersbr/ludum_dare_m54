@@ -110,12 +110,12 @@ void Game::update(int frameCount, float dt)
 	batcher.shader = shaderEx;
 
 	batcher.BeginBatch();
-	for(uint32_t i = 0; i < 10000; i++)
+	for(uint32_t i = 0; i < 50000; i++)
 	{
 		int randX = rand()%1200;
 		int randY = rand()%800;
 
-		batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(10, 10), glm::vec3(0, 0, 0));
+		batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(5, 5), glm::vec3(0, 0, 0));
 	}
 	glm::mat4 prj = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
 	batcher.RenderBatch(prj, glm::mat4());

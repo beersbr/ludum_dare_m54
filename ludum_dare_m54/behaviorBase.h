@@ -5,6 +5,8 @@
 #include <string>
 #include "Entity.h"
 
+#include "rapidjson/document.h"
+
 class Behavior
 {
 public:
@@ -25,6 +27,9 @@ public:
 		actor = owner; 
 	}
 
+	// This is run by the behavior component
+	virtual void Initialize(rapidjson::Value configObject){}
+
 	// NOTE(brett): we can do things based on events here because entities are tagged
 	// NOTE(brett): this function would be called by a collider comopnent in the physics family
 	//virtual void OnCollide(Entity *other){}
@@ -37,6 +42,8 @@ public:
 
 	// This is called each update step of the game
 	virtual void Update(float dt){}
+
+	// Before the behavior removed
 	virtual void End(){}
 
 public:

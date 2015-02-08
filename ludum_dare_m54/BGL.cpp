@@ -289,6 +289,9 @@ std::string ShaderHandler::boundShader;
 
 void ShaderHandler::Load(std::string tag, std::string vertex, std::string fragment)
 {
+
+	std::cout << "Compiling " << vertex << ", " << fragment << std::endl;
+
 	FILE* vertexfd = fopen(vertex.c_str(), "r");
 	FILE* fragmentfd = fopen(fragment.c_str(), "r");
 
