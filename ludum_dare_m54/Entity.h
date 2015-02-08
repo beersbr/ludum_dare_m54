@@ -7,7 +7,7 @@
 #include "BGL.h"
 #include "BGLAudio.h"
 #include "SpriteSheet.h"
-#include "component.h"
+#include "componentBase.h"
 
 
 enum EntityType { 
