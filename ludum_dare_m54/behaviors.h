@@ -16,8 +16,8 @@ public:
 		// NOTE(brett): could grab stuff out of the entities transform data OR could do something if
 		// we have collided
 
-		start_x = actor->pos.x;
-		start_y = actor->pos.y;
+		start_x = 0; //actor->pos.x;
+		start_y = 0; //actor->pos.y;
 		elapsedTime = 0.0f;
 	}
 

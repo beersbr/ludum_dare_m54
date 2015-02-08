@@ -99,6 +99,8 @@ Game::Game()
 void Game::update(int frameCount, float dt)
 {
 
+	createPlayerEnemy(glm::vec2(), glm::vec2());
+
 	BGLShader shader = ShaderHandler::Get("sprite");
 	glUseProgram(shader.id);
 	backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(600.0, 400.0, 0.0f));

@@ -73,7 +73,7 @@ public:
 	{
 		// NOTE(brett): maybe the behaviors (when loaded, probably at the game load) will be put into a map
 		// that this object can then use to create them from -- as they will be in a dynamic lib
-		behavior = new CosineEnemyBehavior();
+		behavior = BehaviorFactoryBase::CreateInstance("cosine_enemy_behavior");
 		behavior->Load(owner);
 		behavior->Start();
 	}

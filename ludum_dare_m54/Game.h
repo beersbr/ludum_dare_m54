@@ -74,6 +74,6 @@ createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
 	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
 	e->pos = pos;
 	e->tag = "Enemy";
-	e->AddComponent<BehaviorComponent>("");
+	e->AddComponent<BehaviorComponent>("cosine_enemy_behavior");
 	e->AddComponent<PhysicsComponent>("AABB");
 }
