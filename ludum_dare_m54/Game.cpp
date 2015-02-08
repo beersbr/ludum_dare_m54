@@ -41,6 +41,8 @@ Game::Game()
 	};
 
 
+	SpriteComponent::InitializeSpriteComponent();
+
 	backgroundSprite = BGLSpriteEx::Create("background", "", 1201, 801, -2, 1, &BGLRectMake(0, 0, 400, 300));
 	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
 

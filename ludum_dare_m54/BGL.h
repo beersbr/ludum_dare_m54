@@ -347,8 +347,6 @@ public:
 	GLuint GeometryVBO;
 	GLuint SpriteVBO;
 
-	glm::mat4 view;
-
 	BGLSpriteBatchVertex spriteArray[BGL_BATCH_SPRITE_MAX];
 
 	// the number of sprites that have been put into the buffer
@@ -361,6 +359,10 @@ public:
 
 	BGLSpriteBatch()
 	{
+		VAO = 0;
+		GeometryVBO = 0;
+		SpriteVBO = 0;
+
 		shader = shader;
 		spritesIndex = 0;
 

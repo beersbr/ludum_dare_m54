@@ -135,6 +135,16 @@ public:
 		entityComponents.push_back(this);
 	}
 
+	// This component needs a start up so that we can create the batchers 
+	// AFTER glew has been initialized. This allows for the static member 
+	// AND for no 0x0 execution errors
+	static void InitializeSpriteComponent()
+	{
+		for(int32_t i = 0; i < SPRITE_LAYER_COUNT; ++i)
+		{
+			renderLayers[i] = new BGLSpriteBatch();
+		}
+	}
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
@@ -158,13 +168,14 @@ public:
 	static std::string Family;
 
 	static glm::mat4 ProjectionMatrix;
-	static BGLSpriteBatch renderLayers[SPRITE_LAYER_COUNT];
+	static BGLSpriteBatch *renderLayers[SPRITE_LAYER_COUNT];
 	static glm::vec4 camera[SPRITE_LAYER_COUNT];
 
-	int32_t renderLayer;
+	int32_t layer;
 	BGLSprite sprite;
 
 private:
 	static std::list<SpriteComponent *> entityComponents;
 };
+
 #endif

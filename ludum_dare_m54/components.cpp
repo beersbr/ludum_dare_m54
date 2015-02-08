@@ -71,11 +71,25 @@ SPRITER COMPONENT
 
 std::string SpriteComponent::Family = "sprite";
 glm::mat4 SpriteComponent::ProjectionMatrix = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
-glm::vec4 SpriteComponent::camera[SPRITE_LAYER_COUNT] = {};
+BGLSpriteBatch *SpriteComponent::renderLayers[SPRITE_LAYER_COUNT];
+glm::vec4 SpriteComponent::camera[SPRITE_LAYER_COUNT];
 
 std::list<SpriteComponent *> SpriteComponent::entityComponents;
 
 void SpriteComponent::Update(float dt)
 {
+	// Render each of our sprites at the owners location and orientation.
+	std::list<SpriteComponent *>::iterator it = entityComponents.begin();
+	for( ; it != entityComponents.end(); ++it)
+	{
+		SpriteComponent *s = (*it);
+		renderLayers[s->layer]->DrawSprite(s->sprite, s->owner->position, s->owner->scale, s->owner->rotation);
+	}
 
+	// Render the batches.
+	for(int32_t i = SPRITE_LAYER_COUNT - 1; i >= 0; --i)
+	{
+		renderLayers[i]->BeginBatch();
+		renderLayers[i]->RenderBatch(ProjectionMatrix, glm::mat4());
+	}
 }
