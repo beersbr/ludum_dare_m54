@@ -451,9 +451,9 @@ BGLShader BGLShaderHandler::Get(std::string tag)
 
 
 
-GLuint BGLSprite::BGLSpriteVBO = 0;
+GLuint BGLSpriteEx::BGLSpriteVBO = 0;
 
-void BGLSprite::Render()
+void BGLSpriteEx::Render()
 {
 
 	glBindVertexArray(Frame.vao);
@@ -506,7 +506,7 @@ void BGLSprite::Render()
 	// NOTE(brett): Do I reset the transform after every draw?
 }
 
-void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
+void BGLSpriteEx::SetAnimationFrame(uint32_t frameIndex)
 { 
     uint32_t newFrame = frameIndex % totalFrames;
     currentFrame = newFrame;
@@ -562,20 +562,20 @@ void BGLSprite::SetAnimationFrame(uint32_t frameIndex)
 }
 
 
-void BGLSprite::AdvanceAnimationFrame()
+void BGLSpriteEx::AdvanceAnimationFrame()
 {
 	SetAnimationFrame(currentFrame+1);
 }
 
-void BGLSprite::SetRelativeAnimationFrame(uint32_t frameIndex)
+void BGLSpriteEx::SetRelativeAnimationFrame(uint32_t frameIndex)
 {
 	SetAnimationFrame(currentFrame + frameIndex);
 }
 
 
-BGLSprite BGLSprite::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
+BGLSpriteEx BGLSpriteEx::Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames)
 {
-	BGLSprite sprite = {};
+	BGLSpriteEx sprite = {};
 
 	if(frameCount > SPRITE_MAX_FRAMES)
 	{

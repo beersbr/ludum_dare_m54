@@ -26,9 +26,11 @@ public:
 	Entity(bool dontTrack);
     ~Entity(void);
 
+	// Meta data for game entities
 	EntityType typeId;
 	std::string tag;
 
+	// Transform information
 	glm::vec2 position;
 	glm::vec2 scale;
 	glm::vec3 rotation;
@@ -44,7 +46,7 @@ public:
     std::vector<SpriteSheet*>* sheetData; //All sprite sheets this entity can use
     SpriteSheet* spriteSheet;		    // currently used spritesheet
 
-    BGLSprite sprite;                      // Actual BGL sprite
+    BGLSpriteEx sprite;                      // Actual BGL sprite
     int curFrame;                       // Current frame of animation as dictated by the sprite sheet class
 
 	virtual void Update(float dt);	

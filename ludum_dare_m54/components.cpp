@@ -1,6 +1,10 @@
 
 #include "components.h"
 
+/******************************************************************************************
+PHYSICS COMPONENT
+******************************************************************************************/
+
 std::string PhysicsComponent::Family = "physics";
 std::list<PhysicsComponent *> PhysicsComponent::entityComponents;
 
@@ -44,8 +48,13 @@ void PhysicsComponent::Update(float dt)
 }
 
 
+/******************************************************************************************
+BEHAVIOR COMPONENT
+******************************************************************************************/
+
 std::string BehaviorComponent::Family = "behavior";
 std::list<BehaviorComponent *> BehaviorComponent::entityComponents;
+
 void BehaviorComponent::Update(float dt)
 {
 	std::list<BehaviorComponent *>::iterator it = entityComponents.begin();
@@ -53,4 +62,17 @@ void BehaviorComponent::Update(float dt)
 	{
 		(*it)->behavior->Update(dt);
 	}
+}
+
+
+/******************************************************************************************
+SPRITER COMPONENT
+******************************************************************************************/
+
+std::string SpriteComponent::Family = "sprite";
+std::list<SpriteComponent *> SpriteComponent::entityComponents;
+
+void SpriteComponent::Update(float dt)
+{
+
 }

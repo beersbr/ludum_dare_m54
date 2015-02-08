@@ -108,6 +108,9 @@ public:
 			dx = speed.x * dt * 1.0;
 		}
 
+		actor->position.x += dx;
+		actor->position.y += dy;
+
 		//// NOTE(brett): Make sure the player does not leave the current view space
 		//if(player.pos.x < camera.x)
 		//{

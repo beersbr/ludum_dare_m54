@@ -189,14 +189,14 @@ private:
 typedef ShaderHandler BGLShaderHandler;
 
 
-class BGLSprite
+class BGLSpriteEx
 {
 public:
 
 	
 	// 0, 0 is top right hand corner of sprite
 	// diffuseTag and normalTag are to have the same coordinates
-	static BGLSprite Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames);
+	static BGLSpriteEx Create(std::string diffuseTag, std::string normalTag, float w, float h, int32_t order, uint32_t frameCount, BGLRect *frames);
 
 	// TODO(brett): for batching if it is needed... NOT finished
 	static void BeginRender();
@@ -265,6 +265,80 @@ typedef struct
 	GLint	textureIndex;
 
 } BGLSpriteBatchVertex;
+
+class BGLSprite
+{
+
+public:
+	static BGLSpriteEx Create(BGLTexture t, uint32_t frameCount, BGLRect *frames)
+	{
+		BGLSprite sprite = {};
+		sprite.texture = t;
+		sprite.totalFrames = frameCount;
+		sprite.currentFrame = 0;
+
+		for(uint32_t i = 0; i < frameCount; ++i)
+		{
+			sprite.frames[i] = frames[i];
+		}
+
+		float uvFrameX = (sprite.frames[sprite.currentFrame].x / (float)sprite.texture.width);
+		float uvFrameY = (sprite.frames[sprite.currentFrame].y / (float)sprite.texture.height);
+
+		float uvFrameW = uvFrameX + (sprite.frames[sprite.currentFrame].w / (float)sprite.texture.width);
+		float uvFrameH = uvFrameY + (sprite.frames[sprite.currentFrame].h / (float)sprite.texture.height);
+
+		sprite.viewRect = BGLRectMake(uvFrameX, 
+									  uvFrameY, 
+									  (sprite.frames[sprite.currentFrame].w / (float)sprite.texture.width), 
+									  (sprite.frames[sprite.currentFrame].h / (float)sprite.texture.height));
+	}
+
+	// set the curretn frame MOD max frames;
+	void SetAnimationFrame(uint32_t frameIndex)
+	{
+		currentFrame = frameIndex % totalFrames;
+
+		float uvFrameX = (frames[currentFrame].x / (float)texture.width);
+		float uvFrameY = (frames[currentFrame].y / (float)texture.height);
+
+		float uvFrameW = uvFrameX + (frames[currentFrame].w / (float)texture.width);
+		float uvFrameH = uvFrameY + (frames[currentFrame].h / (float)texture.height);
+
+		viewRect = BGLRectMake(uvFrameX, 
+							   uvFrameY, 
+							   (frames[currentFrame].w / (float)texture.width), 
+							   (frames[currentFrame].h / (float)texture.height));
+	}
+
+	// move relative to the current frame and set the currentframe
+	void SetRelativeAnimationFrame(uint32_t frameIndex)
+	{
+		SetAnimationFrame(currentFrame + frameIndex);
+	}
+
+	// advanced the frame by 1 % totalFrames
+	void AdvanceAnimationFrame()
+	{
+		SetAnimationFrame(currentFrame + 1);
+	}
+
+public:
+	// Represents the rectangle in texture coordinates of our frame to be drawn
+	BGLRect viewRect;
+
+	// Represents the frames that we can iterate over
+	BGLRect frames[SPRITE_MAX_FRAMES];
+
+	// The total frames in our animation set
+	uint32_t totalFrames;
+
+	// The index of the current frame we are drawing
+	uint32_t currentFrame;
+
+	// The texture to be bound for our sprite to render correctly
+	BGLTexture texture;
+};
 
 class BGLSpriteBatch
 {
@@ -368,8 +442,8 @@ public:
 		BGLSpriteBatchVertex vert = { posCenter.x, posCenter.y,
 									  scale.x, scale.y,
 									  rotation.x, rotation.y, rotation.z,
-									  sprite.frameRect.x, sprite.frameRect.y, 
-									  sprite.frameRect.w, sprite.frameRect.h,
+									  sprite.viewRect.x, sprite.viewRect.y, 
+									  sprite.viewRect.w, sprite.viewRect.h,
 									  0 };
 
 		spriteArray[spritesIndex] = vert;
@@ -386,8 +460,8 @@ public:
 		BGLSpriteBatchVertex vert = { posCenter.x, posCenter.y,
 									  scale.x, scale.y,
 									  rotation.x, rotation.y, rotation.z,
-									  sprite->frameRect.x, sprite->frameRect.y, 
-									  sprite->frameRect.w, sprite->frameRect.h,
+									  sprite->viewRect.x, sprite->viewRect.y, 
+									  sprite->viewRect.w, sprite->viewRect.h,
 									  0 };
 
 		spriteArray[spritesIndex] = vert;

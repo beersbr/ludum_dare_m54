@@ -41,17 +41,17 @@ Game::Game()
 	};
 
 
-	backgroundSprite = BGLSprite::Create("background", "", 1201, 801, -2, 1, &BGLRectMake(0, 0, 400, 300));
+	backgroundSprite = BGLSpriteEx::Create("background", "", 1201, 801, -2, 1, &BGLRectMake(0, 0, 400, 300));
 	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
 
 
-	tileSprites[0] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
-	tileSprites[1] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 208, 16, 16));
-	tileSprites[2] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
-	tileSprites[3] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
-	tileSprites[4] = BGLSprite::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
+	tileSprites[0] = BGLSpriteEx::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 208, 16, 16));
+	tileSprites[1] = BGLSpriteEx::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 208, 16, 16));
+	tileSprites[2] = BGLSpriteEx::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(32, 224, 16, 16));
+	tileSprites[3] = BGLSpriteEx::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(0, 224, 16, 16));
+	tileSprites[4] = BGLSpriteEx::Create("spritesheet", "", 40, 40, -1, 1, &BGLRectMake(112, 240, 16, 16));
 	player = Player();
-	player.sprite = BGLSprite::Create("testship", "", 100, 60, 0, 4, &erects[0]);
+	player.sprite = BGLSpriteEx::Create("testship", "", 100, 60, 0, 4, &erects[0]);
 	player.pos.x = 100.0f;
 	player.pos.y = 400.0f;
 
@@ -115,7 +115,7 @@ void Game::update(int frameCount, float dt)
 		int randX = rand()%1200;
 		int randY = rand()%800;
 
-		batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(5, 5), glm::vec3(0, 0, 0));
+		//batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(5, 5), glm::vec3(0, 0, 0));
 	}
 	glm::mat4 prj = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
 	batcher.RenderBatch(prj, glm::mat4());

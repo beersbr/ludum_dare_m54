@@ -32,9 +32,9 @@ private:
 
     
 	Player *tempPlayer;
-	BGLSprite tileSprites[5];
+	BGLSpriteEx tileSprites[5];
 
-	BGLSprite tiles[100000];
+	BGLSpriteEx tiles[100000];
 	int32_t mapSz;
 
 
@@ -44,7 +44,7 @@ private:
 	BGLRect camera;
 	float cameraMoveSpeed;
 
-	BGLSprite backgroundSprite;
+	BGLSpriteEx backgroundSprite;
 
 	BGLSpriteBatch batcher;
 
@@ -60,7 +60,7 @@ createPlayerBullet(glm::vec2 pos, glm::vec2 size)
 	// NOTE(brett): this would pull from the kinematic :: create_player_bullet tag and just give the data to the
 	// appropriate components (drawable, kinematic, collidable, etc)
 	Entity *e = new Entity(false);
-	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
+	e->sprite = BGLSpriteEx::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(0, 96, 16, 16));
 	e->pos = pos;
 	e->tag = "Bullet";
 	e->AddComponent<PhysicsComponent>("AABB");
@@ -71,7 +71,7 @@ bglinternal void
 createPlayerEnemy(glm::vec2 pos, glm::vec2 size)
 {
 	Entity *e = new Entity(false);
-	e->sprite = BGLSprite::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
+	e->sprite = BGLSpriteEx::Create("spritesheet", "", size.x, size.y, 0, 1, &BGLRectMake(32, 0, 32, 16));
 	e->pos = pos;
 	e->tag = "Enemy";
 	e->AddComponent<BehaviorComponent>("cosine_enemy_behavior");
