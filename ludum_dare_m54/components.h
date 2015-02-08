@@ -1,6 +1,8 @@
 #ifndef __COMPONENTS_H__
 #define __COMPONENTS_H__
 
+#include <glm/gtx/transform.hpp>
+
 #include "componentBase.h"
 #include "Entity.h"
 #include "behaviors.h"
@@ -155,7 +157,9 @@ public:
 	static void Update(float dt);
 	static std::string Family;
 
+	static glm::mat4 ProjectionMatrix;
 	static BGLSpriteBatch renderLayers[SPRITE_LAYER_COUNT];
+	static glm::vec4 camera[SPRITE_LAYER_COUNT];
 
 	int32_t renderLayer;
 	BGLSprite sprite;

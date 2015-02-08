@@ -70,6 +70,9 @@ SPRITER COMPONENT
 ******************************************************************************************/
 
 std::string SpriteComponent::Family = "sprite";
+glm::mat4 SpriteComponent::ProjectionMatrix = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
+glm::vec4 SpriteComponent::camera[SPRITE_LAYER_COUNT] = {};
+
 std::list<SpriteComponent *> SpriteComponent::entityComponents;
 
 void SpriteComponent::Update(float dt)

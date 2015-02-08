@@ -92,9 +92,7 @@ Game::Game()
 		tiles[mapSz].model = glm::translate(glm::mat4(), glm::vec3(randX*tileWidth+tileWidth/2.0f, randY*tileHeight+tileHeight/2.0f, 0.0f));
 		mapSz += 1;
 	}
-
 }
-
 
 void Game::update(int frameCount, float dt)
 {
