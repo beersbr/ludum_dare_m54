@@ -83,7 +83,13 @@ public:
 	{
 		// NOTE(brett): maybe the behaviors (when loaded, probably at the game load) will be put into a map
 		// that this object can then use to create them from -- as they will be in a dynamic lib
-		behavior = BehaviorFactoryBase::CreateInstance("cosine_enemy_behavior");
+		//behavior = BehaviorFactoryBase::CreateInstance("cosine_enemy_behavior");
+
+		if(args["name"] == 1.f)
+		{
+			behavior = BehaviorFactoryBase::CreateInstance("player");
+		}
+
 		behavior->Load(owner);
 		behavior->Start();
 	}
@@ -144,7 +150,6 @@ public:
 		{
 			renderLayers[i] = new BGLSpriteBatch();
 			renderLayers[i]->shader = BGLShaderHandler::Get("spriteEx");
-			std::cout << "Sprite id : " << renderLayers[i]->shader.id << std::endl;
 		}
 	}
 

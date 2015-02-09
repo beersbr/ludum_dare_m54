@@ -87,7 +87,7 @@ void SpriteComponent::Update(float dt)
 	}
 
 	// Render the batches.
-	for(int32_t i = SPRITE_LAYER_COUNT - 1; i > 0; --i)
+	for(int32_t i = SPRITE_LAYER_COUNT - 1; i >= 0; --i)
 	{
 		renderLayers[i]->BeginBatch();
 		renderLayers[i]->RenderBatch(ProjectionMatrix, glm::mat4());

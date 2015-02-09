@@ -70,6 +70,8 @@ public:
 		data["sprite"]["background"]["layer"] = 1.f;
 		data["sprite"]["player"]["texture"] = 1.f;
 		data["sprite"]["player"]["layer"] = 0.f;
+		data["behavior"]["player"]["name"] = 1.f;
+
 
 		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[T::Family][name]);

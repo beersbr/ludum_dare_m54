@@ -82,6 +82,8 @@ public:
 	{
 		BGLInputState InputState = BGLController::GetInputState();
 
+		speed = glm::vec2(150, 150);
+
 		float dx = 0.0f,
 			  dy = 0.0f;
 
@@ -132,6 +134,9 @@ public:
 		//player.pos.x += cameraSpeed*dt;
 	}
 
+
+private:
+	static BehaviorRegistery<PlayerBehavior> registration;
 };
 
 #endif

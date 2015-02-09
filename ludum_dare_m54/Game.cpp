@@ -23,20 +23,27 @@ Game::Game()
 	ShaderHandler::Load("spriteEx", "shaders/spriteEx.vertex", "shaders/spriteEx.fragment");
 	BGLShader shaderEx = ShaderHandler::Get("spriteEx");
 
-	SpriteComponent::InitializeSpriteComponent();
-
 	BGLBatchTextureHandler::InitializeArrayTextures();
-	BGLBatchTextureHandler::LoadArrayTexture("background", "images/background-test.png");
 	BGLBatchTextureHandler::LoadArrayTexture("spritesheet", "images/sheet_test.png");
+	BGLBatchTextureHandler::LoadArrayTexture("background", "images/background-test.png");
+	
+
+	SpriteComponent::InitializeSpriteComponent();
 
 	background.AddComponent<SpriteComponent>("background");
 	background.scale = glm::vec2(1200, 800);
 	background.position = glm::vec2(600, 400);
 
+	player.AddComponent<SpriteComponent>("player");
+	player.AddComponent<BehaviorComponent>("player");
+	player.scale = glm::vec2(80, 40);
+	player.position = glm::vec2(200, 400);
+
 }
 
 void Game::update(int frameCount, float dt)
 {
+	BehaviorComponent::Update(dt);
 	 SpriteComponent::Update(dt);
 }
 
