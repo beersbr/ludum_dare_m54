@@ -118,9 +118,21 @@ public:
 		frameCount += 1;
 		
 		SpriteComponent *sprite = actor->GetComponent<SpriteComponent>();
-		if(sprite && !(frameCount % 4))
+		if(dy < -0.5f)
 		{
-			sprite->sprite.AdvanceAnimationFrame();
+			sprite->SetAnimation("up");
+		}
+		else if(dy > 0.5f)
+		{
+			sprite->SetAnimation("down");
+		}
+		else
+		{
+			sprite->SetAnimation("normal");
+			if(!(frameCount % 6))
+			{
+				sprite->sprite.AdvanceAnimationFrame();
+			}
 		}
 
 		//// NOTE(brett): Make sure the player does not leave the current view space

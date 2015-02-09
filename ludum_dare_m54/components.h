@@ -165,6 +165,9 @@ public:
 				{0, 32, 32, 16}
 			};
 			sprite = BGLSprite::Create(t, 2, (BGLRect *)&(frames[0]));
+			sprites["normal"] = sprite;
+			sprites["up"] =  BGLSprite::Create(t, 1, (BGLRect *)&(BGLRectMake( 0, 64, 32, 16 )));
+			sprites["down"] =  BGLSprite::Create(t, 1, (BGLRect *)&(BGLRectMake( 0, 48, 32, 16)));
 		}
 		if(args["texture"] == 0.f)
 		{
@@ -172,6 +175,12 @@ public:
 			BGLRect frame = { 0, 0, 600, 400 };
 			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
+	}
+
+
+	void SetAnimation(std::string tag)
+	{
+		sprite = sprites[tag];
 	}
 
 	virtual void Cleanup()
@@ -196,6 +205,9 @@ public:
 
 	int32_t layer;
 	BGLSprite sprite;
+
+	std::unordered_map<std::string, BGLSprite> sprites;
+
 
 private:
 	static std::list<SpriteComponent *> entityComponents;
