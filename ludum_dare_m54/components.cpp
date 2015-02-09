@@ -83,7 +83,7 @@ void SpriteComponent::Update(float dt)
 	for( ; it != entityComponents.end(); ++it)
 	{
 		SpriteComponent *s = (*it);
-		renderLayers[s->layer]->DrawSprite(s->sprite, s->owner->position, s->owner->scale, s->owner->rotation);
+		renderLayers[s->layer]->DrawSprite(&s->sprite, s->owner->position, s->owner->scale, s->owner->rotation);
 	}
 
 	// Render the batches.

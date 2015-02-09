@@ -4,19 +4,15 @@
 std::list<Entity *> Entity::createdEntities;
 std::list<Entity *> Entity::deletedEntities = std::list<Entity *>();
 
-Entity::Entity(void) : pos(0.0f,0.0f), vel(0.0f,0.0f), size(0.0f,0.0f)
+Entity::Entity(void) : position(0.0f,0.0f), 
+					   scale(0.f, 0.f), 
+					   rotation(0.f, 0.f, 0.f),
+					   vel(0.0f,0.0f), 
+					   size(0.0f,0.0f)
 {
 	createdEntities.push_back(this);
 	deleted = false;
 }
-
-Entity::Entity(bool dontTrack = true) : pos(0.0f,0.0f), vel(0.0f,0.0f), size(0.0f,0.0f)
-{
-	deleted = false;
-	if(!dontTrack)
-		createdEntities.push_back(this);
-}
-
 
 Entity::~Entity(void)
 {

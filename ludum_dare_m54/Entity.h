@@ -63,21 +63,16 @@ public:
 		// NOTE(brett): this is where we would fetch some data from a json file
 		// std::unordered_map<std::string, float> data = resource_handler[T::family][name]
 
-		std::unordered_map<std::string, std::unordered_map<std::string, float> > data;
-		data["player_simple_projectile"]["vx"] = 2000.0f;
-		data["player_simple_projectile"]["vy"] = 0.0f;
+		std::unordered_map<std::string, std::unordered_map<std::string, std::unordered_map<std::string, float> > > data;
 
-		data["enemy_simple_ai"]["vx"] = -200.0f;
-		data["enemy_simple_ai"]["vy"] = 0.0f;
 
-		data["AABB"]["type"]    = AABB;
-		data["AABB"]["width"]   = 40.0f;
-		data["AABB"]["height"]  = 40.0f;
-		data["AABB"]["offsetX"] = 0.0f;
-		data["AABB"]["offsetY"] = 0.0f;
+		data["sprite"]["background"]["texture"] = 0.f;
+		data["sprite"]["background"]["layer"] = 1.f;
+		data["sprite"]["player"]["texture"] = 1.f;
+		data["sprite"]["player"]["layer"] = 0.f;
 
 		//components[T::Family]->name = name;
-		components[T::Family]->Initialize(data[name]);
+		components[T::Family]->Initialize(data[T::Family][name]);
 	}
 
 

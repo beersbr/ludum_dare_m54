@@ -391,7 +391,7 @@ void ShaderHandler::Load(std::string tag, std::string vertex, std::string fragme
 		memset(log, 0, logSz);
 		glGetShaderInfoLog(shaderId, logSz, 0, log);
 
-		std::cout << "Linker Status: " << std::endl;
+		std::cout << "Could not link shaders. \nLinker Status: " << std::endl;
 		std::cout << log << std::endl;
 		return;
 	}
@@ -679,8 +679,9 @@ GLfloat BGLSpriteBatch::verts[24] = {
 	 0.5f, -0.5f,	1.0f, 0.0f
 };
 
+GLuint BGLBatchTextureHandler::arrayId = 0;
 uint32_t BGLBatchTextureHandler::arrayTextureSz = 0;
 uint32_t BGLBatchTextureHandler::textureSz = 0;
-uint32_t BGLBatchTextureHandler::arrayId = 0;
-std::unordered_map<std::string, BGLBatchTexture> arrayTextures;
-std::unordered_map<std::string, BGLBatchTexture> textures;
+int32_t BGLBatchTextureHandler::textureValues[MAX_BATCH_TEXTURE_COUNT] = {0, 1, 2, 3, 4, 5, 6, 7};
+std::unordered_map<std::string, BGLBatchTexture> BGLBatchTextureHandler::arrayTextures;
+std::unordered_map<std::string, BGLBatchTexture> BGLBatchTextureHandler::textures;

@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player(void) : Entity(true)
+Player::Player(void) : Entity()
 {
 	moveSpeed = 350.0;
 	shootBulletsInterval = 0.3f;

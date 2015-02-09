@@ -143,6 +143,8 @@ public:
 		for(int32_t i = 0; i < SPRITE_LAYER_COUNT; ++i)
 		{
 			renderLayers[i] = new BGLSpriteBatch();
+			renderLayers[i]->shader = BGLShaderHandler::Get("spriteEx");
+			std::cout << "Sprite id : " << renderLayers[i]->shader.id << std::endl;
 		}
 	}
 
@@ -150,14 +152,20 @@ public:
 	{
 		layer = args["layer"];
 
-		if(args["sprite"] == 0)
+		if(args["texture"] == 1.f)
 		{
-			BGLTexture t = TextureHandler::Get("spritesheet");
+			BGLBatchTexture t = BGLBatchTextureHandler::GetTexture("spritesheet");
 			BGLRect frames[2] = {
 				{0, 0, 32, 16},
 				{0, 32, 32, 16}
 			};
 			sprite = BGLSprite::Create(t, 2, (BGLRect *)&(frames[0]));
+		}
+		if(args["texture"] == 0.f)
+		{
+			BGLBatchTexture t = BGLBatchTextureHandler::GetTexture("background");
+			BGLRect frame = { 0, 0, 600, 400 };
+			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
 	}
 

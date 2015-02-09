@@ -263,6 +263,10 @@ public:
 #define MAX_BATCH_ARRAY_TEXTURE_COUNT 32
 #define MAX_BATCH_TEXTURE_COUNT 8
 
+#define MAX_ARRAY_WIDTH 2048
+#define MAX_ARRAY_HEIGHT 2048
+
+
 typedef struct
 {
 	GLuint id;
@@ -304,8 +308,8 @@ public:
 		glTexImage3D(GL_TEXTURE_2D_ARRAY,
 					0,
 					GL_RGBA,
-					256,
-					256,
+					MAX_ARRAY_WIDTH,
+					MAX_ARRAY_HEIGHT,
 					0,
 					MAX_BATCH_ARRAY_TEXTURE_COUNT,
 					GL_RGBA,
@@ -349,7 +353,11 @@ public:
 						image->pixels); 
 
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+
 		SDL_FreeSurface(image);
+
+		bglTexture.width = MAX_ARRAY_WIDTH;
+		bglTexture.height = MAX_ARRAY_HEIGHT;
 		arrayTextures[tag] = bglTexture;
 		arrayTextureSz += 1;
 	}
@@ -394,15 +402,20 @@ public:
 		glBindTexture(GL_TEXTURE_2D, 0);
 		SDL_FreeSurface(image);
 
+
+		std::cout << "Loaded batch texture " << path << ": " << bglTexture.id << " at " << textureSz << std::endl;
+
 		bglTexture.index = textureSz;
 		textures[tag] = bglTexture;
 		textureSz += 1;
 	}
 
+
 public:
 	static GLuint arrayId;
 	static uint32_t arrayTextureSz;
 	static uint32_t textureSz;
+	static int32_t textureValues[MAX_BATCH_TEXTURE_COUNT];
 	static std::unordered_map<std::string, BGLBatchTexture> arrayTextures;
 	static std::unordered_map<std::string, BGLBatchTexture> textures;
 };
@@ -444,6 +457,8 @@ public:
 									  uvFrameY, 
 									  (sprite.frames[sprite.currentFrame].w / (float)sprite.texture.width), 
 									  (sprite.frames[sprite.currentFrame].h / (float)sprite.texture.height));
+
+		return sprite;
 	}
 
 	// set the curretn frame MOD max frames;
@@ -489,7 +504,7 @@ public:
 	uint32_t currentFrame;
 
 	// The texture to be bound for our sprite to render correctly
-	BGLTexture texture;
+	BGLBatchTexture texture;
 };
 
 class BGLSpriteBatch
@@ -583,9 +598,16 @@ public:
 
 		glUseProgram(shader.id);
 
-		BGLTexture t = TextureHandler::Get("spritesheet");
+		//std::unordered_map<std::string, BGLBatchTexture>::iterator it = BGLBatchTextureHandler::textures.begin();
+		//for( ; it != BGLBatchTextureHandler::textures.end(); ++it)
+		//{
+		//	glActiveTexture(GL_TEXTURE0 + (*it).second.index );
+		//	glBindTexture(GL_TEXTURE_2D, (*it).second.id);
+		//}
+	
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, t.id);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, BGLBatchTextureHandler::arrayId);
+
 	}
 
 	void DrawSprite(BGLSprite sprite, glm::vec2 posCenter, glm::vec2 scale, glm::vec3 rotation)
@@ -598,7 +620,7 @@ public:
 									  rotation.x, rotation.y, rotation.z,
 									  sprite.viewRect.x, sprite.viewRect.y, 
 									  sprite.viewRect.w, sprite.viewRect.h,
-									  0 };
+									  sprite.texture.index };
 
 		spriteArray[spritesIndex] = vert;
 
@@ -616,7 +638,7 @@ public:
 									  rotation.x, rotation.y, rotation.z,
 									  sprite->viewRect.x, sprite->viewRect.y, 
 									  sprite->viewRect.w, sprite->viewRect.h,
-									  0 };
+									  sprite->texture.index };
 
 		spriteArray[spritesIndex] = vert;
 
@@ -629,13 +651,14 @@ public:
 		// this evertytime we draw
 		glUseProgram(shader.id);
 
+		GLint textureListLocation = glGetUniformLocation(shader.id, "sampler");
 		GLint projectionLocation = glGetUniformLocation(shader.id, "projection");
 		GLint viewLocation = glGetUniformLocation(shader.id, "view");
-		GLint textureLocation = glGetUniformLocation(shader.id, "textureSampler");
+	
 
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (GLfloat *)&projection[0]);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, (GLfloat *)&view[0]);
-		glUniform1d(textureLocation, 0);
+		glUniform1i(textureListLocation, 0);
 
 		glBufferSubData(GL_ARRAY_BUFFER, 
 						0,
