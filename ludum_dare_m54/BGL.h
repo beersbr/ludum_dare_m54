@@ -30,7 +30,7 @@ Version 0.02
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 #define BGL_MAX_LAYERS 5
-#define BGL_BATCH_SPRITE_MAX 100000
+#define BGL_BATCH_SPRITE_MAX 10000
 
 typedef struct
 {
@@ -609,8 +609,14 @@ public:
 		//	glBindTexture(GL_TEXTURE_2D, (*it).second.id);
 		//}
 	
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, BGLBatchTextureHandler::arrayId);
+		local_persist bool bound = false;
+		if(!bound)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D_ARRAY, BGLBatchTextureHandler::arrayId);
+			bound = true;
+		}
+		
 
 	}
 
