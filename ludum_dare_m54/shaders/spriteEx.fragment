@@ -11,5 +11,5 @@ out vec4 FinalColor;
 
 void main()
 {
-	FinalColor = texture2DArray(sampler, vec3(UV, 0.0));
+	FinalColor = texture2DArray(sampler, vec3(UV, texIndex));
 }

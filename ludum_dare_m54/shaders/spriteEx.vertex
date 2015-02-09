@@ -7,7 +7,7 @@ layout(location = 2) in vec2 transform;
 layout(location = 3) in vec2 scale;
 layout(location = 4) in vec3 rotation;
 layout(location = 5) in vec4 tex;
-layout(location = 6) in int textureId;
+layout(location = 6) in float textureId;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -18,7 +18,7 @@ out float texIndex;
 void main()
 {
 	UV = vec2(tex.x + (tex.z * uv.x), tex.y + (tex.w * uv.y));
-	texIndex = float(textureId);
+	texIndex = textureId;
 	// NOTE(brett): remember that these are columns NOT rows
 	mat4 model = mat4(1.0f * scale.x, 0.0f, 0.0f, 0.0f,
 					  0.0f, 1.0f * scale.y, 0.0f, 0.0f,

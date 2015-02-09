@@ -310,8 +310,8 @@ public:
 					GL_RGBA,
 					MAX_ARRAY_WIDTH,
 					MAX_ARRAY_HEIGHT,
-					0,
 					MAX_BATCH_ARRAY_TEXTURE_COUNT,
+					0,
 					GL_RGBA,
 					GL_UNSIGNED_BYTE,
 					0);
@@ -356,8 +356,12 @@ public:
 
 		SDL_FreeSurface(image);
 
+		std::cout << "added texture to array at index: " << tag << " : " << arrayTextureSz << std::endl;
+
 		bglTexture.width = MAX_ARRAY_WIDTH;
 		bglTexture.height = MAX_ARRAY_HEIGHT;
+		//bglTexture.width = bglTexture.width;
+		//bglTexture.height = bglTexture.height;
 		arrayTextures[tag] = bglTexture;
 		arrayTextureSz += 1;
 	}
@@ -574,7 +578,7 @@ public:
 		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*2));
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*4));
 		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*7));
-		glVertexAttribPointer(6, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*11));
+		glVertexAttribPointer(6, 1, GL_UNSIGNED_INT, GL_TRUE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*11));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 

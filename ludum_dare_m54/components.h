@@ -154,7 +154,7 @@ public:
 
 		if(args["texture"] == 1.f)
 		{
-			BGLBatchTexture t = BGLBatchTextureHandler::GetTexture("spritesheet");
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
 			BGLRect frames[2] = {
 				{0, 0, 32, 16},
 				{0, 32, 32, 16}
@@ -163,7 +163,7 @@ public:
 		}
 		if(args["texture"] == 0.f)
 		{
-			BGLBatchTexture t = BGLBatchTextureHandler::GetTexture("background");
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("background");
 			BGLRect frame = { 0, 0, 600, 400 };
 			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
