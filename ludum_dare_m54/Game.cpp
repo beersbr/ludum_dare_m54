@@ -31,6 +31,7 @@ Game::Game()
 	TextureHandler::Load("testship", "images/ship_spritesheet.png");
 	TextureHandler::Load("spritesheet", "./images/sheet_test.png");
 	TextureHandler::Load("background", "./images/background.png");
+	TextureHandler::Load("background-long", "./images/background_long.png");
 
 	BGLTexture diffuse = TextureHandler::Get("testship");
 	BGLRect erects[] = {
@@ -43,7 +44,7 @@ Game::Game()
 
 	SpriteComponent::InitializeSpriteComponent();
 
-	backgroundSprite = BGLSpriteEx::Create("background", "", 1201, 801, -2, 1, &BGLRectMake(0, 0, 400, 300));
+	backgroundSprite = BGLSpriteEx::Create("background-long", "", 4801, 801, -2, 1, &BGLRectMake(0, 0, 2400, 400));
 	backgroundSprite.model = glm::translate(backgroundSprite.model, glm::vec3(600.0, 400.0, 0.0f));
 
 
@@ -99,27 +100,14 @@ Game::Game()
 void Game::update(int frameCount, float dt)
 {
 
-	createPlayerEnemy(glm::vec2(), glm::vec2());
+	local_persist float offsetX = 0.0f;
+
+	offsetX += 50.0 * dt;
 
 	BGLShader shader = ShaderHandler::Get("sprite");
 	glUseProgram(shader.id);
-	backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(600.0, 400.0, 0.0f));
+	backgroundSprite.model = glm::translate(glm::mat4(), glm::vec3(2400.0f-offsetX, 400.0, 0.0f));
 	backgroundSprite.Render();
-
-	BGLShader shaderEx = ShaderHandler::Get("spriteEx");
-	batcher.shader = shaderEx;
-
-	batcher.BeginBatch();
-	for(uint32_t i = 0; i < 50000; i++)
-	{
-		int randX = rand()%1200;
-		int randY = rand()%800;
-
-		//batcher.DrawSprite(&tiles[i], glm::vec2(randX, randY), glm::vec2(5, 5), glm::vec3(0, 0, 0));
-	}
-	glm::mat4 prj = glm::ortho(0.0f, 1200.0f, 800.0f, 0.0f, -1.0f, 1.0f);
-	batcher.RenderBatch(prj, glm::mat4());
-	batcher.ClearBatch();
 
 	return;
 

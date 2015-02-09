@@ -37,7 +37,6 @@ private:
 	BGLSpriteEx tiles[100000];
 	int32_t mapSz;
 
-
 	int32_t mapWidth;
 	int32_t mapHeight;
 

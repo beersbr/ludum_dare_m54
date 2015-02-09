@@ -667,7 +667,9 @@ BGLSpriteEx BGLSpriteEx::Create(std::string diffuseTag, std::string normalTag, f
 	return sprite;
 }
 
-
+/****************************************************************************************************************
+	SPRITE BATCH
+****************************************************************************************************************/
 GLfloat BGLSpriteBatch::verts[24] = {
 	-0.5f,  0.5f,   0.0f, 1.0f,
 	-0.5f, -0.5f,	0.0f, 0.0f,
@@ -676,3 +678,9 @@ GLfloat BGLSpriteBatch::verts[24] = {
 	-0.5f, -0.5f,	0.0f, 0.0f,
 	 0.5f, -0.5f,	1.0f, 0.0f
 };
+
+uint32_t BGLBatchTextureHandler::arrayTextureSz = 0;
+uint32_t BGLBatchTextureHandler::textureSz = 0;
+uint32_t BGLBatchTextureHandler::arrayId = 0;
+std::unordered_map<std::string, BGLBatchTexture> arrayTextures;
+std::unordered_map<std::string, BGLBatchTexture> textures;

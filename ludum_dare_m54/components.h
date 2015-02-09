@@ -148,7 +148,17 @@ public:
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
+		layer = args["layer"];
 
+		if(args["sprite"] == 0)
+		{
+			BGLTexture t = TextureHandler::Get("spritesheet");
+			BGLRect frames[2] = {
+				{0, 0, 32, 16},
+				{0, 32, 32, 16}
+			};
+			sprite = BGLSprite::Create(t, 2, (BGLRect *)&(frames[0]));
+		}
 	}
 
 	virtual void Cleanup()

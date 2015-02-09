@@ -256,6 +256,158 @@ public:
 };
 
 
+/****************************************************************************************************************
+	SPRITE BATCH
+****************************************************************************************************************/
+
+#define MAX_BATCH_ARRAY_TEXTURE_COUNT 32
+#define MAX_BATCH_TEXTURE_COUNT 8
+
+typedef struct
+{
+	GLuint id;
+	uint32_t width;
+	uint32_t height;
+	uint32_t index;
+} BGLBatchTexture;
+
+
+class BGLBatchTextureHandler
+{
+public:
+	static BGLBatchTexture GetArrayTexture(std::string tag)
+	{
+		return arrayTextures[tag];
+	}
+
+	static BGLBatchTexture GetTexture(std::string tag)
+	{
+		return textures[tag];
+	}
+
+	static void InitializeArrayTextures()
+	{
+
+		glGenTextures(1, &arrayId);
+		if(arrayId == 0)
+		{
+			std::cout << "Could not create a texture on current GL context" << std::endl;
+			return;
+		}
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, arrayId);
+		glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexImage3D(GL_TEXTURE_2D_ARRAY,
+					0,
+					GL_RGBA,
+					256,
+					256,
+					0,
+					MAX_BATCH_ARRAY_TEXTURE_COUNT,
+					GL_RGBA,
+					GL_UNSIGNED_BYTE,
+					0);
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+		
+	}
+
+	static void LoadArrayTexture(std::string tag, std::string path)
+	{
+		if(arrayTextureSz >= MAX_BATCH_ARRAY_TEXTURE_COUNT)
+		{
+			std::cout << "WARNING: Texture not loaded. Cannot load anymore texture for batching." << std::endl;
+			return;
+		}
+
+		SDL_Surface *image = IMG_Load(path.c_str());
+		if(!image)
+		{
+			std::cout << "Image was not loaded: " << path << std::endl;
+			return;
+		}
+
+		BGLBatchTexture bglTexture = {};
+		bglTexture.width = image->w;
+		bglTexture.height = image->h;
+		bglTexture.index = arrayTextureSz;
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, arrayId);
+
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
+						0, 0, 0, 
+						arrayTextureSz, 
+						bglTexture.width, 
+						bglTexture.height, 
+						1, 
+						GL_RGBA, 
+						GL_UNSIGNED_BYTE, 
+						image->pixels); 
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+		SDL_FreeSurface(image);
+		arrayTextures[tag] = bglTexture;
+		arrayTextureSz += 1;
+	}
+
+	static void LoadTexture(std::string tag, std::string path)
+	{
+		SDL_Surface *image = IMG_Load(path.c_str());
+		if(!image)
+		{
+			std::cout << "Image was not loaded: " << path << std::endl;
+			return;
+		}
+
+		BGLBatchTexture bglTexture = {};
+		bglTexture.width = image->w;
+		bglTexture.height = image->h;
+
+		glGenTextures(1, &bglTexture.id);
+		if(bglTexture.id == 0)
+		{
+			std::cout << "Could not create a texture on current GL context" << std::endl;
+			return;
+		}
+
+		glActiveTexture(GL_TEXTURE0+textureSz);
+		glBindTexture(GL_TEXTURE_2D, bglTexture.id);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexImage2D(GL_TEXTURE_2D,
+					0,
+					GL_RGBA,
+					bglTexture.width,
+					bglTexture.height,
+					0,
+					GL_RGBA,
+					GL_UNSIGNED_BYTE,
+					image->pixels);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		SDL_FreeSurface(image);
+
+		bglTexture.index = textureSz;
+		textures[tag] = bglTexture;
+		textureSz += 1;
+	}
+
+public:
+	static GLuint arrayId;
+	static uint32_t arrayTextureSz;
+	static uint32_t textureSz;
+	static std::unordered_map<std::string, BGLBatchTexture> arrayTextures;
+	static std::unordered_map<std::string, BGLBatchTexture> textures;
+};
+
+
 typedef struct 
 {
 	GLfloat x, y;
@@ -270,7 +422,7 @@ class BGLSprite
 {
 
 public:
-	static BGLSpriteEx Create(BGLTexture t, uint32_t frameCount, BGLRect *frames)
+	static BGLSprite Create(BGLBatchTexture t, uint32_t frameCount, BGLRect *frames)
 	{
 		BGLSprite sprite = {};
 		sprite.texture = t;

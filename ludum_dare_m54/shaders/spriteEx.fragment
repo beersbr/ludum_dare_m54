@@ -2,7 +2,7 @@
 
 in vec2 UV;
 
-uniform sampler2D textureSampler;
+uniform sampler2D samplers[8];
 // uniform sampler2D normalSampler;
 
 out vec4 FinalColor;
