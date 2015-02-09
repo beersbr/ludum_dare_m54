@@ -9,6 +9,7 @@
 #include "BGLAudio.h"
 
 #include "rapidjson/document.h"
+#include "components.h"
 
 class CosineEnemyBehavior : public Behavior
 {
@@ -74,15 +75,13 @@ public:
 
 	virtual void Start()
 	{
-
+		speed = glm::vec2(250, 250);
 	}
 
 
 	virtual void Update(float dt)
 	{
 		BGLInputState InputState = BGLController::GetInputState();
-
-		speed = glm::vec2(150, 150);
 
 		float dx = 0.0f,
 			  dy = 0.0f;
@@ -112,6 +111,17 @@ public:
 
 		actor->position.x += dx;
 		actor->position.y += dy;
+
+
+		// TODO(brett): should probably move this to the sprite component
+		local_persist int32_t frameCount = 0;
+		frameCount += 1;
+		
+		SpriteComponent *sprite = actor->GetComponent<SpriteComponent>();
+		if(sprite && !(frameCount % 4))
+		{
+			sprite->sprite.AdvanceAnimationFrame();
+		}
 
 		//// NOTE(brett): Make sure the player does not leave the current view space
 		//if(player.pos.x < camera.x)

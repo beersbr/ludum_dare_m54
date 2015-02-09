@@ -5,7 +5,7 @@
 
 #include "componentBase.h"
 #include "Entity.h"
-#include "behaviors.h"
+#include "behaviorBase.h"
 
 /******************************************************************************************
 PHYSICS COMPONENT

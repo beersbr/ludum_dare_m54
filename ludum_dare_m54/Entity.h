@@ -79,7 +79,7 @@ public:
 
 
 	template <typename T>
-	T* GetComponent()
+	T *GetComponent()
 	{
 		return (T *)components[T::Family];
 	}
