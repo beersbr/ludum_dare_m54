@@ -91,6 +91,9 @@ void SpriteComponent::Update(float dt)
 	{
 		renderLayers[i]->BeginBatch();
 		renderLayers[i]->RenderBatch(ProjectionMatrix, glm::mat4());
+
+		// TODO(brett): sometimes we dont need to draw and rerender things. Especially in the case of the background, we
+		// can just render it each time without doing any extra array manipulation.
 		renderLayers[i]->ClearBatch();
 	}
 }
