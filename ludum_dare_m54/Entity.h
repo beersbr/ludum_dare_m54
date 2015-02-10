@@ -69,7 +69,7 @@ public:
 		const float SPRITESHEET = 0.f;
 
 		data["sprite"]["background"]["texture"] = 0.f;
-		data["sprite"]["background"]["layer"] = BACKGROUND_LAYER;
+		data["sprite"]["background"]["layer"] = BACKGROUND_BACKGROUND;
 
 		// player
 		data["sprite"]["player"]["texture"] = 1.f;
@@ -81,7 +81,10 @@ public:
 
 		// tile
 		data["sprite"]["tile"]["texture"] = 3.f;
-		data["sprite"]["tile"]["layer"] = LEVEL_LAYER;
+		data["sprite"]["tile"]["layer"] = LEVEL_BACKGROUND;
+
+		data["sprite"]["tileback"]["texture"] = 4.f;
+		data["sprite"]["tileback"]["layer"] = LEVEL_FOREGROUND;
 
 		data["behavior"]["player"]["name"] = 1.f;
 		data["behavior"]["bullet"]["name"] = 2.f;

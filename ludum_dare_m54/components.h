@@ -128,12 +128,14 @@ SPRITER COMPONENT
 ******************************************************************************************/
 
 enum SpriteRenderLayer {
-	FRONT_LAYER = 0,
+	UI_LAYER = 0,
+	LEVEL_FOREGROUND,
 	PLAYER_LAYER,
 	ENEMY_LAYER,
-	LEVEL_LAYER,
-	BACKGROUND_LAYER,
-	RESET_LAYER,
+	DOODAD,
+	LEVEL_BACKGROUND,
+	BACKGROUND_FOREGROUND,
+	BACKGROUND_BACKGROUND,
 	SPRITE_LAYER_COUNT
 };
 
@@ -195,6 +197,13 @@ public:
 		{
 			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
 			BGLRect frame = { 32, 208, 16, 16};
+			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
+		}
+
+		if(args["texture"] == 4.f)
+		{
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
+			BGLRect frame = { 0, 208, 16, 16};
 			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
 	}

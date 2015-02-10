@@ -43,18 +43,34 @@ Game::Game()
 	srand(SDL_GetTicks());
 
 	// create the test level
-	for(int32_t i = 0; i < 500; ++i)
+	for(int32_t i = 0; i < 1000; ++i)
 	{
 		for(int32_t j = 0; j < 20; ++j)
 		{
-			if(rand()%100 > 10) continue;
+			if(rand()%100 > 4) continue;
+
+			Entity *e = new Entity();
+			e->position = glm::vec2(40*i+20, 40*j+20);
+			e->scale = glm::vec2(40, 40);
+			e->AddComponent<SpriteComponent>("tileback");
+
+		}
+	}
+
+	for(int32_t i = 0; i < 1000; ++i)
+	{
+		for(int32_t j = 0; j < 20; ++j)
+		{
+			if(rand()%100 > 4) continue;
 
 			Entity *e = new Entity();
 			e->position = glm::vec2(40*i+20, 40*j+20);
 			e->scale = glm::vec2(40, 40);
 			e->AddComponent<SpriteComponent>("tile");
+
 		}
 	}
+
 }
 
 void Game::update(int frameCount, float dt)
@@ -62,8 +78,9 @@ void Game::update(int frameCount, float dt)
 	BehaviorComponent::Update(dt);
 	SpriteComponent::Update(dt);
 
-	float levelSpeed = 50.f;
-	SpriteComponent::camera[LEVEL_LAYER].x += levelSpeed * dt;
+	float levelSpeed = 40.f;
+	SpriteComponent::camera[LEVEL_FOREGROUND].x += levelSpeed * dt;
+	SpriteComponent::camera[LEVEL_BACKGROUND].x += levelSpeed * dt * 0.5;
 
 }
 
