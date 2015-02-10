@@ -11,6 +11,8 @@
 #include "BGLAudio.h"
 #include "components.h"
 
+#include <thread>
+
 class Game
 {
 public:
@@ -31,6 +33,9 @@ private:
 	
 	Entity background;
 	Entity player;
+
+	std::thread th;
+	bool working;
 };
 
 
