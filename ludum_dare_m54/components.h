@@ -89,6 +89,10 @@ public:
 		{
 			behavior = BehaviorFactoryBase::CreateInstance("player");
 		}
+		if(args["name"] == 2.f)
+		{
+			behavior = BehaviorFactoryBase::CreateInstance("bullet");
+		}
 
 		behavior->Load(owner);
 		behavior->Start();
@@ -150,13 +154,25 @@ public:
 		{
 			renderLayers[i] = new BGLSpriteBatch();
 			renderLayers[i]->shader = BGLShaderHandler::Get("spriteEx");
+
+			camera[i] = glm::vec4(0, 0, 1200, 800);
+
 		}
 	}
 
 	virtual void Initialize(std::unordered_map<std::string, float> args)
 	{
+
 		layer = args["layer"];
 
+		assert(layer < SPRITE_LAYER_COUNT);
+
+		if(args["texture"] == 0.f)
+		{
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("background");
+			BGLRect frame = { 0, 0, 600, 400 };
+			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
+		}
 		if(args["texture"] == 1.f)
 		{
 			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
@@ -169,14 +185,24 @@ public:
 			sprites["up"] =  BGLSprite::Create(t, 1, (BGLRect *)&(BGLRectMake( 0, 64, 32, 16 )));
 			sprites["down"] =  BGLSprite::Create(t, 1, (BGLRect *)&(BGLRectMake( 0, 48, 32, 16)));
 		}
-		if(args["texture"] == 0.f)
+		if(args["texture"] == 2.f)
 		{
-			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("background");
-			BGLRect frame = { 0, 0, 600, 400 };
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
+			BGLRect frame = { 0, 80, 16, 16};
+			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
+		}
+		if(args["texture"] == 3.f)
+		{
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
+			BGLRect frame = { 32, 208, 16, 16};
 			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
 	}
 
+	glm::vec4 Camera()
+	{
+		return camera[layer];
+	}
 
 	void SetAnimation(std::string tag)
 	{

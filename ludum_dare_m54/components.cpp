@@ -89,8 +89,10 @@ void SpriteComponent::Update(float dt)
 	// Render the batches.
 	for(int32_t i = SPRITE_LAYER_COUNT - 1; i >= 0; --i)
 	{
+		glm::mat4 layerCamera = glm::translate(glm::mat4(), glm::vec3(-camera[i].x, -camera[i].y, 0.f));
+		
 		renderLayers[i]->BeginBatch();
-		renderLayers[i]->RenderBatch(ProjectionMatrix, glm::mat4());
+		renderLayers[i]->RenderBatch(ProjectionMatrix, layerCamera);
 
 		// TODO(brett): sometimes we dont need to draw and rerender things. Especially in the case of the background, we
 		// can just render it each time without doing any extra array manipulation.

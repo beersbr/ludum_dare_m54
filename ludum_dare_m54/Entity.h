@@ -65,13 +65,26 @@ public:
 
 		std::unordered_map<std::string, std::unordered_map<std::string, std::unordered_map<std::string, float> > > data;
 
+		const float BACKGROUND = 0.f;
+		const float SPRITESHEET = 0.f;
 
 		data["sprite"]["background"]["texture"] = 0.f;
-		data["sprite"]["background"]["layer"] = 1.f;
-		data["sprite"]["player"]["texture"] = 1.f;
-		data["sprite"]["player"]["layer"] = 0.f;
-		data["behavior"]["player"]["name"] = 1.f;
+		data["sprite"]["background"]["layer"] = BACKGROUND_LAYER;
 
+		// player
+		data["sprite"]["player"]["texture"] = 1.f;
+		data["sprite"]["player"]["layer"] = PLAYER_LAYER;
+
+		// bullet
+		data["sprite"]["bullet"]["texture"] = 2.f;
+		data["sprite"]["bullet"]["layer"] = ENEMY_LAYER;
+
+		// tile
+		data["sprite"]["tile"]["texture"] = 3.f;
+		data["sprite"]["tile"]["layer"] = LEVEL_LAYER;
+
+		data["behavior"]["player"]["name"] = 1.f;
+		data["behavior"]["bullet"]["name"] = 2.f;
 
 		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[T::Family][name]);
@@ -105,3 +118,4 @@ public:
 	static std::list<Entity *> createdEntities;
 	static std::list<Entity *> deletedEntities;
 };
+

@@ -86,12 +86,14 @@ void BGLController::UpdateControllerButton(SDL_ControllerButtonEvent event)
 	}
 }
 
+#define CONTROLLER_AXIS_THREASHOLD 0.2f
+
 void BGLController::UpdateControllerAxis(SDL_ControllerAxisEvent event)
 {
 	ControllerInputs *inputs = &(SystemInputs.controllers[event.which]);
 	
 	float normalizedValue = event.value / CONTROLLER_AXIS_MAX;
-	normalizedValue = (fabsf(normalizedValue) < 0.15f) ? 0.0f : normalizedValue;
+	normalizedValue = (fabsf(normalizedValue) < CONTROLLER_AXIS_THREASHOLD) ? 0.0f : normalizedValue;
 
 	switch(event.axis)
 	{

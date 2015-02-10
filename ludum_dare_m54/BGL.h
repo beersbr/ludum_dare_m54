@@ -30,7 +30,7 @@ Version 0.02
 // The max number of frames a sprite can have
 #define SPRITE_MAX_FRAMES 64
 #define BGL_MAX_LAYERS 5
-#define BGL_BATCH_SPRITE_MAX 10000
+#define BGL_BATCH_SPRITE_MAX 50000
 
 typedef struct
 {
