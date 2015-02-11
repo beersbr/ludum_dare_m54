@@ -3,12 +3,13 @@
 
 std::list<Entity *> Entity::createdEntities;
 std::list<Entity *> Entity::deletedEntities = std::list<Entity *>();
+std::list<Entity *> Entity::freeEntities;
+Entity Entity::entities[MAX_ENTITY_COUNT];
+
 
 Entity::Entity(void) : position(0.0f,0.0f), 
 					   scale(0.f, 0.f), 
-					   rotation(0.f, 0.f, 0.f),
-					   vel(0.0f,0.0f), 
-					   size(0.0f,0.0f)
+					   rotation(0.f, 0.f, 0.f)
 {
 	createdEntities.push_back(this);
 	deleted = false;
@@ -28,13 +29,26 @@ void Entity::Delete()
 	
 }
 
-void Entity::Render()
+
+void Entity::Initialize()
 {
-	sprite.model = glm::translate(glm::mat4(), glm::vec3(pos.x, pos.y, 0.0f));
-	sprite.Render();
+	// TODO(brett): do some studying on lists. look for a better way to do this.
+	for(int32_t i = 0; i < MAX_ENTITY_COUNT; ++i)
+	{
+		freeEntities.push_back(&entities[i]);
+	}
 }
 
-void Entity::Update(float dt)
+Entity *Entity::Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
+{
+	// NOTE(brett): ran out of entities
+	assert(freeEntities.size() > 0);
+
+	return 0;
+
+}
+
+void Entity::Destroy(Entity *)
 {
 
 }

@@ -16,7 +16,7 @@ void PhysicsComponent::Update(float dt)
 	{
 		// TODO(brett): I don't wanna do this everytime. Should just make the rect part of
 		// the physics component
-		glm::vec2 pos = (*it)->owner->pos;
+		glm::vec2 pos = (*it)->owner->position;
 		float ww = (*it)->width/2.0f;
 		float hh = (*it)->height/2.0f;
 		BGLRect myRect = BGLRectMake(pos.x-ww, pos.y-hh, ww+ww, hh+hh);
@@ -26,7 +26,7 @@ void PhysicsComponent::Update(float dt)
 		{
 			if(it == jt) continue;
 
-			glm::vec2 pos2 = (*jt)->owner->pos;
+			glm::vec2 pos2 = (*jt)->owner->position;
 			float ww2 = (*jt)->width/2.0f;
 			float hh2 = (*jt)->height/2.0f;
 			BGLRect theyRect = BGLRectMake(pos2.x-ww2, pos2.y-hh2, ww2+ww2, hh2+hh2);

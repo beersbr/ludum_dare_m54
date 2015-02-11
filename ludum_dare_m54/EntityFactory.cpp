@@ -35,16 +35,18 @@ void EntityFactory::CreateBasicEntity(const char* jsonBuf, Entity* entity)
     }
 
     //Entity* tmp = new Entity();
-    entity->size = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
+    entity->scale = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
     
     rapidjson::StringBuffer sb;
     rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
     doc["spriteSheets"].Accept(writer);
 
-    entity->sheetData = GetSpriteSheet(sb.GetString());
-    entity->spriteSheet = (*entity->sheetData)[0];
+	// NOTE(brett): I removed this for now
+    //entity->sheetData = GetSpriteSheet(sb.GetString());
+    //entity->spriteSheet = (*entity->sheetData)[0];
     
-    entity->sprite = BGLSpriteEx::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), entity->size[0], entity->size[1], 0, (uint32_t)entity->spriteSheet->frameData.size(), entity->spriteSheet->getFrameArray());
+	// NOTE(brett): the entity no longer holds a reference to a sprite but a sprite component
+    //entity->sprite = BGLSpriteEx::Create(doc["imageName"].GetString(), doc["normalName"].GetString(), entity->size[0], entity->size[1], 0, (uint32_t)entity->spriteSheet->frameData.size(), entity->spriteSheet->getFrameArray());
 
     return;
 }

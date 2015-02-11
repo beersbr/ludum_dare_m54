@@ -10,6 +10,8 @@
 #include "componentBase.h"
 
 
+#define MAX_ENTITY_COUNT 30000
+
 enum EntityType { 
 	ENEMY, 
 	PROJECTILE, 
@@ -37,21 +39,6 @@ public:
 
 	bool deleted;
 	void Delete();
-
-
-    glm::vec2 pos;                      // x,y position in top left cornder
-    //glm::vec2 dir;                    // Direction? Might incldue facing for enemy firing, think on this one.
-    glm::vec2 vel;                      // current vlocity in x,y direction
-    glm::vec2 size;                    // How big is the object, to the game?
-    std::vector<SpriteSheet*>* sheetData; //All sprite sheets this entity can use
-    SpriteSheet* spriteSheet;		    // currently used spritesheet
-
-    BGLSpriteEx sprite;                      // Actual BGL sprite
-    int curFrame;                       // Current frame of animation as dictated by the sprite sheet class
-
-	virtual void Update(float dt);	
-	virtual void Render();
-
 
 	template <typename T>
 	void AddComponent(std::string name)
@@ -120,10 +107,17 @@ public:
 	//void addComponent(std::string family, std::string type);
 	//void removeComponent(std::string family);
 	std::unordered_map<std::string, Component *> components;
-
+	
+	// No more asking for memory during run time
+	static void Initialize();
+	static Entity *Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation);
+	static void Destroy(Entity *entity);
 
 	// TODO(brett): this is just for testing
 	static std::list<Entity *> createdEntities;
 	static std::list<Entity *> deletedEntities;
+	static std::list<Entity *> freeEntities;
+	static Entity entities[MAX_ENTITY_COUNT];
+	
 };
 
