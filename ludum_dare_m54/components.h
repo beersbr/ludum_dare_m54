@@ -93,6 +93,10 @@ public:
 		{
 			behavior = BehaviorFactoryBase::CreateInstance("bullet");
 		}
+		if(args["name"] == 3.f)
+		{
+			behavior = BehaviorFactoryBase::CreateInstance("simple-enemy");
+		}
 
 		behavior->Load(owner);
 		behavior->Start();
@@ -206,6 +210,14 @@ public:
 			BGLRect frame = { 0, 208, 16, 16};
 			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
 		}
+
+		if(args["texture"] == 5.f)
+		{
+			BGLBatchTexture t = BGLBatchTextureHandler::GetArrayTexture("spritesheet");
+			BGLRect frame = { 192, 0, 64, 16};
+			sprite = BGLSprite::Create(t, 1, (BGLRect *)&frame);
+		}
+
 	}
 
 	glm::vec4 Camera()

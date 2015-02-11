@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	glDisable(GL_DEPTH);
 
 	// Set screen clear color to black
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 

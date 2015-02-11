@@ -10,6 +10,32 @@
 
 #include "rapidjson/document.h"
 #include "components.h"
+#include "Particles.h"
+
+
+class SimpleEnemyBehavior : public Behavior
+{
+public:
+	float speed;
+	float lifetime;
+
+	virtual void Start()
+	{
+		speed = 100.f;
+		lifetime = 0.f;
+	}
+
+	virtual void Update(float dt)
+	{
+		lifetime += dt;
+
+		actor->position.x += -speed*dt;
+		actor->position.y = 200.f * sinf(lifetime*1.2f) + 400;
+	}
+
+private:
+	static BehaviorRegistery<SimpleEnemyBehavior> registration;
+};
 
 class PlayerBehavior : public Behavior
 {
@@ -80,7 +106,10 @@ public:
 			dx = speed.x * dt * 1.0;
 		}
 
+		local_persist float particleCount = 0.25f;
+
 		shootCounter += dt;
+		particleCount += dt;
 
 		actor->position.x += dx;
 		actor->position.y += dy;
@@ -89,6 +118,17 @@ public:
 		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down )
 		{
 			Shoot();
+		}
+
+		
+		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down && particleCount > shootPeriod)
+		{
+			ParticleHandler::Emit(
+				glm::vec2(actor->position.x + 30, actor->position.y),
+				glm::vec2(50, 50),
+				glm::vec3(),
+				0.3f);
+			particleCount = 0.f;
 		}
 
 		if(InputState.keyboard.keys[SDLK_j].down)

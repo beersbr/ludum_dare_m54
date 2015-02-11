@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Particles.h"
 
 Game::Game(std::vector<std::pair<std::string, std::string>>& resourceFileList, std::vector<std::pair<std::string, std::string>>& textureFileList)
 {
@@ -27,9 +28,11 @@ Game::Game()
 	BGLBatchTextureHandler::LoadArrayTexture("spritesheet", "images/sheet_test.png");
 	BGLBatchTextureHandler::LoadArrayTexture("background", "images/background-test.png");
 	BGLBatchTextureHandler::LoadArrayTexture("loading", "images/loading.png");
+	BGLBatchTextureHandler::LoadArrayTexture("startscreen", "images/start_screen.png");
 	
-
 	SpriteComponent::InitializeSpriteComponent();
+	ParticleHandler::Initialize();
+	
 
 	background.AddComponent<SpriteComponent>("background");
 	background.scale = glm::vec2(1200, 800);
@@ -47,41 +50,39 @@ Game::Game()
 	std::cout << "--- Creating the level ---" << std::endl;
 	th = std::thread([this] () -> void {
 		// create the test level
-		for(int32_t i = 0; i < 1000; ++i)
-		{
-			for(int32_t j = 0; j < 20; ++j)
-			{
-				if(rand()%100 > 3) continue;
+		//for(int32_t i = 0; i < 1000; ++i)
+		//{
+		//	for(int32_t j = 0; j < 20; ++j)
+		//	{
+		//		if(rand()%100 > 3) continue;
 
-				Entity *e = new Entity();
-				e->position = glm::vec2(40*i+20, 40*j+20);
-				e->scale = glm::vec2(40, 40);
-				e->AddComponent<SpriteComponent>("tileback");
+		//		Entity *e = new Entity();
+		//		e->position = glm::vec2(40*i+20, 40*j+20);
+		//		e->scale = glm::vec2(40, 40);
+		//		e->AddComponent<SpriteComponent>("tileback");
 
-			}
-		}
+		//	}
+		//}
 
-		for(int32_t i = 0; i < 1000; ++i)
-		{
-			for(int32_t j = 0; j < 20; ++j)
-			{
-				if(rand()%100 > 3) continue;
+		//for(int32_t i = 0; i < 1000; ++i)
+		//{
+		//	for(int32_t j = 0; j < 20; ++j)
+		//	{
+		//		if(rand()%100 > 3) continue;
 
-				Entity *e = new Entity();
-				e->position = glm::vec2(40*i+20, 40*j+20);
-				e->scale = glm::vec2(40, 40);
-				e->AddComponent<SpriteComponent>("tile");
+		//		Entity *e = new Entity();
+		//		e->position = glm::vec2(40*i+20, 40*j+20);
+		//		e->scale = glm::vec2(40, 40);
+		//		e->AddComponent<SpriteComponent>("tile");
 
-			}
-		}
+		//	}
+		//}
 
 		working = false;
 	});
 
-	BGLSprite loading = BGLSprite::Create(BGLBatchTextureHandler::GetArrayTexture("loading"), 1, (BGLRect *)&BGLRectMake(0, 0, 800, 600));
+	BGLSprite loading = BGLSprite::Create(BGLBatchTextureHandler::GetArrayTexture("startscreen"), 1, (BGLRect *)&BGLRectMake(0, 0, 600, 400));
 	SpriteComponent::renderLayers[UI_LAYER]->DrawSprite(loading, glm::vec2(600, 400), glm::vec2(1200, 800), glm::vec3(0, 0, 0));
-
-	
 }
 
 void Game::update(int frameCount, float dt)
@@ -95,13 +96,26 @@ void Game::update(int frameCount, float dt)
 		return;
 	}
 
+	local_persist float spawnTimer = 4.f;
+	
+	if((spawnTimer += dt) > 0.5f)
+	{
+		Entity *e = new Entity();
+		e->AddComponent<BehaviorComponent>("enemy");
+		e->AddComponent<SpriteComponent>("enemy");
+		e->scale = glm::vec2(128, 32);
+		e->position = glm::vec2(1200, 400);
+
+		spawnTimer = 0.f;
+	}
 
 	BehaviorComponent::Update(dt);
+	ParticleHandler::Update(dt);
 	SpriteComponent::Update(dt);
 
-	float levelSpeed = 40.f;
-	SpriteComponent::camera[LEVEL_FOREGROUND].x += levelSpeed * dt;
-	SpriteComponent::camera[LEVEL_BACKGROUND].x += levelSpeed * dt * 0.5;
+	//float levelSpeed = 40.f;
+	//SpriteComponent::camera[LEVEL_FOREGROUND].x += levelSpeed * dt;
+	//SpriteComponent::camera[LEVEL_BACKGROUND].x += levelSpeed * dt * 0.5;
 
 }
 

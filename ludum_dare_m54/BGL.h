@@ -465,6 +465,32 @@ public:
 		return sprite;
 	}
 
+	static void Create(BGLSprite *existingSprite, BGLBatchTexture t, uint32_t frameCount, BGLRect *frames)
+	{
+		assert(existingSprite);
+
+		existingSprite->texture = t;
+		existingSprite->totalFrames = frameCount;
+		existingSprite->currentFrame = 0;
+
+		// NOTE(brett): this can probably be done with a single memcpy instead of a loop
+		for(uint32_t i = 0; i < frameCount; ++i)
+		{
+			existingSprite->frames[i] = frames[i];
+		}
+
+		float uvFrameX = (existingSprite->frames[existingSprite->currentFrame].x / (float)existingSprite->texture.width);
+		float uvFrameY = (existingSprite->frames[existingSprite->currentFrame].y / (float)existingSprite->texture.height);
+
+		float uvFrameW = uvFrameX + (existingSprite->frames[existingSprite->currentFrame].w / (float)existingSprite->texture.width);
+		float uvFrameH = uvFrameY + (existingSprite->frames[existingSprite->currentFrame].h / (float)existingSprite->texture.height);
+
+		existingSprite->viewRect = BGLRectMake(uvFrameX, 
+									  uvFrameY, 
+									  (existingSprite->frames[existingSprite->currentFrame].w / (float)existingSprite->texture.width), 
+									  (existingSprite->frames[existingSprite->currentFrame].h / (float)existingSprite->texture.height));
+	}
+
 	// set the curretn frame MOD max frames;
 	void SetAnimationFrame(uint32_t frameIndex)
 	{

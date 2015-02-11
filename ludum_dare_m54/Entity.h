@@ -79,6 +79,10 @@ public:
 		data["sprite"]["bullet"]["texture"] = 2.f;
 		data["sprite"]["bullet"]["layer"] = ENEMY_LAYER;
 
+		// enemy
+		data["sprite"]["enemy"]["texture"] = 5.f;
+		data["sprite"]["enemy"]["layer"] = ENEMY_LAYER;
+
 		// tile
 		data["sprite"]["tile"]["texture"] = 3.f;
 		data["sprite"]["tile"]["layer"] = LEVEL_BACKGROUND;
@@ -88,6 +92,7 @@ public:
 
 		data["behavior"]["player"]["name"] = 1.f;
 		data["behavior"]["bullet"]["name"] = 2.f;
+		data["behavior"]["enemy"]["name"] = 3.f;
 
 		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[T::Family][name]);
