@@ -124,7 +124,7 @@ public:
 		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down && particleCount > shootPeriod)
 		{
 			ParticleHandler::Emit(
-				glm::vec2(actor->position.x + 30, actor->position.y),
+				glm::vec2(actor->position.x + 35, actor->position.y),
 				glm::vec2(50, 50),
 				glm::vec3(),
 				0.3f);

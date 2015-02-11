@@ -72,7 +72,7 @@ public:
 			uint32_t frame = ((*it)->aliveFor * ParticleExplostionFrameCount) / (*it)->liveTime;
 			(*it)->sprite.SetAnimationFrame(frame);
 
-			SpriteComponent::renderLayers[DOODAD]->DrawSprite(&(*it)->sprite, (*it)->position, (*it)->scale, (*it)->rotation);
+			SpriteComponent::renderLayers[PARTICLES_BACK]->DrawSprite(&(*it)->sprite, (*it)->position, (*it)->scale, (*it)->rotation);
 
 			it++;
 		}
