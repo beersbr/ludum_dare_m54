@@ -84,7 +84,8 @@ bool Map::loadMapData(std::string mapName)
             std::cout << "[-] Error getting json data from resourcer!" << std::endl;
             return false;
         }
-        entityList->push_back(EntityFactory::CreateEnemyEntity(monJson));
+		//NOTE(brett): nore more enemy objects
+        //entityList->push_back(EntityFactory::CreateEnemyEntity(monJson));
     }
 
     for(int i = 0; i < tileVect.size(); i++)
@@ -95,7 +96,8 @@ bool Map::loadMapData(std::string mapName)
             std::cout << "[-] Error getting json from resourcer!" << std::endl;
             return false;
         }
-        tileList->push_back(EntityFactory::CreateTileEntity(tileJson));
+		//NOTE(brett): no more tile objects. entities are just entities
+        //tileList->push_back(EntityFactory::CreateTileEntity(tileJson));
     }
 
     return false;

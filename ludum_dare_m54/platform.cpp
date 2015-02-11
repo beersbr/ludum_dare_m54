@@ -128,23 +128,45 @@ int main(int argc, char *argv[])
 
 	int32_t frames = 0;
 	int32_t secondSum = 0;
+	int32_t offsetTime = 0;
 
 	SDL_Event event;
 
 	bool Running = true;
 	while(Running)
 	{
-		LastTick = CurrentTick;
-		CurrentTick = SDL_GetTicks();
-
-		// NOTE(brett): ElapsedTick is in ms
-		uint64_t ElapsedTick = CurrentTick - LastTick;
-		CycleTime += ElapsedTick;
-
 		while(SDL_PollEvent(&event))
 		{
 			switch(event.type)
 			{
+				case SDL_WINDOWEVENT:
+				{
+					switch(event.window.event)
+					{
+						case SDL_WINDOWEVENT_FOCUS_GAINED:
+						{
+							
+						}
+						case SDL_WINDOWEVENT_FOCUS_LOST:
+						{
+							
+						}
+						case SDL_WINDOWEVENT_MOVED:
+						{
+							//TODO(brett): this should only be done if vsync is active
+							CurrentTick = SDL_GetTicks();
+						}
+						case SDL_WINDOWEVENT_ENTER:
+						{
+							
+						}
+						case SDL_WINDOWEVENT_LEAVE:
+						{
+							
+						}
+					}
+				}
+
 				case SDL_KEYDOWN:
 				{
 					BGLController::UpdateKeyboardButton(event.key);
@@ -202,6 +224,13 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
+
+		LastTick = CurrentTick;
+		CurrentTick = SDL_GetTicks();
+
+		// NOTE(brett): ElapsedTick is in ms
+		uint64_t ElapsedTick = CurrentTick - LastTick;
+		CycleTime += ElapsedTick;
 
 		// NOTE(brett): This doesnt need to happen if we are covering the entire screen something
 

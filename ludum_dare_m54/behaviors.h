@@ -65,10 +65,7 @@ public:
 		if(shootCounter >= shootPeriod)
 		{
 			// create the entity to shoot
-
-			Entity *e = new Entity();
-			e->position = actor->position;
-			e->scale = glm::vec2(16, 16);
+			Entity *e = Entity::Create(actor->position, glm::vec2(16, 16), glm::vec3());
 			e->AddComponent<SpriteComponent>("bullet");
 			e->AddComponent<BehaviorComponent>("bullet");
 

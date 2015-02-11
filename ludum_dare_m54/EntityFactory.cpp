@@ -35,7 +35,7 @@ void EntityFactory::CreateBasicEntity(const char* jsonBuf, Entity* entity)
     }
 
     //Entity* tmp = new Entity();
-    entity->scale = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
+    //entity->scale = glm::vec2(doc["size"][0].GetInt(), doc["size"][1].GetInt());
     
     rapidjson::StringBuffer sb;
     rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
@@ -109,35 +109,4 @@ std::vector<SpriteSheet*>* EntityFactory::GetSpriteSheet(const char* jsonBuf)
         tmpSheets->push_back(tmpSheet);
     }
     return tmpSheets;
-}
-
-Player* EntityFactory::CreatePlayerEntity(const char* jsonBuf)
-{
-    //Call basic stuff, then do whatever is relevant to Player specifically
-    Player* tmp = new Player();
-    
-    CreateBasicEntity(jsonBuf, tmp);
-
-    return tmp;
-}
-
-Enemy* EntityFactory::CreateEnemyEntity(const char* jsonBuf)
-{
-    //Call basic stuff, then do whatever is relevant to Enemy specifically
-    Enemy* tmp = new Enemy();
-
-    CreateBasicEntity(jsonBuf, tmp);
-
-    return tmp;
-
-}
-
-Tile* EntityFactory::CreateTileEntity(const char* jsonBuf)
-{
-    //Call basic stuff, then do whatever is relevant to Tile specifically
-    Tile* tmp = new Tile();
-
-    CreateBasicEntity(jsonBuf, tmp);
-
-    return tmp;
 }

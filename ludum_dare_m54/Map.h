@@ -5,7 +5,6 @@
 #include <rapidjson\reader.h>
 #include "language.h"
 #include "EntityFactory.h"
-#include "Tile.h"
 #include "Resourcer.h"
 
 typedef struct bitmapFileHeader {

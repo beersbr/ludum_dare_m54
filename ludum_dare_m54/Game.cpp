@@ -32,17 +32,14 @@ Game::Game()
 	
 	SpriteComponent::InitializeSpriteComponent();
 	ParticleHandler::Initialize();
-	
+	Entity::Initialize();
 
-	background.AddComponent<SpriteComponent>("background");
-	background.scale = glm::vec2(1200, 800);
-	background.position = glm::vec2(600, 400);
+	background = Entity::Create(glm::vec2(600, 400), glm::vec2(1200, 800), glm::vec3());
+	background->AddComponent<SpriteComponent>("background");
 
-	player.AddComponent<SpriteComponent>("player");
-	player.AddComponent<BehaviorComponent>("player");
-	player.scale = glm::vec2(80, 40);
-	player.position = glm::vec2(200, 400);
-
+	player = Entity::Create(glm::vec2(200, 400), glm::vec2(80, 40), glm::vec3());
+	player->AddComponent<SpriteComponent>("player");
+	player->AddComponent<BehaviorComponent>("player");
 
 	srand(SDL_GetTicks());
 
@@ -100,11 +97,9 @@ void Game::update(int frameCount, float dt)
 	
 	if((spawnTimer += dt) > 0.5f)
 	{
-		Entity *e = new Entity();
+		Entity *e = Entity::Create(glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
 		e->AddComponent<BehaviorComponent>("enemy");
 		e->AddComponent<SpriteComponent>("enemy");
-		e->scale = glm::vec2(128, 32);
-		e->position = glm::vec2(1200, 400);
 
 		spawnTimer = 0.f;
 	}

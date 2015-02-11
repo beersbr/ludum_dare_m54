@@ -44,7 +44,16 @@ Entity *Entity::Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
 	// NOTE(brett): ran out of entities
 	assert(freeEntities.size() > 0);
 
-	return 0;
+	Entity *e = freeEntities.back();
+	freeEntities.pop_back();
+
+	e->position = pos;
+	e->scale = scale;
+	e->rotation = rotation;
+
+	createdEntities.push_back(e);
+
+	return e;
 
 }
 

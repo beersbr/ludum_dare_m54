@@ -4,7 +4,6 @@
 #include <fstream>
 #include "language.h"
 #include "Map.h"
-#include "Player.h"
 #include "Resourcer.h"
 #include "BGL.h"
 #include "BGLController.h"
@@ -30,12 +29,13 @@ private:
     //void loadEntity(std::string entityTag); //map is gonna do all that
     Resourcer resourcer;
     Map* curMap;       //Will tell us what entities to load.
-	
-	Entity background;
-	Entity player;
 
 	std::thread th;
 	bool working;
+
+	Entity *background;
+	Entity *player;
+
 };
 
 

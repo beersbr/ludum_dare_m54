@@ -24,10 +24,6 @@ enum EntityType {
 class Entity
 {
 public:
-    Entity(void);
-	Entity(bool dontTrack);
-    ~Entity(void);
-
 	// Meta data for game entities
 	EntityType typeId;
 	std::string tag;
@@ -119,5 +115,10 @@ public:
 	static std::list<Entity *> freeEntities;
 	static Entity entities[MAX_ENTITY_COUNT];
 	
+
+private:
+	Entity(void);
+    ~Entity(void);
+
 };
 

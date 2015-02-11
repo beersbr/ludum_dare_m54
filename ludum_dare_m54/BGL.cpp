@@ -25,6 +25,17 @@ BGLRectOverlap(BGLRect a, BGLRect b)
 	return true;
 }
 
+bool 
+BGLContainsPoint(BGLRect a, glm::vec2 p)
+{
+	if(p.x < a.x) return false;
+	if(p.x > a.x + a.w) return false;
+
+	if(p.y < a.y) return false;
+	if(p.y > a.y + a.h) return false;
+	return true;
+}
+
 void InitializeFrame(float left, float right, float bottom, float top, float near, float far)
 {
 	Frame.id = 0; // The screen

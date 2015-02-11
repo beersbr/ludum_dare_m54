@@ -10,10 +10,10 @@ std::list<PhysicsComponent *> PhysicsComponent::entityComponents;
 
 void PhysicsComponent::Update(float dt)
 {
-
 	std::list<PhysicsComponent *>::iterator it = entityComponents.begin();
 	for( ; it != entityComponents.end(); ++it)
 	{
+
 		// TODO(brett): I don't wanna do this everytime. Should just make the rect part of
 		// the physics component
 		glm::vec2 pos = (*it)->owner->position;
