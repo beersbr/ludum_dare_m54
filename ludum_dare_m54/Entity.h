@@ -99,7 +99,11 @@ public:
 		for( ; it != components.end(); ++it)
 		{
 			if(it->second)
+			{
 				it->second->Cleanup();
+				delete it->second;
+				it->second = 0;
+			}
 		}
 	}
 

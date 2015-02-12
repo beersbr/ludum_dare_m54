@@ -116,7 +116,7 @@ public:
 	{
 		speed = glm::vec2(80, 80);
 		shootPeriod = 0.18f;
-		shootCounter = 0.25f;
+		shootCounter = 0.2f;
 	}
 
 	void Shoot()
@@ -247,34 +247,35 @@ private:
 	static BehaviorRegistery<PlayerBehavior> registration;
 };
 
-
-
 class PlayerBulletBehavior : public Behavior
 {
 public:
 	glm::vec2 velocity;
+	float lifetime;
+	float aliveFor;
 
 	virtual void Start()
 	{
 		velocity.x = 2000.f;
-	}
-
-	virtual void OnCollide(Entity *e)
-	{
-
+		lifetime = 2.f;
+		aliveFor = 0.f;
 	}
 
 	virtual void Update(float dt)
 	{
 		actor->position += velocity * dt;
+		aliveFor += dt;
 
-		if(actor->position.x > 100000.0f)
+		if(aliveFor > lifetime)
 		{
-			actor->Delete();
+			Entity::Destroy(this->actor);
 		}
 
 	}
-
+	
+	virtual void Cleanup()
+	{
+	}
 
 
 private:

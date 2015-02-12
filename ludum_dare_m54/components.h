@@ -77,6 +77,7 @@ public:
 	BehaviorComponent(Entity *who) : Component(who)
 	{
 		entityComponents.push_back(this);
+		behavior = 0;
 	}
 	
 	virtual void Initialize(std::unordered_map<std::string, float> args)
@@ -102,6 +103,8 @@ public:
 		{
 			behavior = BehaviorFactoryBase::CreateInstance("explosion");
 		}
+
+		assert(behavior);
 
 		behavior->Load(owner);
 		behavior->Start();
@@ -240,7 +243,7 @@ public:
 	virtual void Cleanup()
 	{
 		entityComponents.remove(this);
-		owner = 0;
+		//owner = 0;
 	}
 
 

@@ -11,7 +11,6 @@ Entity::Entity(void) : position(0.0f,0.0f),
 					   scale(0.f, 0.f), 
 					   rotation(0.f, 0.f, 0.f)
 {
-	createdEntities.push_back(this);
 	deleted = false;
 }
 
@@ -22,7 +21,6 @@ Entity::~Entity(void)
 void Entity::Delete()
 {
 	deleted = true;
-	
 }
 
 
@@ -77,11 +75,14 @@ void Entity::SweepDestruction()
 {
 	if(deletedEntities.size() == 0) return;
 
+	std::cout << "D: " << deletedEntities.size() << " C: " << createdEntities.size() << " F: " << freeEntities.size() << std::endl;
+
 	std::list<Entity *>::iterator it = deletedEntities.begin();
-	for( ; it != deletedEntities.end(); )
+	for( ; it != deletedEntities.end(); ++it)
 	{
 		(*it)->CleanupComponents();
 		freeEntities.push_front((*it));
-		deletedEntities.erase(it++);
 	}
+
+	deletedEntities.clear();
 }
