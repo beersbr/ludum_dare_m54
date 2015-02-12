@@ -95,7 +95,9 @@ void Game::update(int frameCount, float dt)
 
 	local_persist float spawnTimer = 4.f;
 	
-	if((spawnTimer += dt) > 0.2f )
+	BGLInputState input = BGLController::GetInputState();
+
+	if((spawnTimer += dt) > 0.2f && input.controllers[0].Y.down)
 	{
 		Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
 		e->AddComponent<BehaviorComponent>("enemy");
