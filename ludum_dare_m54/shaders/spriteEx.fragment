@@ -9,5 +9,9 @@ out vec4 FinalColor;
 
 void main()
 {
-	FinalColor = texture(sampler, vec3(UV, texIndex));
+	vec4 tcolor = texture(sampler, vec3(UV, texIndex));
+	//if(tcolor.a == 0.0f)
+	//	tcolor = vec4(1.0, 0.0, 1.0, 1.0);
+ 
+	FinalColor = tcolor;
 }

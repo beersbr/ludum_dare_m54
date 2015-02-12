@@ -55,8 +55,8 @@ public:
 
 	virtual void Start()
 	{
-		speed = glm::vec2(250, 250);
-		shootPeriod = 0.25f;
+		speed = glm::vec2(110, 110);
+		shootPeriod = 0.18f;
 		shootCounter = 0.25f;
 	}
 
@@ -80,11 +80,16 @@ public:
 		float dx = 0.0f,
 			  dy = 0.0f;
 
+		float rz = 0.0f;
+
 		if(InputState.controllerSz > 0)
 		{
 			dx = InputState.controllers[0].LX * speed.x * dt;
 			dy = InputState.controllers[0].LY * speed.y * dt;
+
+			rz = InputState.controllers[0].RX * dt;
 		}
+
 
 		if(InputState.keyboard.keys[SDLK_w].down)
 		{
@@ -108,8 +113,20 @@ public:
 		shootCounter += dt;
 		particleCount += dt;
 
-		actor->position.x += dx;
-		actor->position.y += dy;
+		actor->rotation.z += rz;
+
+		vel = vel + glm::vec2(dx, dy);
+		vel = vel * 0.88f;
+
+		actor->position += vel;
+
+		//std::cout << vel.x << ", " << vel.y << std::endl;
+
+		glm::vec2 orScale = glm::vec2(80, 40);
+		actor->scale = glm::vec2(
+			orScale.x - (orScale.x * ( fabs(vel.y) / 100.0f)),
+			orScale.y - (orScale.y * ( fabs(vel.x) / 100.0f)));
+
 
 		// shoot bullets
 		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down )
@@ -122,9 +139,9 @@ public:
 		{
 			ParticleHandler::Emit(
 				glm::vec2(actor->position.x + 35, actor->position.y),
-				glm::vec2(50, 50),
+				glm::vec2(100, 100),
 				glm::vec3(),
-				0.3f);
+				0.15f);
 			particleCount = 0.f;
 		}
 
@@ -132,7 +149,6 @@ public:
 		{
 			Shoot();
 		}
-
 
 		// TODO(brett): should probably move this to the sprite component
 		local_persist int32_t frameCount = 0;

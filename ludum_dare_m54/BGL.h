@@ -431,6 +431,7 @@ typedef struct
 	GLfloat scaleX, scaleY;
 	GLfloat rotatex, rotatey, rotatez;
 	GLfloat tx, ty, tw, th;
+	GLfloat colorR, colorG, colorB, colorA;
 	GLfloat textureIndex;
 
 } BGLSpriteBatchVertex;
@@ -604,6 +605,7 @@ public:
 		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*2));
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*4));
 		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*7));
+		//glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*11));
 		glVertexAttribPointer(6, 1, GL_FLOAT, GL_TRUE, sizeof(BGLSpriteBatchVertex), (void *)(sizeof(GLfloat)*11));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

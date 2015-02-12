@@ -15,16 +15,40 @@ uniform mat4 view;
 out vec2 UV;
 out float texIndex;
 
+mat4 rotationMatrix(vec3 axis, float angle)
+{
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+    
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+}
+
 void main()
 {
 	UV = vec2(tex.x + (tex.z * uv.x), tex.y + (tex.w * uv.y));
 	texIndex = textureId;
 
-	// NOTE(brett): remember that these are columns NOT rows
-	mat4 model = mat4(1.0f * scale.x, 0.0f, 0.0f, 0.0f,
+	mat4 rotZ = rotationMatrix(vec3(0, 0, 1), rotation.z);
+	// mat4 rotation = rotationMatrix(vec3(0, 0, 1), rotation.z);
+	// mat4 rotation = rotationMatrix(vec3(0, 0, 1), rotation.z);
+
+
+	mat4 translate = mat4(1.0f, 0.0f, 0.0f, 0.0f,
+					      0.0f, 1.0f, 0.0f, 0.0f,
+						  0.0f, 0.0f, 1.0f, 0.0f,
+						  transform.x, transform.y, 0.0f, 1.0f);
+
+	mat4 scale = mat4(1.0f * scale.x, 0.0f, 0.0f, 0.0f,
 					  0.0f, 1.0f * scale.y, 0.0f, 0.0f,
 					  0.0f, 0.0f, 1.0f, 0.0f,
-					  transform.x, transform.y, 0.0f, 1.0f);
+					  0.0f, 0.0f, 0.0f, 1.0f);
+
+	mat4 model = translate * rotZ * scale;
 
 	gl_Position = projection * view * model * vec4(position, 0.0, 1.0);
 }
