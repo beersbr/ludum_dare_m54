@@ -39,6 +39,13 @@ void Entity::Initialize()
 	}
 }
 
+Entity *Entity::Create(std::string tag, glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
+{
+	Entity *e = Create(pos, scale, rotation);
+	e->tag = tag;
+	return e;
+}
+
 Entity *Entity::Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
 {
 	// NOTE(brett): ran out of entities

@@ -28,6 +28,9 @@ public:
 	EntityType typeId;
 	std::string tag;
 
+	// NOTE(brett): Who created me
+	Entity *owner;
+
 	// Transform information
 	glm::vec2 position;
 	glm::vec2 scale;
@@ -106,6 +109,7 @@ public:
 	
 	// No more asking for memory during run time
 	static void Initialize();
+	static Entity *Create(std::string tag, glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation);
 	static Entity *Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation);
 	static void Destroy(Entity *entity);
 

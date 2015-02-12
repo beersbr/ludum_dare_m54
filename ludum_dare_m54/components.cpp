@@ -13,7 +13,6 @@ void PhysicsComponent::Update(float dt)
 	std::list<PhysicsComponent *>::iterator it = entityComponents.begin();
 	for( ; it != entityComponents.end(); ++it)
 	{
-
 		// TODO(brett): I don't wanna do this everytime. Should just make the rect part of
 		// the physics component
 		glm::vec2 pos = (*it)->owner->position;
@@ -21,7 +20,7 @@ void PhysicsComponent::Update(float dt)
 		float hh = (*it)->height/2.0f;
 		BGLRect myRect = BGLRectMake(pos.x-ww, pos.y-hh, ww+ww, hh+hh);
 
-		std::list<PhysicsComponent *>::iterator jt = entityComponents.begin();
+		std::list<PhysicsComponent *>::iterator jt = it;
 		for( ; jt != entityComponents.end(); ++jt)
 		{
 			if(it == jt) continue;

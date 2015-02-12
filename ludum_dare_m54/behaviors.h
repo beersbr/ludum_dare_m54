@@ -25,6 +25,12 @@ public:
 		lifetime = 0.f;
 	}
 
+	virtual void OnCollide(Entity *other)
+	{
+		if(other->tag == "bullet")
+			std::cout << "Collided with a bullet" << std::endl;
+	}
+
 	virtual void Update(float dt)
 	{
 		lifetime += dt;
@@ -55,7 +61,7 @@ public:
 
 	virtual void Start()
 	{
-		speed = glm::vec2(110, 110);
+		speed = glm::vec2(80, 80);
 		shootPeriod = 0.18f;
 		shootCounter = 0.25f;
 	}
@@ -65,7 +71,7 @@ public:
 		if(shootCounter >= shootPeriod)
 		{
 			// create the entity to shoot
-			Entity *e = Entity::Create(actor->position, glm::vec2(16, 16), glm::vec3());
+			Entity *e = Entity::Create("bullet", actor->position, glm::vec2(16, 16), glm::vec3());
 			e->AddComponent<SpriteComponent>("bullet");
 			e->AddComponent<BehaviorComponent>("bullet");
 
@@ -108,10 +114,8 @@ public:
 			dx = speed.x * dt * 1.0;
 		}
 
-		local_persist float particleCount = 0.25f;
 
 		shootCounter += dt;
-		particleCount += dt;
 
 		actor->rotation.z += rz;
 
@@ -132,17 +136,6 @@ public:
 		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down )
 		{
 			Shoot();
-		}
-
-		
-		if(InputState.controllerSz > 0 && InputState.controllers[0].X.down && particleCount > shootPeriod)
-		{
-			ParticleHandler::Emit(
-				glm::vec2(actor->position.x + 35, actor->position.y),
-				glm::vec2(100, 100),
-				glm::vec3(),
-				0.15f);
-			particleCount = 0.f;
 		}
 
 		if(InputState.keyboard.keys[SDLK_j].down)
@@ -209,7 +202,7 @@ public:
 
 	virtual void Start()
 	{
-		velocity.x = 1500.f;
+		velocity.x = 2000.f;
 	}
 
 	virtual void OnCollide(Entity *e)

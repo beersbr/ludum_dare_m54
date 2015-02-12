@@ -97,7 +97,7 @@ void Game::update(int frameCount, float dt)
 	
 	if((spawnTimer += dt) > 0.5f)
 	{
-		Entity *e = Entity::Create(glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+		Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
 		e->AddComponent<BehaviorComponent>("enemy");
 		e->AddComponent<SpriteComponent>("enemy");
 
@@ -105,6 +105,7 @@ void Game::update(int frameCount, float dt)
 	}
 
 	BehaviorComponent::Update(dt);
+	PhysicsComponent::Update(dt);
 	ParticleHandler::Update(dt);
 	SpriteComponent::Update(dt);
 
