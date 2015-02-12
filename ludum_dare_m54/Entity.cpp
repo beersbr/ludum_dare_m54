@@ -2,7 +2,7 @@
 
 
 std::list<Entity *> Entity::createdEntities;
-std::list<Entity *> Entity::deletedEntities = std::list<Entity *>();
+std::list<Entity *> Entity::deletedEntities;
 std::list<Entity *> Entity::freeEntities;
 Entity Entity::entities[MAX_ENTITY_COUNT];
 
@@ -21,11 +21,7 @@ Entity::~Entity(void)
 
 void Entity::Delete()
 {
-	if(!deleted)
-	{
-		deleted = true;
-		deletedEntities.push_back(this);
-	}
+	deleted = true;
 	
 }
 
@@ -60,11 +56,32 @@ Entity *Entity::Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
 
 	createdEntities.push_back(e);
 
+	e->deleted = false;
+
 	return e;
 
 }
 
-void Entity::Destroy(Entity *)
+void Entity::Destroy(Entity *e)
 {
+	deletedEntities.push_back(e);
 
+	e->Delete();
+
+	// TODO(brett): do any other things that an entity needs before getting rid of it
+
+	createdEntities.remove(e);
+}
+
+void Entity::SweepDestruction()
+{
+	if(deletedEntities.size() == 0) return;
+
+	std::list<Entity *>::iterator it = deletedEntities.begin();
+	for( ; it != deletedEntities.end(); )
+	{
+		(*it)->CleanupComponents();
+		freeEntities.push_front((*it));
+		deletedEntities.erase(it++);
+	}
 }

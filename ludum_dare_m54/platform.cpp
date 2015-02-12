@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	}
 
 	PlatformWindow Window = {};
-	PlatformCreateWindow(&Window, "Mini LD 54", 1200, 800, 1); 
+	PlatformCreateWindow(&Window, "Mini LD 54", 1200, 800, true); 
 
 	if(!Window.isValid)
 	{

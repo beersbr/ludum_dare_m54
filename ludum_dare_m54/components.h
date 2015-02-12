@@ -98,6 +98,11 @@ public:
 			behavior = BehaviorFactoryBase::CreateInstance("simple-enemy");
 		}
 
+		if(args["name"] == 4.f)
+		{
+			behavior = BehaviorFactoryBase::CreateInstance("explosion");
+		}
+
 		behavior->Load(owner);
 		behavior->Start();
 	}
@@ -111,7 +116,8 @@ public:
 	{
 		entityComponents.remove(this);
 		owner = 0;
-		delete behavior;
+		if(behavior)
+			delete behavior;
 	}
 
 public:

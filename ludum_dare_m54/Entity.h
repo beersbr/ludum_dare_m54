@@ -79,6 +79,7 @@ public:
 		data["behavior"]["player"]["name"] = 1.f;
 		data["behavior"]["bullet"]["name"] = 2.f;
 		data["behavior"]["enemy"]["name"] = 3.f;
+		data["behavior"]["explosion"]["name"] = 4.f;
 
 		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[T::Family][name]);
@@ -101,6 +102,8 @@ public:
 				it->second->Cleanup();
 		}
 	}
+
+	static void SweepDestruction();
 
 	// TODO(brett): see if we can manipulate entities purely with data
 	//void addComponent(std::string family, std::string type);

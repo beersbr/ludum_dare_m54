@@ -11,7 +11,54 @@
 #include "rapidjson/document.h"
 #include "components.h"
 #include "Particles.h"
+#include "platformdef.h"
 
+class ExplosionBehavior : public Behavior
+{
+public:
+	float aliveFor;
+	float lifetime;
+	int32_t explosions;
+	float explosionPeriod;
+	float explosionTimer;
+
+	virtual void Start()
+	{
+		lifetime = 0.5f;
+		aliveFor = 0.0f;
+		explosions = 5.f;
+		explosionPeriod = lifetime/explosions;
+		explosionTimer = explosionPeriod;
+	}
+
+	virtual void Update(float dt)
+	{
+		explosionTimer += dt;
+		aliveFor += dt;
+
+		if(aliveFor >= lifetime)
+		{
+			Entity::Destroy(this->actor);
+			return;
+		}
+		else if(explosionTimer >= explosionPeriod)
+		{
+			// TODO(brett): emit particles more generically with just a position
+			float offsetX = RandomRange(-50, 50);
+			float offsetY = RandomRange(-50, 50);
+			glm::vec2 pos = glm::vec2(actor->position.x + offsetX, actor->position.y + offsetY);
+			glm::vec2 size = glm::vec2(60, 60) * (2 * frand());
+			ParticleHandler::Emit(pos, size, glm::vec3(), 0.2f);
+
+			explosionTimer = 0.f;
+		}
+	}
+
+
+
+private:
+	static BehaviorRegistery<ExplosionBehavior> registration;
+};
 
 class SimpleEnemyBehavior : public Behavior
 {
@@ -28,7 +75,13 @@ public:
 	virtual void OnCollide(Entity *other)
 	{
 		if(other->tag == "bullet")
-			std::cout << "Collided with a bullet" << std::endl;
+		{
+			Entity::Destroy(other);
+			Entity::Destroy(this->actor);
+
+			Entity *e = Entity::Create(actor->position, glm::vec2(2,2), glm::vec3());
+			e->AddComponent<BehaviorComponent>("explosion");
+		}
 	}
 
 	virtual void Update(float dt)
@@ -74,6 +127,7 @@ public:
 			Entity *e = Entity::Create("bullet", actor->position, glm::vec2(16, 16), glm::vec3());
 			e->AddComponent<SpriteComponent>("bullet");
 			e->AddComponent<BehaviorComponent>("bullet");
+			e->AddComponent<PhysicsComponent>("");
 
 			shootCounter = 0.0f;
 		}

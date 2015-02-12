@@ -100,6 +100,7 @@ void Game::update(int frameCount, float dt)
 		Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
 		e->AddComponent<BehaviorComponent>("enemy");
 		e->AddComponent<SpriteComponent>("enemy");
+		e->AddComponent<PhysicsComponent>("");
 
 		spawnTimer = 0.f;
 	}
@@ -108,6 +109,8 @@ void Game::update(int frameCount, float dt)
 	PhysicsComponent::Update(dt);
 	ParticleHandler::Update(dt);
 	SpriteComponent::Update(dt);
+
+	Entity::SweepDestruction();
 
 	//float levelSpeed = 40.f;
 	//SpriteComponent::camera[LEVEL_FOREGROUND].x += levelSpeed * dt;
