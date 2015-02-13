@@ -11,6 +11,21 @@
 #include "components.h"
 
 #include <thread>
+#include <functional>
+
+struct LevelEvent
+{
+	float time; // ms
+	std::function<void()> action;
+
+	static LevelEvent CreateAction(float time, std::function<void()> fn)
+	{
+		LevelEvent ev;
+		ev.time = time;
+		ev.action = fn;
+		return ev;
+	}
+};
 
 class Game
 {
@@ -35,6 +50,9 @@ private:
 
 	Entity *background;
 	Entity *player;
+
+	std::list<LevelEvent> events;
+	float runningTime;
 
 };
 

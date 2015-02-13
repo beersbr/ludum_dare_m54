@@ -64,6 +64,8 @@ PlatformCreateWindow(PlatformWindow *platformWindow, char *title, int32_t width,
 
 int main(int argc, char *argv[])
 {
+	std::cout << "starting main" << std::endl;
+
 	if(SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO) != 0)
 	{
 		std::cout << "Could not initialize SDL2. Stopping." << std::endl;

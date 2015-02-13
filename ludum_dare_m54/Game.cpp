@@ -40,6 +40,7 @@ Game::Game()
 	player = Entity::Create(glm::vec2(200, 400), glm::vec2(80, 40), glm::vec3());
 	player->AddComponent<SpriteComponent>("player");
 	player->AddComponent<BehaviorComponent>("player");
+	runningTime = 0.0f;
 
 	srand(SDL_GetTicks());
 
@@ -75,6 +76,124 @@ Game::Game()
 		//	}
 		//}
 
+		events.push_back(LevelEvent::CreateAction(2000, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+		events.push_back(LevelEvent::CreateAction(2300, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(2600, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(2900, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(3200, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(3500, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+
+		events.push_back(LevelEvent::CreateAction(5000, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+		events.push_back(LevelEvent::CreateAction(5300, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(5600, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(5900, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(6200, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(6500, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+
+		events.push_back(LevelEvent::CreateAction(10000, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+		events.push_back(LevelEvent::CreateAction(10300, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(10600, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(10900, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(11200, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+		events.push_back(LevelEvent::CreateAction(11500, [this]() -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
+			e->AddComponent<BehaviorComponent>("enemy");
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+		}));
+
+		// sort the events by time
+
 		working = false;
 	});
 
@@ -93,23 +212,26 @@ void Game::update(int frameCount, float dt)
 		return;
 	}
 
-	local_persist float spawnTimer = 4.f;
-	
-	if((spawnTimer += dt) > 0.2f )
-	{
-		Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(128, 32), glm::vec3());
-		e->AddComponent<BehaviorComponent>("enemy");
-		e->AddComponent<SpriteComponent>("enemy");
-		e->AddComponent<PhysicsComponent>("");
 
-		spawnTimer = 0.f;
+	runningTime += dt*1000;
+
+	// check for LevelEvents to excecute
+	while(events.size() > 0)
+	{
+		if(events.front().time < runningTime)
+		{
+			std::cout << "RUNNING TIME: " << runningTime << std::endl;
+			events.front().action();
+			events.pop_front();
+		}
+		else
+			break;
 	}
 
 	BehaviorComponent::Update(dt);
 	PhysicsComponent::Update(dt);
 	ParticleHandler::Update(dt);
 	SpriteComponent::Update(dt);
-
 	Entity::SweepDestruction();
 
 	//float levelSpeed = 40.f;
