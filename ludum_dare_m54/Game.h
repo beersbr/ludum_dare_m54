@@ -45,6 +45,7 @@ public:
     void startGame(std::string mapName);
     void update(int frameCount, float dt);
     bool isRunning();
+	void cleanup();
 
 private:
     void draw();

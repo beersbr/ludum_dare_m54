@@ -2,6 +2,7 @@
 #define __BEHAVIOR_BASE_H__
 
 #include <map>
+#include <unordered_map>
 #include <string>
 #include "Entity.h"
 
@@ -58,7 +59,7 @@ Behavior *CreateBehavior()
 }
 
 
-typedef std::map<std::string, Behavior *(*)()> registeredBehaviorType;
+typedef std::unordered_map<std::string, Behavior *(*)()> registeredBehaviorType;
 
 struct BehaviorFactoryBase
 {

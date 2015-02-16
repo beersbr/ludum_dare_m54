@@ -83,6 +83,7 @@ public:
 		data["behavior"]["bullet"]["name"] = 2.f;
 		data["behavior"]["enemy"]["name"] = 3.f;
 		data["behavior"]["explosion"]["name"] = 4.f;
+		data["behavior"]["s-enemy"]["name"] = 5.f;
 
 		//components[T::Family]->name = name;
 		components[T::Family]->Initialize(data[T::Family][name]);
@@ -132,7 +133,7 @@ public:
 
 private:
 	Entity(void);
-    ~Entity(void);
+    virtual ~Entity(void);
 
 };
 

@@ -60,6 +60,57 @@ private:
 	static BehaviorRegistery<ExplosionBehavior> registration;
 };
 
+class BaseEnemy : public Behavior
+{
+public:
+	float speed;
+	float lifetime;
+
+	void OnCollide(Entity *other)
+	{
+		if(other->tag == "bullet")
+		{
+			Entity::Destroy(other);
+			Entity::Destroy(this->actor);
+
+			Entity *e = Entity::Create(actor->position, glm::vec2(2,2), glm::vec3());
+			e->AddComponent<BehaviorComponent>("explosion");
+		}
+	}
+
+	void Update(float dt)
+	{
+		lifetime += dt;
+	}
+};
+
+class FlybyEnemyBehavior : public BaseEnemy
+{
+public:
+	virtual void Start()
+	{
+		speed = 200.f;
+		lifetime = 0.f;
+	}
+
+	virtual void OnCollide(Entity *other)
+	{
+		BaseEnemy::OnCollide(other);
+	}
+
+	virtual void Update(float dt)
+	{
+		BaseEnemy::Update(dt);
+
+		actor->position.x += -speed*dt;
+	}
+
+private:
+	static BehaviorRegistery<FlybyEnemyBehavior> registration;
+};
+
+
+
 class SimpleEnemyBehavior : public Behavior
 {
 public:

@@ -256,6 +256,10 @@ int main(int argc, char *argv[])
 			secondSum -= 1000;
 			frames = 0;
 		}
+
+		if(!Running)
+			curGame->cleanup();
+
 	}
 
 	BGLAudio::Cleanup();

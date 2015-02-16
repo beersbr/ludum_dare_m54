@@ -16,6 +16,7 @@ Entity::Entity(void) : position(0.0f,0.0f),
 
 Entity::~Entity(void)
 {
+
 }
 
 void Entity::Delete()

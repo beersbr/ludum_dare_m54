@@ -121,6 +121,48 @@ Game::Game()
 			e->AddComponent<BehaviorComponent>("enemy");
 		}) ));
 
+
+
+		events.push_back(LevelEvent::CreateAction(200.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(240.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(280.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(320.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(360.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
 		LevelEvent::PrepareLevelEvents(&events);
 
 		// sort the events by time
@@ -186,4 +228,11 @@ void Game::startGame(std::string mapName)
 {
 	curMap = new Map(mapName, &resourcer);
 	//Should also probably create the player entity here
+}
+
+void Game::cleanup()
+{
+	Entity::createdEntities.clear();
+	Entity::freeEntities.clear();
+	Entity::deletedEntities.clear();
 }

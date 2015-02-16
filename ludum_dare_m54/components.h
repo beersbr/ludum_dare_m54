@@ -98,6 +98,10 @@ public:
 		{
 			behavior = BehaviorFactoryBase::CreateInstance("simple-enemy");
 		}
+		if(args["name"] == 5.f)
+		{
+			behavior = BehaviorFactoryBase::CreateInstance("straight-enemy");
+		}
 
 		if(args["name"] == 4.f)
 		{
