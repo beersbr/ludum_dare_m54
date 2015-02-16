@@ -250,8 +250,8 @@ int main(int argc, char *argv[])
 		secondSum += ElapsedTick;
 		if(secondSum >= 1000)
 		{
-			std::cout << "FPS: " << frames/(float)secondSum * 1000 << std::endl;
-			std::cout << "AVG t/frmame: " << secondSum/1000.0f / frames << std::endl;
+			//std::cout << "FPS: " << frames/(float)secondSum * 1000 << std::endl;
+			//std::cout << "AVG t/frmame: " << secondSum/1000.0f / frames << std::endl;
 
 			secondSum -= 1000;
 			frames = 0;

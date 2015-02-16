@@ -31,6 +31,7 @@ void Entity::Initialize()
 	{
 		freeEntities.push_back(&entities[i]);
 	}
+	//std::cout << "D: " << deletedEntities.size() << " C: " << createdEntities.size() << " F: " << freeEntities.size() << std::endl;
 }
 
 Entity *Entity::Create(std::string tag, glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
@@ -62,8 +63,10 @@ Entity *Entity::Create(glm::vec2 pos, glm::vec2 scale, glm::vec3 rotation)
 
 void Entity::Destroy(Entity *e)
 {
-	deletedEntities.push_back(e);
+	//if(std::find(deletedEntities.begin(), deletedEntities.end(), e) != deletedEntities.end())
+	if(e->deleted) return;
 
+	deletedEntities.push_back(e);
 	e->Delete();
 
 	// TODO(brett): do any other things that an entity needs before getting rid of it
@@ -73,9 +76,9 @@ void Entity::Destroy(Entity *e)
 
 void Entity::SweepDestruction()
 {
-	if(deletedEntities.size() == 0) return;
+	//std::cout << "D: " << deletedEntities.size() << " C: " << createdEntities.size() << " F: " << freeEntities.size() << std::endl;
 
-	std::cout << "D: " << deletedEntities.size() << " C: " << createdEntities.size() << " F: " << freeEntities.size() << std::endl;
+	if(deletedEntities.size() == 0) return;
 
 	std::list<Entity *>::iterator it = deletedEntities.begin();
 	for( ; it != deletedEntities.end(); ++it)

@@ -16,14 +16,23 @@
 struct LevelEvent
 {
 	float time; // ms
+	float offset; //px
 	std::function<void()> action;
 
-	static LevelEvent CreateAction(float time, std::function<void()> fn)
+	static LevelEvent CreateAction(float offset, float time, std::function<void()> fn)
 	{
 		LevelEvent ev;
 		ev.time = time;
 		ev.action = fn;
+		ev.offset = offset;
 		return ev;
+	}
+
+	static void PrepareLevelEvents(std::list<LevelEvent> *events)
+	{
+		events->sort([] (LevelEvent a, LevelEvent b) -> bool {
+			return (a.time > b.time);
+		});
 	}
 };
 
@@ -53,6 +62,7 @@ private:
 
 	std::list<LevelEvent> events;
 	float runningTime;
+	glm::vec2 levelCameraOffset;
 
 };
 

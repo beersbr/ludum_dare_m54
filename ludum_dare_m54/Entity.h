@@ -57,6 +57,9 @@ public:
 		data["sprite"]["background"]["texture"] = 0.f;
 		data["sprite"]["background"]["layer"] = BACKGROUND_BACKGROUND;
 
+		data["sprite"]["foreground"]["texture"] = 10.f;
+		data["sprite"]["foreground"]["layer"] = BACKGROUND_FOREGROUND;
+
 		// player
 		data["sprite"]["player"]["texture"] = 1.f;
 		data["sprite"]["player"]["layer"] = PLAYER_LAYER;

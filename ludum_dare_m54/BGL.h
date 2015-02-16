@@ -260,7 +260,7 @@ public:
 	SPRITE BATCH
 ****************************************************************************************************************/
 
-#define MAX_BATCH_ARRAY_TEXTURE_COUNT 32
+#define MAX_BATCH_ARRAY_TEXTURE_COUNT 8
 #define MAX_BATCH_TEXTURE_COUNT 8
 
 #define MAX_ARRAY_WIDTH 2048
