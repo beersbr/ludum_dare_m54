@@ -121,8 +121,6 @@ Game::Game()
 			e->AddComponent<BehaviorComponent>("enemy");
 		}) ));
 
-
-
 		events.push_back(LevelEvent::CreateAction(200.f, 0.f, 
 		([] () -> void {
 			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
@@ -156,6 +154,47 @@ Game::Game()
 		}) ));
 
 		events.push_back(LevelEvent::CreateAction(360.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+
+		events.push_back(LevelEvent::CreateAction(500.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(540.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(580.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(620.f, 0.f, 
+		([] () -> void {
+			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
+			e->AddComponent<SpriteComponent>("enemy");
+			e->AddComponent<PhysicsComponent>("");
+			e->AddComponent<BehaviorComponent>("s-enemy");
+		}) ));
+
+		events.push_back(LevelEvent::CreateAction(660.f, 0.f, 
 		([] () -> void {
 			Entity *e = Entity::Create("enemy", glm::vec2(1200, 400), glm::vec2(80, 40), glm::vec3());
 			e->AddComponent<SpriteComponent>("enemy");

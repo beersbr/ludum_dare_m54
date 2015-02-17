@@ -15,7 +15,7 @@ public:
 	Behavior()
 	{
 		actor = 0;
-	}
+	} 
 
 	~Behavior()
 	{

@@ -89,7 +89,7 @@ class FlybyEnemyBehavior : public BaseEnemy
 public:
 	virtual void Start()
 	{
-		speed = 200.f;
+		speed = 300.f;
 		lifetime = 0.f;
 	}
 
